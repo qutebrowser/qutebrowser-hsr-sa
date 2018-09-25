@@ -1,0 +1,22 @@
+sudo: false
+dist: trusty
+language: generic
+group: edge
+addons:
+  apt:
+    sources:
+      - sourceline: "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
+    packages:
+      - texlive
+      - texlive-fonts-extra
+      - texlive-lang-german
+      - texlive-latex-extra
+      - texlive-pictures
+      - latex-xcolor
+      - python-pygments
+      - pgf
+      - latexmk
+
+script:
+  - cd doc
+  - latexmk -latexoption=-shell-escape -pdf main.tex
