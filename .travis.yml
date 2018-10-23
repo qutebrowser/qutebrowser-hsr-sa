@@ -13,6 +13,7 @@ addons:
       - texlive-latex-extra
       - texlive-pictures
       - texlive-font-utils
+      - ghostscript
       - latex-xcolor
       - python-pygments
       - pgf
