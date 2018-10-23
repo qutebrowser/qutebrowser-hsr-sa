@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{natbib}
 
 \begin{document}
 
@@ -184,8 +185,10 @@ documentation.
 
 \chapter{Glossary and Abbreviations}
 
-\chapter{Literature and Sources}
+Test \citep{yapproach}
 
-
+\renewcommand{\bibname}{\chapter{Literature and Sources}}
+\bibliographystyle{IEEEtranN}
+\bibliography{bibliography}
 
 \end{document}
