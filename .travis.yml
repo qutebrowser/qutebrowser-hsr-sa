@@ -12,6 +12,7 @@ addons:
       - texlive-lang-german
       - texlive-latex-extra
       - texlive-pictures
+      - texlive-font-utils
       - latex-xcolor
       - python-pygments
       - pgf
