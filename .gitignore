@@ -18,6 +18,7 @@
 # *.ps
 # *.eps
 # *.pdf
+doc/main.pdf
 doc/fig/*.pdf
 doc/fig/auto
 
@@ -216,7 +217,10 @@ TSWLatexianTemp*
 *~[0-9]*
 
 # auto folder when using emacs and auctex
-/auto/*
+/doc/auto/*
 
 # expex forward references with \gathertags
 *-tags.tex
+
+# meeting notes
+/meetings/*.html
