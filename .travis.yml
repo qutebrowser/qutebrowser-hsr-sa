@@ -12,6 +12,7 @@ addons:
       - texlive-lang-german
       - texlive-latex-extra
       - texlive-pictures
+      - texlive-publishers
       - texlive-font-utils
       - ghostscript
       - latex-xcolor
