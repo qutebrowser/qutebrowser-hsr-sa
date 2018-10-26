@@ -127,7 +127,7 @@ qutebrowser's GitHub repository. The biggest planned changes are the following:
   \item \url{https://github.com/qutebrowser/qutebrowser/issues/345}: \\
     To generate HTML documentation, qutebrowser currently uses
     asciidoc\footnote{\url{http://asciidoc.org/}} which is unsuitable for API
-    documentation and ceased maintainance. An external contributor (see page
+    documentation and ceased maintenance. An external contributor (see page
     \pageref{fiete}) is currently working on migrating to the
     Sphinx\footnote{\url{http://www.sphinx-doc.org/}} toolchain, and should be
     supported with his work throughout the SA.
@@ -143,9 +143,33 @@ should be refactored to use better alternatives such as constructor arguments
 % Rahmenbedingungen, Umfeld, Definitionen, Abgrenzungen
 \section{Context}
 
+The software and version constraints are mostly given by the existing project:
+
+\begin{itemize}
+  \item Python\footnote{\url{https://www.python.org/}} 3 (3.5 or newer)
+  \item Qt\footnote{\url{https://www.qt.io/}} 5 (5.7 or newer), used via PyQt5\footnote{\url{https://www.riverbankcomputing.com/software/pyqt/intro}}
+  \item pytest\footnote{\url{https://pytest.org/}} as test framework
+  \item Various code quality tools: pylint\footnote{\url{https://pylint.org/}},
+    flake8\footnote{\url{http://flake8.pycqa.org/}} and others.
+\end{itemize}
+
+As qutebrowser is a pre-existing project with a vibrant community, community
+contributions are expected to continue (despite an
+announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html}}
+asking people to hold back bigger contributions). This can be challenging,
+as it results in refactorings being carried out against a moving target. Because
+of the nature of open-source contributions,
+% http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/
+% https://www.fordfoundation.org/about/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
+it's hard to foresee or control which areas external contributors are changing.
+At the beginning of the SA, some time was set aside to merge external
+contributions (pull requests) which were already open. For the rest of the SA,
+such contributions will be dealt with on a best effort basis, with the main
+focus being this documentation and the work required for the plugin API.
 
 % Vorgehen, Aufbau der Arbeit
 \section{Methods and Structure}
+
 
 
 % "Stand der Technik" (Was gibt es schon?)
