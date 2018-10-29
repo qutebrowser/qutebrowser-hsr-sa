@@ -10,7 +10,10 @@
 \usepackage{minted}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
-\newcommand{\fixme}[1]{\textbf{FIXME} #1}
+\newcommand{\fixme}[1]{\textbf{FIXME} \emph{#1}}
+
+\hyphenation{Web-Extension}
+\hyphenation{Web-Extensions}
 
 \begin{document}
 
@@ -184,8 +187,6 @@ focus being this documentation and the work required for the plugin API.
 
 \section{Firefox XUL plugins}
 
-\fixme{refs}
-
 Older versions of the Firefox web browser used to have a very powerful plugin
 API, based on its XUL (XML User Interface Language) technology. However, this
 approach came with various issues and was thus recently abandoned, while
@@ -193,9 +194,61 @@ adopting the WebExtensions standard.
 
 The apparent philosophy behind ``legacy'' Firefox addons was to allow maximum
 customizability from extensions -- however, this came with various drawbacks
-which ultimately lead to Mozilla abandoning that approach \citep{mozilla-webext}.
+which ultimately lead to Mozilla abandoning that approach.
 
+The motivations to deprecate and subsequently remove the legacy addon API listed
+in Mozilla's blog post \citep{mozilla-webext} were as follows:
 
+\begin{itemize}
+  \item Chrome and Opera (and nowadays also Microsoft Edge) already supported
+    the WebExtension API, so a switch to the WebExtension API would drastically
+    reduce the effort required for developers when implementing extensions with
+    cross-browser compatibility: \emph{``We would like add-on development to be more
+    like Web development: the same code should run in multiple browsers according to
+    behavior set by standards, with comprehensive documentation available from
+    multiple vendors.''}
+  \item Firefox' Electrolysis (e10s)
+    project\footnote{\url{https://wiki.mozilla.org/Electrolysis}} was a big
+    change in its codebase, with the goal of separating tabs into separate
+    processes, for security and performance reasons. Many legacy addons were not
+    compatible with the changes necessary for Electrolysis. This forced either
+    the add-on developer to make (sometimes intricate) changes to their code; or
+    the user's Firefox instance to run in a special fallback mode: \emph{``Add-ons
+    that haven’t been upgraded to work with Electrolysis will run in a special
+    compatibility environment that resembles single-process Firefox as much as
+    possible. [...] However, [the fallback is] much slower than the equivalent DOM
+    operations in single-process Firefox, and can affect the user experience
+    negatively. Also, some accesses aren’t supported by the compatibility layer and
+    will throw exceptions.''}
+  \item Since Firefox is a quite popular product, malicious Firefox addons
+    started to become an attractive attack vector for bad actors. With legacy
+    addons, addon code is able to run arbitrary code and freely modify Firefox
+    internals on the user's machine, which turns untrusted addons into a
+    security liability \citep{mozilla-signing}.
+  \item Legacy addons hindered Firefox development in general, since its
+    powerful addon API introduced a tight coupling between Firefox' internal
+    code, and the code in third-party addons: \emph{``A permissive add-on model
+    means that we have limited flexibility in changing the foundations of Firefox.
+    [...] Without a fundamental shift to the way Firefox add-ons work, we will
+    be unable to use new technologies like Electrolysis, Servo\footnote{An
+      experimental new rendering engine by Mozilla, implemented in the Rust
+      programming language. Parts of Servo (such as its CSS renderer) have since
+    been merged into Firefox.} or browser.html\footnote{A Mozilla research
+    project which implements a browser completely in HTML, now retired.}
+    as part of Firefox. The tight coupling between the browser and its add-ons
+    also creates shorter-term problems for Firefox development. It’s not uncommon
+    for Firefox development to be delayed because of broken add-ons.''}
+\end{itemize}
+
+While qutebrowser should learn from the mistakes made in Firefox' legacy API,
+there is a fundamental difference in the two approaches: qutebrowser plugins
+should be written in the Python language (like qutebrowser itself is), but
+safely executing untrusted Python code proved to be impossible
+\citep{nedbat-eval, lwn-pysandbox}. \fixme{separate security chapter?}
+
+The key takeaway for qutebrowser is that it should have a minimal and clearly
+outlined plugin API, rather than naively exposing its internal Python code to
+plugins.
 
 \section{WebExtensions}
 
@@ -250,7 +303,7 @@ for plugins have been collected based on users' feature requests. Care should be
 taken so the plugin API can also satisfy those use cases in the future.
 
 \paragraph{Other plugin APIs} There's a general consensus from browser vendors
-around the Web\-Extension plugin API. Mostly compatible subsets of it are
+around the WebExtension plugin API. Mostly compatible subsets of it are
 supported by the Chrome, Opera, Firefox and Edge browsers. Efforts are currently
 underway to standardize the API as a W3C specification \citep{w3c-webext}.
 Unfortunately, that API is unsuitable for qutebrowser (for reasons explained in
