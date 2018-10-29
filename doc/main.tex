@@ -7,6 +7,10 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{natbib}
+\usepackage{minted}
+
+\newcommand{\py}[1]{\mintinline{python}{#1}}
+\newcommand{\fixme}[1]{\textbf{FIXME} #1}
 
 \begin{document}
 
@@ -173,23 +177,102 @@ focus being this documentation and the work required for the plugin API.
 
 
 % "Stand der Technik" (Was gibt es schon?)
-\chapter{Existing Work}  
+\chapter{Existing APIs}
+\label{unsuitable}
+
+\fixme{}: Introductory text here?
+
+\section{Firefox XUL plugins}
+
+\fixme{refs}
+
+Older versions of the Firefox web browser used to have a very powerful plugin
+API, based on its XUL (XML User Interface Language) technology. However, this
+approach came with various issues and was thus recently abandoned, while
+adopting the WebExtensions standard.
+
+The apparent philosophy behind ``legacy'' Firefox addons was to allow maximum
+customizability from extensions -- however, this came with various drawbacks
+which ultimately lead to Mozilla abandoning that approach \citep{mozilla-webext}.
+
+
+
+\section{WebExtensions}
+
+Various previous approaches for browser plugins exist. Currently, there are
+ongoing efforts towards a standardized API for browser extensions, called
+\emph{WebExtensions}.
+
+Unfortunately, this standard is unsuitable for qutebrowser, as further explained
+in this chapter.
+
 
 % Bestehende Lösungsansätze und Normen
-\section{Existing Approaches and Norms (Existing APIs?)}
+%\section{Existing APIs}
 
 % Kurzbeschreibung und Charakterisierung
 % \section{Summary and Characerization}
 
 % Defizite (Hinweise auf Weiterentwicklungs-, bzw. Verbesserungspotential)
-\section{Problems with existing solutions}  
-
+%\section{Problems with existing solutions}  
 
 % Bewertung (Evaluation)
 \chapter{Evaluation}
 
 % Kriterien (Wie wird bewertet?)
 \section{Criteria}
+
+There are various forces which affect design decisions for qutebrowser's plugin
+API:
+
+\paragraph{Qt APIs} qutebrowser is built on top of the QtWebEngine/QtWebKit
+rendering engines (which of the two to use is user-configurable). To some
+degree, the APIs exposed by those libraries also dictates how the API
+qutebrowser can expose to plugins can look. The API to get the selected text
+from a web page is an ideal example: The most straightforward API would be a
+\py{def selection() -> str} method. However, JavaScript execution is needed to get
+the selection, which is only available from Qt as a callback-based interface.
+Thus, the plugin API will need to look like
+\py{def selection(cb: Callable[[str], None]) -> None} --
+in other words, the \py{selection} method will take a
+callback which gets called with the selected text.
+
+\paragraph{Internal qutebrowser code} One of the main goals (as per the task
+description) of this SA is moving code from qutebrowser's core into internal
+``plugins'' shipped alongside qutebrowser. Components which use general-purpose
+APIs (like the adblocker, which needs to intercept network requests) can
+conveniently moved out of the core, and result in plugin APIs which are also
+usable for other purposes.
+
+\paragraph{Ideas for future plugins} While external plugins (contributed by the
+qutebrowser community) are not the primary focus of this SA, a lot of use-cases
+for plugins have been collected based on users' feature requests. Care should be
+taken so the plugin API can also satisfy those use cases in the future.
+
+\paragraph{Other plugin APIs} There's a general consensus from browser vendors
+around the Web\-Extension plugin API. Mostly compatible subsets of it are
+supported by the Chrome, Opera, Firefox and Edge browsers. Efforts are currently
+underway to standardize the API as a W3C specification \citep{w3c-webext}.
+Unfortunately, that API is unsuitable for qutebrowser (for reasons explained in
+chapter \ref{unsuitable}), but it can be used as a source of inspiration.
+However, the WebExtension API is closely tied to the JavaScript language, so
+architecture decisions taken there will not necessarily be applicable to
+qutebrowser's Python plugin API.
+
+\paragraph{Python and Qt} While some higher-level architectural decisions are
+independent from the programming language used to implement them, what is
+commonly considered a ``good'' API certainly depends on the underlying
+programming language and the idioms used therein. Since qutebrowser's plugin API
+is used from Python, it should aim to be ``Pythonic'' (i.e., adhering to Python
+idioms\footnote{\url{https://blog.startifact.com/posts/older/what-is-pythonic.html}})
+and also use features made available by Qt. As an example, a Pythonic API might
+favor Python
+decorators\footnote{\url{https://docs.python.org/3/glossary.html\#term-decorator}}
+over inheritance to set up plugin hooks; or a Qt API might prefer Qt's
+signals/slots
+facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
+callback-based API.
+
 
 % Schlussfolgerungen, eigener Lösungsansatz
 \section{Conclusion}
