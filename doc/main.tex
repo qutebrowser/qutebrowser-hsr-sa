@@ -98,7 +98,7 @@ long-standing feature
 request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
 which has often been requested by its users.
 
-It's difficult to estimate qutebrowser's user count, but it's likely used by a
+It is difficult to estimate qutebrowser's user count, but it is likely used by a
 couple thousand users, so a plugin API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
 
@@ -113,7 +113,7 @@ those users to extend qutebrowser with custom plugins in an easy way, in order
 to keep qutebrowser's core small.
 
 Since qutebrowser already has a thriving community, this change also intends to
-decentralize development efforts, as it makes it possible for power-users and
+decentralize development efforts, as it enables power-users and
 developers to maintain their plugins independently from the core development.
 
 % Ziele und Unterziele
@@ -121,7 +121,7 @@ developers to maintain their plugins independently from the core development.
 
 Initially, qutebrowser was developed without knowledge of proper software
 engineering practices, which resulted in some maintainability issues. While many
-of those issues have been cleaned up since, some still remain. Those
+of those issues have been fixed since, some still remain. Those
 refactorings affect the API exposed to plugins, and therefore should be taken
 care of before attempting to design a plugin API.
 
@@ -167,7 +167,7 @@ The software and version constraints are mostly given by the existing project:
     flake8\footnote{\url{http://flake8.pycqa.org/}} and others.
 \end{itemize}
 
-As qutebrowser is a pre-existing project with a vibrant community, community
+As qutebrowser is a pre-existing project with a vibrant community, external
 contributions are expected to continue (despite an
 announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html}}
 asking people to hold back bigger contributions). This can be challenging,
@@ -175,8 +175,8 @@ as it results in refactorings being carried out against a moving target. Because
 of the nature of open-source contributions,
 % http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/
 % https://www.fordfoundation.org/about/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
-it's hard to foresee or control which areas external contributors are changing.
-At the beginning of the SA, some time was set aside to merge external
+it is hard to foresee or control which areas external contributors are changing.
+At the beginning of the SA, some time was allocated for merging external
 contributions (pull requests) which were already open. For the rest of the SA,
 such contributions will be dealt with on a best effort basis, with the main
 focus being this documentation and the work required for the plugin API.
@@ -295,7 +295,7 @@ the selection, which is only available from Qt as a callback-based interface.
 Thus, the plugin API will need to look like
 \py{def selection(cb: Callable[[str], None]) -> None} --
 in other words, the \py{selection} method will take a
-callback which gets called with the selected text.
+callback function, which then gets called with the selected text.
 
 \paragraph{Internal qutebrowser code} One of the main goals (as per the task
 description) of this SA is moving code from qutebrowser's core into internal
@@ -309,7 +309,7 @@ qutebrowser community) are not the primary focus of this SA, a lot of use-cases
 for plugins have been collected based on users' feature requests. Care should be
 taken so the plugin API can also satisfy those use cases in the future.
 
-\paragraph{Other plugin APIs} There's a general consensus from browser vendors
+\paragraph{Other plugin APIs} There is a general consensus from browser vendors
 around the WebExtension plugin API. Mostly compatible subsets of it are
 supported by the Chrome, Opera, Firefox and Edge browsers. Efforts are currently
 underway to standardize the API as a W3C specification \citep{w3c-webext}.
@@ -456,7 +456,7 @@ callback-based API.
 % Team, Rollen und Verantwortlichkeiten
 \section{Team and Roles}
 \emph{Florian Bruhin} is both the primary maintainer of qutebrowser and the
-author of this student research project. He's been working on qutebrowser since
+author of this student research project. He has been working on qutebrowser since
 December 2013 and started studying Computer Science at HSR in 2016.
 
 Professor \emph{Stefan Keller}, institute partner at the Institute for Software
