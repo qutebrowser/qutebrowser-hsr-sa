@@ -253,18 +253,46 @@ should be written in the Python language (like qutebrowser itself is), but
 safely executing untrusted Python code proved to be impossible
 \citep{nedbat-eval, lwn-pysandbox}. \fixme{separate security chapter?}
 
+A more thorough analysis of the XUL API design proved to be difficult. While
+archived API documentation is still
+available\footnote{\url{https://developer.mozilla.org/en-US/docs/Archive/Add-ons}},
+bad documentation was one of the criticisms of XUL addons
+\citep{mozilla-webext}. Since the API is not in active use anymore, and ties
+into Firefox' core code deeply, no further analysis was performed.
+
 The key takeaway for qutebrowser is that it should have a minimal and clearly
 outlined plugin API, rather than naively exposing its internal Python code to
 plugins.
 
 \section{WebExtensions}
 
-Various previous approaches for browser plugins exist. Currently, there are
-ongoing efforts towards a standardized API for browser extensions, called
-\emph{WebExtensions}.
+Currently, there are ongoing efforts towards an API for browser
+extensions called \emph{WebExtensions}, which is shared between different
+browsers. Mostly compatible subsets of it are supported by Chrome, Opera,
+Firefox and Edge. Efforts are currently underway to standardize the API
+as a W3C specification \citep{w3c-webext}.
+
+If qutebrowser would support the WebExtension API, it would follow a common
+standard, and enable running thousands of existing Chromium extensions with
+little to no adjustment to their code.
+
+Unfortunately, WebExtensions are unsuitable for qutebrowser, for various
+reasons:
+
+\begin{itemize}
+  \item \fixme{todo}
+\end{itemize}
+
+\fixme{continue here}
+
+but it can
+be used as a source of inspiration. However, the WebExtension API is closely
+tied to the JavaScript language, so architecture decisions taken there will not
+necessarily be applicable to qutebrowser's Python plugin API.
 
 Unfortunately, this standard is unsuitable for qutebrowser, as further explained
 in this chapter.
+
 
 
 % Bestehende Lösungsansätze und Normen
@@ -310,14 +338,9 @@ for plugins have been collected based on users' feature requests. Care should be
 taken so the plugin API can also satisfy those use cases in the future.
 
 \paragraph{Other plugin APIs} There is a general consensus from browser vendors
-around the WebExtension plugin API. Mostly compatible subsets of it are
-supported by the Chrome, Opera, Firefox and Edge browsers. Efforts are currently
-underway to standardize the API as a W3C specification \citep{w3c-webext}.
-Unfortunately, that API is unsuitable for qutebrowser (for reasons explained in
-chapter \ref{unsuitable}), but it can be used as a source of inspiration.
-However, the WebExtension API is closely tied to the JavaScript language, so
-architecture decisions taken there will not necessarily be applicable to
-qutebrowser's Python plugin API.
+around the WebExtension plugin API. Unfortunately, that API is unsuitable for
+qutebrowser, for reasons explained in chapter \ref{unsuitable}. It can still
+serve as a source for inspiration.
 
 \paragraph{Python and Qt} While some higher-level architectural decisions are
 independent from the programming language used to implement them, what is
