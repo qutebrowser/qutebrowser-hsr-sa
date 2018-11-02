@@ -102,6 +102,20 @@ It is difficult to estimate qutebrowser's user count, but it is most likely used
 couple thousand users, so a plugin API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
 
+There are two backends (rendering engines) which can be used with qutebrowser:
+
+\begin{itemize}
+  \item \emph{QtWebKit} which is based on the
+  WebKit\footnote{\url{https://www.webkit.org/}} project
+  \item \emph{QtWebEngine} which is based on the
+  Chromium\footnote{\url{https://www.chromium.org/}} project, which is also used
+  in Google Chrome (used as default).
+\end{itemize}
+
+In order to allow using either backend, qutebrowser provides an abstraction
+layer over the two libraries, implementing the adapter pattern
+\citep[p.~139ff]{gof}.
+
 % Problemstellung, Vision
 \section{Vision}
 
@@ -280,20 +294,50 @@ Unfortunately, WebExtensions are unsuitable for qutebrowser, for various
 reasons:
 
 \begin{itemize}
-  \item \fixme{todo}
+  \item Full WebExtension support would likely require some degree of support by
+    the underlying rendering engine. While there is an open
+    suggestion\footnote{\url{https://bugreports.qt.io/browse/QTBUG-61676}} in
+    Qt's bugtracker, no work on that has been started so far.
+  \item Implementing WebExtension support in Python only (without any support
+    from the underlying backend) is hard, if possible at all. Neither
+    backend allows deep access to its JavaScript engine
+    (V8\footnote{\url{https://v8.dev/}} for QtWebEngine, JavaScriptCore for
+    QtWebKit), which means extension code would have to run in a separate
+    JavaScript interpreter (such as Qt's
+    \verb|QJSEngine|\footnote{\url{http://doc.qt.io/qt-5/qjsengine.html}} class).
+    However, plugins should have access to web contents. Thus, a secure
+    communication channel is needed between the backend's JavaScript interpreter
+    (used for the page), and the separate interpreter used for plugins. In
+    addition, it should only be possible for extensions to access page content,
+    not the other way around, as that would be a security issue. All in all,
+    this approach is prohibitively complex, and thus out of scope for this SA.
+  \item Most qutebrowser users and contributors are accustomed to writing Python
+    code (since qutebrowser itself is written in Python). While a WebExtension
+    API (in JavaScript) would allow using thousands of existing Chrome extensions, a
+    Python API will make it easier for users to write custom additions to
+    qutebrowser to suit their needs.
+  \item The security model of WebExtensions is fundamentally different from
+    what's intended for qutebrowser plugins -- WebExtension code is sandboxed,
+    and unable to run arbitrary code on the user's machine. This can be worked
+around by using WebExtension's ``native
+    messaging''\footnote{\url{https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging}}
+    capability with a separate application running in the background, but doing
+    so is cumbersome. See \ref{security} for an explanation on the security
+    model of qutebrowser plugins.
+  \item The WebExtension API was not designed with the Qt APIs in mind, yet
+    qutebrowser is bound to using those. In some cases it might be possible to
+    write an adapter to bring the two approaches together; but if they are
+    fundamentally different, doing so might prove difficult. With a custom API,
+    there's more control over the tradeoff between an API which closely follows
+    Qt's (and thus reduces friction and complexity), or an API which prioritizes
+    other considerations (see \ref{criteria}).
 \end{itemize}
 
-\fixme{continue here}
-
-but it can
-be used as a source of inspiration. However, the WebExtension API is closely
-tied to the JavaScript language, so architecture decisions taken there will not
-necessarily be applicable to qutebrowser's Python plugin API.
-
-Unfortunately, this standard is unsuitable for qutebrowser, as further explained
-in this chapter.
-
-
+While it's not possible for qutebrowser to implement the WebExtension API
+directly, it's still useful as a source for API design inspiration. However, it
+should be noted that the WebExtension API is closely tied to the JavaScript
+language, so architecture decisions taken there will not necessarily be
+applicable to qutebrowser's Python plugin API.
 
 % Bestehende Lösungsansätze und Normen
 %\section{Existing APIs}
@@ -309,6 +353,8 @@ in this chapter.
 
 % Kriterien (Wie wird bewertet?)
 \section{Criteria}
+
+\label{criteria}
 
 There are various forces which affect design decisions for qutebrowser's plugin
 API:
