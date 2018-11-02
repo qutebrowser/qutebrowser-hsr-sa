@@ -98,7 +98,7 @@ long-standing feature
 request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
 which has often been requested by its users.
 
-It is difficult to estimate qutebrowser's user count, but it is likely used by a
+It is difficult to estimate qutebrowser's user count, but it is most likely used by a
 couple thousand users, so a plugin API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
 
@@ -121,7 +121,7 @@ developers to maintain their plugins independently from the core development.
 
 Initially, qutebrowser was developed without knowledge of proper software
 engineering practices, which resulted in some maintainability issues. While many
-of those issues have been fixed since, some still remain. Those
+of those issues have since been resolved, some still remain. Those
 refactorings affect the API exposed to plugins, and therefore should be taken
 care of before attempting to design a plugin API.
 
@@ -170,7 +170,7 @@ The software and version constraints are mostly given by the existing project:
 As qutebrowser is a pre-existing project with a vibrant community, external
 contributions are expected to continue (despite an
 announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html}}
-asking people to hold back bigger contributions). This can be challenging,
+asking people to refrain from making larger contributions). This can be challenging,
 as it results in refactorings being carried out against a moving target. Because
 of the nature of open-source contributions,
 % http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/
@@ -196,12 +196,12 @@ focus being this documentation and the work required for the plugin API.
 
 Older versions of the Firefox web browser used to have a very powerful plugin
 API, based on its XUL (XML User Interface Language) technology. However, this
-approach came with various issues and was thus recently abandoned, while
+approach presented various challenges and was thus recently abandoned, while
 adopting the WebExtensions standard.
 
 The apparent philosophy behind ``legacy'' Firefox addons was to allow maximum
 customizability from extensions -- however, this came with various drawbacks
-which ultimately lead to Mozilla abandoning that approach.
+which ultimately led to Mozilla abandoning that approach.
 
 The motivations to deprecate and subsequently remove the legacy addon API listed
 in Mozilla's blog post \citep{mozilla-webext} were as follows:
