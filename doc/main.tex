@@ -8,6 +8,9 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{minted}
+\usepackage{microtype}
+\usepackage{enumitem}
+\setlist{parsep=10pt}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
 \newcommand{\fixme}[1]{\textbf{FIXME} \emph{#1}}
@@ -359,7 +362,8 @@ applicable to qutebrowser's Python plugin API.
 There are various forces which affect design decisions for qutebrowser's plugin
 API:
 
-\paragraph{Qt APIs} qutebrowser is built on top of the QtWebEngine/QtWebKit
+\begin{description}
+\item[Qt APIs] qutebrowser is built on top of the QtWebEngine/QtWebKit
 rendering engines (which of the two to use is user-configurable). To some
 degree, the APIs exposed by those libraries also dictates how the API
 qutebrowser can expose to plugins can look. The API to get the selected text
@@ -371,24 +375,24 @@ Thus, the plugin API will need to look like
 in other words, the \py{selection} method will take a
 callback function, which then gets called with the selected text.
 
-\paragraph{Internal qutebrowser code} One of the main goals (as per the task
+\item[Internal qutebrowser code] One of the main goals (as per the task
 description) of this SA is moving code from qutebrowser's core into internal
 ``plugins'' shipped alongside qutebrowser. Components which use general-purpose
 APIs (like the adblocker, which needs to intercept network requests) can
 conveniently moved out of the core, and result in plugin APIs which are also
 usable for other purposes.
 
-\paragraph{Ideas for future plugins} While external plugins (contributed by the
+\item[Ideas for future plugins] While external plugins (contributed by the
 qutebrowser community) are not the primary focus of this SA, a lot of use-cases
 for plugins have been collected based on users' feature requests. Care should be
 taken so the plugin API can also satisfy those use cases in the future.
 
-\paragraph{Other plugin APIs} There is a general consensus from browser vendors
+\item[Other plugin APIs] There is a general consensus from browser vendors
 around the WebExtension plugin API. Unfortunately, that API is unsuitable for
 qutebrowser, for reasons explained in chapter \ref{unsuitable}. It can still
 serve as a source for inspiration.
 
-\paragraph{Python and Qt} While some higher-level architectural decisions are
+\item[Python and Qt] While some higher-level architectural decisions are
 independent from the programming language used to implement them, what is
 commonly considered a ``good'' API certainly depends on the underlying
 programming language and the idioms used therein. Since qutebrowser's plugin API
@@ -401,6 +405,7 @@ over inheritance to set up plugin hooks; or a Qt API might prefer Qt's
 signals/slots
 facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
 callback-based API.
+\begin{description}
 
 
 % Schlussfolgerungen, eigener Lösungsansatz
