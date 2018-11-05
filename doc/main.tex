@@ -342,6 +342,299 @@ should be noted that the WebExtension API is closely tied to the JavaScript
 language, so architecture decisions taken there will not necessarily be
 applicable to qutebrowser's Python plugin API.
 
+\subsection{Analysis of the WebExtension API}
+
+The WebExtensions API is separated into various modules, each of which is
+briefly analyzed in the context of qutebrowser in this section. The indented
+descriptions are copied verbatim from Mozilla's API
+documentation\footnote{\url{https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API}, accessed 2018-11-02}.
+
+\subsubsection{alarms}
+\begin{quote}
+Schedule code to run at a specific time in the future.
+\end{quote}
+
+Since qutebrowser extensions will have access to the Qt GUI library, no
+equivalent to this module is needed. Qt provides the
+\verb|QTimer|\footnote{\url{http://doc.qt.io/qt-5/qtimer.html}} class, which can
+be used for equivalent functionality.
+
+\subsubsection{bookmarks}
+\begin{quote}
+The WebExtensions bookmarks API lets an extension interact with and manipulate the browser's bookmarking system. You can use it to bookmark pages, retrieve existing bookmarks, and edit, remove, and organize bookmarks.
+\end{quote}
+
+Bookmarks in qutebrowser currently are much simpler than they are in Firefox or
+Chrome; i.e. they are not organized in a tree-like structure, and features like
+tags are missing. Therefore, the bookmarks WebExtension API doesn't fit well
+with qutebrowser bookmarks.
+
+There's an ongoing
+contribution\footnote{\url{https://github.com/qutebrowser/qutebrowser/pull/3855}}
+to add such features, and it would make little sense to add a plugin API before
+that contribution is merged. Since access to bookmarks isn't vital for a plugin
+API, it is currently out of scope.
+
+\subsubsection{browserAction, menus, pageAction}
+\begin{quote}
+browserAction: Adds a button to the browser's toolbar.
+\end{quote}
+\begin{quote}
+menus: Add items to the browser's menu system.
+\end{quote}
+\begin{quote}
+pageAction: A page action is a clickable icon inside the browser's address bar.
+\end{quote}
+
+Those modules allow extensions to add their own user interface elements to the
+browser, as shown in figure \ref{img:browser-action}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\linewidth]{img/browser-action.png}
+  \caption{A button added via the \texttt{browserAction} WebExtension API}
+  \label{img:browser-action}
+\end{figure}
+
+It should be able for custom qutebrowser extensions to add their own user
+interface elements. However, this functionality is unlikely to be needed
+when moving core functionality into plugins (which is the main focus of this
+SA). Therefore, this API is currently out of scope.
+
+\subsubsection{browserSettings}
+\begin{quote}
+Enables an extension to modify certain global browser settings.
+\end{quote}
+
+Extensions for qutebrowser should be able to modify its settings, and also
+define their own options.
+
+\subsubsection{browsingData}
+\begin{quote}
+Enables extensions to clear the data that is accumulated while the user is
+browsing.
+\end{quote}
+
+No such functionality is currently implemented in qutebrowser, so this API is
+out of scope.
+
+\subsubsection{clipboard}
+\begin{quote}
+The clipboard API enables an extension to copy items to the system clipboard.
+\end{quote}
+
+Since qutebrowser extensions will have access to the Qt GUI library, no
+equivalent to this module is needed. Qt provides the
+\verb|QClipboard|\footnote{\url{http://doc.qt.io/qt-5/qclipboard.html}} class, which can
+be used for equivalent functionality.
+
+\subsubsection{commands}
+\begin{quote}
+Listen for the user executing commands that you have registered using the commands manifest.json key.
+\end{quote}
+
+This API is used to register custom keyboard shortcuts in WebExtensions. A
+similar concept also exists in qutebrowser, where commands can either be bound
+to keys (using the configuration), or executed in the commandline via \verb|:command|.
+
+This API is important, since many core parts register commands in qutebrowser
+(like \verb|:adblock-update| for the ad blocker). Thus, Extensions should be
+able to register Python functions as commands.
+
+\subsubsection{contentScripts}
+\begin{quote}
+With the contentScripts API, an extension can register and unregister scripts at runtime.
+\end{quote}
+
+Injecting custom JavaScript code into websites will be an useful feature for
+custom plugins at a later stage, but isn't needed to move code out of
+qutebrowser's core, as it's expected for internal JavaScript code to stay in the
+core part. Thus, this module is currently out of scope.
+
+Running JavaScript one-off snippets (triggered manually, rather than
+automatically on page load) is already implemented in the tab API, and should be
+trivial to expose to plugins.
+
+\subsubsection{contextualIdentities, i18n, identity, idle, notifications, pkcs11}
+\begin{quote}
+contextualidentities: Work with contextual identities: list, create, remove, and update contextual identities.
+\end{quote}
+\begin{quote}
+i18n: Functions to internationalize your extension. You can use these APIs to get localized strings from locale files packaged with your extension, find out the browser's current language, and find out the value of its Accept-Language header.
+\end{quote}
+\begin{quote}
+identity: Use the identity API to get an OAuth2 authorization code or access token, which an extension can then use to access user data from a service which supports OAuth2 access (such as a Google or a Facebook account).
+\end{quote}
+\begin{quote}
+idle: Find out when the user's system is idle, locked, or active.
+\end{quote}
+\begin{quote}
+notifications: Display notifications to the user, using the underlying operating system's notification mechanism.
+\end{quote}
+\begin{quote}
+pkcs11: The pkcs11 API enables an extension to enumerate PKCS #11 security modules, and to make them accessible to the browser as sources of keys and certificates.
+\end{quote}
+
+No such functionality is currently implemented in qutebrowser, so those modules
+are out of scope.
+
+\subsubsection{cookies}
+\begin{quote}
+Enables extensions to get and set cookies, and be notified when they change.
+\end{quote}
+
+Cookie access isn't fully exposed by the QtWebEngine
+library\footnote{\url{http://doc.qt.io/qt-5/qwebenginecookiestore.html}}, so
+it's currently not possible to implement this module.
+
+\subsubsection{devtools}
+\begin{quote}
+The devtools.inspectedWindow API lets a devtools extension interact with the window that the developer tools are attached to.
+\end{quote}
+
+\begin{quote}
+The devtools.network API lets a devtools extension get information about network requests associated with the window that the devtools are attached to (the inspected window).
+\end{quote}
+
+\begin{quote}
+The devtools.panels API lets a devtools extension define its user interface inside the devtools window.
+\end{quote}
+
+Access to developer tools isn't exposed by the QtWebEngine library, so it's
+currently not possible to implement this module.
+
+\subsubsection{dns}
+\begin{quote}
+Enables an extension to resolve domain names.
+\end{quote}
+
+Since qutebrowser extensions will have access to the Qt GUI library, no
+equivalent to this module is needed. Qt provides the
+\verb|QDnsLookup|\footnote{\url{http://doc.qt.io/qt-5/qdnslookup.html}} class, which can
+be used for equivalent functionality.
+
+\subsubsection{downloads}
+\begin{quote}
+Enables extensions to interact with the browser's download manager. You can use this API module to download files, cancel, pause, resume downloads, and show downloaded files in the file manager.
+\end{quote}
+
+This module is needed for various core parts (such as the ad blocker, to
+download filter lists).
+
+\subsubsection{events, extensions, extensionTypes, permissions}
+\begin{quote}
+events: Common types used by APIs that dispatch events.
+\end{quote}
+\begin{quote}
+extensions: Utilities related to your extension. Get URLs to resources packages with your extension, get the Window object for your extension's pages, get the values for various settings. Note that the messaging APIs in this module are deprecated in favor of the equivalent APIs in the runtime module.
+\end{quote}
+\begin{quote}
+extensionTypes: Some common types used in other WebExtension APIs.
+\end{quote}
+\begin{quote}
+permissions: Extensions need permissions to access more powerful WebExtension APIs. They can ask for permissions at install time, by including the permissions they need in the permissions manifest.json key. The main advantages of asking for permissions at install time are:
+\end{quote}
+
+Those APIs are specific to the WebExtensions API, and thus irrelevant for
+qutebrowser.
+
+\subsubsection{find}
+\begin{quote}
+Finds text in a web page, and highlights matches.
+\end{quote}
+
+This functionality is already available as part of the \emph{tab API}, and
+should be trivial to expose to plugins.
+
+\fixme{define ``tab api''}
+
+\subsubsection{history}
+\begin{quote}
+Use the history API to interact with the browser history.
+\end{quote}
+
+Accessing and manipulating the history might be an useful feature for future
+user-contributed plugins, but is likely not needed for moving code out of
+qutebrowser's core. Thus, the history module is currently out of scope.
+
+\subsubsection{management}
+\begin{quote}
+Get information about installed add-ons.
+\end{quote}
+
+Extensions are currently not expected to interact with each other (even less so
+when moving code out of the core), so this module is not needed.
+
+\subsubsection{omnibox}
+\begin{quote}
+Enables extensions to implement customised behavior when the user types into the
+browser's address bar.
+\end{quote}
+
+When adding custom commands, extensions also should be able to specify a
+completion function, so users can use qutebrowser's autocompletion when typing
+the extension's commands.
+
+\subsubsection{privacy}
+\begin{quote}
+Access and modify various privacy-related browser settings.
+\end{quote}
+
+\fixme{continue here!}
+
+\subsubsection{proxy}
+\begin{quote}
+Use the proxy API to proxy web requests. There are two different ways you can do this:
+\end{quote}
+\subsubsection{runtime}
+\begin{quote}
+This module provides information about your extension and the environment it's running in.
+\end{quote}
+\subsubsection{search}
+\begin{quote}
+Retrieves search engines and executes a search with a specific search engine.
+\end{quote}
+\subsubsection{sessions}
+\begin{quote}
+Use the sessions API to list, and restore, tabs and windows that have been closed while the browser has been running.
+\end{quote}
+\subsubsection{sidebarAction}
+\begin{quote}
+Gets and sets properties of an extension's sidebar.
+\end{quote}
+\subsubsection{storage}
+\begin{quote}
+Enables extensions to store and retrieve data, and listen for changes to stored items.
+\end{quote}
+\subsubsection{tabs}
+\begin{quote}
+Interact with the browser's tab system.
+\end{quote}
+\subsubsection{theme}
+\begin{quote}
+Enables browser extensions to update the browser theme.
+\end{quote}
+\subsubsection{topSites}
+\begin{quote}
+Use the topSites API to get an array containing pages that the user has visited often and frequently.
+\end{quote}
+\subsubsection{types}
+\begin{quote}
+Defines the BrowserSetting type, which is used to represent a browser setting.
+\end{quote}
+\subsubsection{webNavigation}
+\begin{quote}
+Add event listeners for the various stages of a navigation. A navigation consists of a frame in the browser transitioning from one URL to another, usually (but not always) in response to a user action like clicking a link or entering a URL in the location bar.
+\end{quote}
+\subsubsection{webRequest}
+\begin{quote}
+Add event listeners for the various stages of making an HTTP request. The event listener receives detailed information about the request, and can modify or cancel the request.
+\end{quote}
+\subsubsection{windows}
+\begin{quote}
+Interact with browser windows. You can use this API to get information about open windows and to open, modify, and close windows. You can also listen for window open, close, and activate events.
+\end{quote}
+
 % Bestehende Lösungsansätze und Normen
 %\section{Existing APIs}
 
@@ -405,7 +698,7 @@ over inheritance to set up plugin hooks; or a Qt API might prefer Qt's
 signals/slots
 facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
 callback-based API.
-\begin{description}
+\end{description}
 
 
 % Schlussfolgerungen, eigener Lösungsansatz
