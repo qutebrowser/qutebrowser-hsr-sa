@@ -349,6 +349,10 @@ briefly analyzed in the context of qutebrowser in this section. The indented
 descriptions are copied verbatim from Mozilla's API
 documentation\footnote{\url{https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API}, accessed 2018-11-02}.
 
+\fixme{Sort properly}
+
+\fixme{DOM access? Content vs. background script?}
+
 \subsubsection{alarms}
 \begin{quote}
 Schedule code to run at a specific time in the future.
@@ -375,7 +379,7 @@ to add such features, and it would make little sense to add a plugin API before
 that contribution is merged. Since access to bookmarks isn't vital for a plugin
 API, it is currently out of scope.
 
-\subsubsection{browserAction, menus, pageAction}
+\subsubsection{browserAction, menus, pageAction, sidebarAction}
 \begin{quote}
 browserAction: Adds a button to the browser's toolbar.
 \end{quote}
@@ -384,6 +388,9 @@ menus: Add items to the browser's menu system.
 \end{quote}
 \begin{quote}
 pageAction: A page action is a clickable icon inside the browser's address bar.
+\end{quote}
+\begin{quote}
+sidebarAction: Gets and sets properties of an extension's sidebar.
 \end{quote}
 
 Those modules allow extensions to add their own user interface elements to the
@@ -455,7 +462,7 @@ Running JavaScript one-off snippets (triggered manually, rather than
 automatically on page load) is already implemented in the tab API, and should be
 trivial to expose to plugins.
 
-\subsubsection{contextualIdentities, i18n, identity, idle, notifications, pkcs11}
+\subsubsection{contextualIdentities, i18n, identity, idle, notifications, pkcs11, topSites}
 \begin{quote}
 contextualidentities: Work with contextual identities: list, create, remove, and update contextual identities.
 \end{quote}
@@ -472,7 +479,10 @@ idle: Find out when the user's system is idle, locked, or active.
 notifications: Display notifications to the user, using the underlying operating system's notification mechanism.
 \end{quote}
 \begin{quote}
-pkcs11: The pkcs11 API enables an extension to enumerate PKCS #11 security modules, and to make them accessible to the browser as sources of keys and certificates.
+pkcs11: The pkcs11 API enables an extension to enumerate PKCS\#11 security modules, and to make them accessible to the browser as sources of keys and certificates.
+\end{quote}
+\begin{quote}
+topSites: Use the topSites API to get an array containing pages that the user has visited often and frequently.
 \end{quote}
 
 No such functionality is currently implemented in qutebrowser, so those modules
@@ -521,7 +531,7 @@ Enables extensions to interact with the browser's download manager. You can use 
 This module is needed for various core parts (such as the ad blocker, to
 download filter lists).
 
-\subsubsection{events, extensions, extensionTypes, permissions}
+\subsubsection{events, extensions, extensionTypes, permissions, runtime, types}
 \begin{quote}
 events: Common types used by APIs that dispatch events.
 \end{quote}
@@ -533,6 +543,12 @@ extensionTypes: Some common types used in other WebExtension APIs.
 \end{quote}
 \begin{quote}
 permissions: Extensions need permissions to access more powerful WebExtension APIs. They can ask for permissions at install time, by including the permissions they need in the permissions manifest.json key. The main advantages of asking for permissions at install time are:
+\end{quote}
+\begin{quote}
+runtime: This module provides information about your extension and the environment it's running in.
+\end{quote}
+\begin{quote}
+types: Defines the BrowserSetting type, which is used to represent a browser setting.
 \end{quote}
 
 Those APIs are specific to the WebExtensions API, and thus irrelevant for
@@ -580,60 +596,85 @@ the extension's commands.
 Access and modify various privacy-related browser settings.
 \end{quote}
 
-\fixme{continue here!}
+In qutebrowser, those settings (like
+\verb|privacy.network.webRTCIPHandlingPolicy|) are exposed as normal qutebrowser
+setttings (like \verb|content.webrtc_ip_handling_policy|), so there's no need
+for a similar module in the plugin API.
 
 \subsubsection{proxy}
 \begin{quote}
 Use the proxy API to proxy web requests. There are two different ways you can do this:
 \end{quote}
-\subsubsection{runtime}
-\begin{quote}
-This module provides information about your extension and the environment it's running in.
-\end{quote}
+
+No low-level networking access is possible via the QtWebEngine API, so this
+module will not be implemented.
+
 \subsubsection{search}
 \begin{quote}
 Retrieves search engines and executes a search with a specific search engine.
 \end{quote}
+
+Search engines are part of the main configuration in qutebrowser, so an
+extension can trivially retrieve a search engine from there and execute a query
+without the need for a dedicated API.
+
 \subsubsection{sessions}
 \begin{quote}
 Use the sessions API to list, and restore, tabs and windows that have been closed while the browser has been running.
 \end{quote}
-\subsubsection{sidebarAction}
-\begin{quote}
-Gets and sets properties of an extension's sidebar.
-\end{quote}
+
+While qutebrowser does have a session feature, access to it is not vital for a
+plugin API, so this is currently out of scope.
+
 \subsubsection{storage}
 \begin{quote}
 Enables extensions to store and retrieve data, and listen for changes to stored items.
 \end{quote}
-\subsubsection{tabs}
+
+Having a simple way to persist data for extensions will be an useful feature for
+third-party extensions, but is currently not needed when moving code out of the core.
+
+\subsubsection{tabs, windows}
 \begin{quote}
-Interact with the browser's tab system.
+tabs: Interact with the browser's tab system.
 \end{quote}
+\begin{quote}
+windows: Interact with browser windows. You can use this API to get information about open windows and to open, modify, and close windows. You can also listen for window open, close, and activate events.
+\end{quote}
+
+Various functionality already exists in qutebrowser as part of the ``tab API'',
+which should be trivial to expose to the plugin API. Furthermore, the
+\verb|tabs| and \verb|windows| modules contains various functionality to
+retrieve tabs, which should be added to qutebrowser's plugin API.
+
 \subsubsection{theme}
 \begin{quote}
 Enables browser extensions to update the browser theme.
 \end{quote}
-\subsubsection{topSites}
-\begin{quote}
-Use the topSites API to get an array containing pages that the user has visited often and frequently.
-\end{quote}
-\subsubsection{types}
-\begin{quote}
-Defines the BrowserSetting type, which is used to represent a browser setting.
-\end{quote}
+
+No dedicated theme feature exists in qutebrowser - instead, qutebrowser's user
+interface can be customized using its configuration.
+
 \subsubsection{webNavigation}
 \begin{quote}
 Add event listeners for the various stages of a navigation. A navigation consists of a frame in the browser transitioning from one URL to another, usually (but not always) in response to a user action like clicking a link or entering a URL in the location bar.
 \end{quote}
+
+This exposes various events such as \verb|webNavigation.onCompleted|. Those will
+be exposed as part of the tab API in qutebrowser, as Qt signals such as \verb|load_finished|.
+
 \subsubsection{webRequest}
 \begin{quote}
 Add event listeners for the various stages of making an HTTP request. The event listener receives detailed information about the request, and can modify or cancel the request.
 \end{quote}
-\subsubsection{windows}
-\begin{quote}
-Interact with browser windows. You can use this API to get information about open windows and to open, modify, and close windows. You can also listen for window open, close, and activate events.
-\end{quote}
+
+The \verb|webRequest| module allows extensions to intercept and change HTTP
+network requests. Many of the fine-grained modifications exposed by
+WebExtensions (such as \verb|onResponseStarted| to modify the network response)
+are not available in the QtWebEngine API, so exposing them in qutebrowser's API
+won't be possible. However, it's possible to intercept and block network
+requests, and such functionality is critical to move components like the ad
+blocker out from the core.
 
 % Bestehende Lösungsansätze und Normen
 %\section{Existing APIs}
