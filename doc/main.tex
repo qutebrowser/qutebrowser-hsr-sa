@@ -10,6 +10,8 @@
 \usepackage{minted}
 \usepackage{microtype}
 \usepackage{enumitem}
+\usepackage{pgfgantt}
+\usepackage{tabulary}
 \setlist{parsep=10pt}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
@@ -977,13 +979,98 @@ This project will benefit from his work, as Sphinx, unlike asciidoc, is a
 very good fit for documenting APIs. His work is clearly marked as such in this
 documentation.
 
-% Aufwandschätzung, Zeitplan, Projektplan
-\section{Project Schedule}
-% Risiken
-\section{Risks}
 % Prozessmodel
 \section{Process Model}
+\fixme{Move this before ``Project Schedule''?}
 
+Because of previous experience as part of HSR's ``Engineering Project'', the
+``Scrum+'' process model will be used, i.e., an agile Scrum process with an
+additional ``End of Elaboration'' milestone.
+
+At the beginning of the SA, there was a phase with the goal of merging existing
+third-party contributions (pull requests) into qutebrowser, so that the changes
+required for extensions don't conflict with existing work. Thus, an additional
+\emph{preparation} phase has been introduced, resulting in the following phases:
+
+Inception, Preparation, Elaboration, Construction, Transition
+
+% Aufwandschätzung, Zeitplan, Projektplan
+\section{Project Schedule}
+\strut
+\begin{figure}[h!]
+\begin{ganttchart}[
+      title height = 1,
+      y unit title=.5cm,
+      y unit chart=.5cm,
+      bar/.append style={fill=green!20},
+      vgrid={
+        *1{blue!60},
+        *4{gray, dashed},
+        *1{blue!60},
+        *2{gray, dashed},
+        *1{blue!60},
+        *2{gray, dashed},
+        *1{gray, dashed}
+      }]{1}{14}
+  \gantttitle{\hspace{-6.5em}\footnotesize{Calendar week}}{0}{0}
+  \gantttitlelist{38,...,51}{1} \\
+  \gantttitle{\hspace{-6.5em}\footnotesize{Semester week}}{0}{0}
+  \gantttitlelist{1,...,14}{1} \\
+
+  \ganttgroup{Inception}{1}{1} \\
+  \ganttmilestone{M0: Kickoff}{1} \\
+
+  \ganttgroup{Preparation}{2}{6} \\
+  \ganttbar{Qt 5.12 release}{2}{2} \\
+  \ganttbar{Merge contributions}{3}{5} \\
+  \ganttbar{Buffer}{6}{6} \\
+
+  \ganttmilestone{M1: Most contributions addressed}{6} \\
+
+  \ganttgroup{Elaboration}{7}{9} \\
+  \ganttbar{Existing approaches}{7}{7} \\
+  \ganttbar{Project documentation}{8}{8} \\
+  \ganttbar{API design}{9}{9} \\
+
+  \ganttgroup{Construction}{10}{13} \\
+  \ganttbar{Introducing MyPy}{10}{10} \\
+  \ganttbar{Adding extension API}{11}{12} \\
+  \ganttmilestone{M2: API review}{11} \\
+  \ganttbar{Refactoring core into extensions}{11}{12} \\
+  \ganttbar{Buffer}{13}{13} \\
+
+  \ganttgroup{Transition}{14}{14} \\
+  \ganttbar{Finishing documentation}{14}{14} \\
+
+  \ganttmilestone{M3: Project end}{14}
+\end{ganttchart}
+
+\caption{Project schedule}
+\end{figure}
+
+% Risiken
+\section{Risks}
+The following risks have been identified in this project:
+
+\begin{table}[h!]
+  \begin{tabulary}{\linewidth}{LLl}
+    \toprule
+    Risk & Mitigation & Probability (1-6) \\
+    \midrule
+    Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions & 6 \\
+    \hline
+    Not enough time in construction phase & Work on extension API is very
+    scalable & 5 \\
+    \hline
+    Future breaking API changes needed & API is not exposed for third-party
+    contributions yet & 4 \\
+    \hline
+    Migrating documentation toolchain to Sphinx (done by external contributor)
+    is not done in time & Initial plugin API documentation can be separate from
+    qutebrowser documentation & 3 \\
+    \bottomrule
+  \end{tabulary}
+\end{table}
 
 % Projektmonitoring (Ist-Beschreibung, so ist es passiert)
 \chapter{Project Monitoring}
@@ -1003,8 +1090,7 @@ documentation.
 
 \chapter{Glossary and Abbreviations}
 
-Test \citep{yapproach}
-
+\nocite{yapproach}
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \bibliographystyle{IEEEtranN}
 \bibliography{bibliography}
