@@ -12,6 +12,7 @@
 \usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
+
 \setlist{parsep=10pt}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
@@ -95,7 +96,9 @@ Date: {\today}
   second paragraph. Maybe define web browser. Also define Python/PyQt. List
 alternatives.}
 
-The qutebrowser project exists since December 2013. It is a keyboard-focused
+\fixme{``has existed'' sounds like it doesn't anymore?}
+
+The qutebrowser project has existed since December 2013. It is a keyboard-focused
 web browser with a minimal GUI, based on Python and PyQt5.
 
 A plugin API for users to write their own extensions to qutebrowser is a
@@ -289,11 +292,14 @@ plugins.
 
 Currently, there are ongoing efforts towards an API for browser
 extensions called \emph{WebExtensions}, which is shared between different
-browsers. Mostly compatible subsets of it are supported by Chrome, Opera,
-Firefox and Edge. Efforts are currently underway to standardize the API
-as a W3C specification \citep{w3c-webext}.
+browsers. WebExtensions are supported by Chrome, Opera, Firefox and Edge.
+Efforts are currently underway to standardize the API as a W3C specification
+\citep{w3c-webext}. At the moment, each browser has a slightly different set of
+supported APIs, with some divergence in naming. As an example, the
+\verb|chrome.| module is used in Chromium for browser-specific features, while
+Firefox uses \verb|browser.|.
 
-If qutebrowser would support the WebExtension API, it would follow a common
+If qutebrowser supported the WebExtension API, it would follow a common
 standard, and enable running thousands of existing Chromium extensions with
 little to no adjustment to their code.
 
@@ -340,8 +346,8 @@ around by using WebExtension's ``native
     other considerations (see \ref{criteria}).
 \end{itemize}
 
-While it's not possible for qutebrowser to implement the WebExtension API
-directly, it's still useful as a source for API design inspiration. However, it
+While it is not possible for qutebrowser to implement support for WebExtensions,
+they are still useful as a source for API design inspiration. However, it
 should be noted that the WebExtension API is closely tied to the JavaScript
 language, so architecture decisions taken there will not necessarily be
 applicable to qutebrowser's Python plugin API.
