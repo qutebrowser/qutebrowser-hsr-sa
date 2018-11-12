@@ -12,6 +12,10 @@
 \usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
+% http://wiki.luatex.org/index.php/Attributes
+% conflicts with \attribute from pgf-umlcd
+\let\attribute\relax
+\usepackage{pgf-umlcd}
 
 \setlist{parsep=10pt}
 
@@ -110,6 +114,7 @@ It is difficult to estimate qutebrowser's user count, but it is most likely used
 couple thousand users, so a plugin API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
 
+\label{backends}
 There are two backends (rendering engines) which can be used with qutebrowser:
 
 \begin{itemize}
@@ -122,7 +127,8 @@ There are two backends (rendering engines) which can be used with qutebrowser:
 
 In order to allow using either backend, qutebrowser provides an abstraction
 layer over the two libraries, implementing the adapter pattern
-\citep[p.~139ff]{gof}.
+\citep[p.~139ff]{gof}. This abstraction layer is referred to as ``tab API'', and
+documented in section \ref{tabapi}.
 
 % Problemstellung, Vision
 \section{Vision}
@@ -607,10 +613,8 @@ qutebrowser.
 Finds text in a web page, and highlights matches.
 \end{quote}
 
-This functionality is already available as part of the \emph{tab API}, and
-should be trivial to expose to plugins.
-
-\fixme{define ``tab api''}
+This functionality is already available as part of qutebrowser's tab API (see
+section \ref{tabapi}), and should be trivial to expose to plugins.
 
 \subsubsection{history}
 \begin{quote}
@@ -690,10 +694,11 @@ tabs: Interact with the browser's tab system.
 windows: Interact with browser windows. You can use this API to get information about open windows and to open, modify, and close windows. You can also listen for window open, close, and activate events.
 \end{quote}
 
-Various functionality already exists in qutebrowser as part of the ``tab API'',
-which should be trivial to expose to the plugin API. Furthermore, the
-\verb|tabs| and \verb|windows| modules contains various functionality to
-retrieve tabs, which should be added to qutebrowser's plugin API.
+Various functionality already exists in qutebrowser as part of the ``tab API''
+(documented in section \ref{tabapi}), which should be trivial to expose to the
+plugin API. Furthermore, the \verb|tabs| and \verb|windows| modules contains
+various functionality to retrieve tabs, which should be added to qutebrowser's
+plugin API.
 
 \subsubsection{theme}
 \begin{quote}
@@ -723,6 +728,147 @@ are not available in the QtWebEngine API, so exposing them in qutebrowser's API
 won't be possible. However, it's possible to intercept and block network
 requests, and such functionality is critical to move components like the ad
 blocker out from the core.
+
+\section{qutebrowser tab API}
+\label{tabapi}
+
+As explained in section \ref{backends}, qutebrowser supports two rendering
+engines (QtWebKit and QtWebEngine) and provides an abstraction layer (``tab
+API'') over those backends, representing a single tab in the browser.
+
+The tab API has been designed with clean API design in mind, as an extension API
+already was on the horizon when implementing it. Its goal is that the rest of
+qutebrowser's code never has to access backend-specific functionality (like the
+\verb|QWebEngineView|\footnote{\url{https://doc.qt.io/qt-5/qwebengineview.html}}
+class) directly, and uses the abstraction layer instead.
+
+The tab API is grouped into various objects:
+
+\begin{figure}[h]
+\begin{tikzpicture}
+  \begin{class}[text width=2cm]{Tab}{6,2}
+  \end{class}
+
+  \begin{class}[text width=2cm]{Audio}{0,0}
+  \end{class}
+  \association{Tab}{}{}{Audio}{}{}
+
+  \begin{class}[text width=2cm]{Elements}{1.5,4.5}
+  \end{class}
+  \association{Tab}{}{}{Elements}{}{}
+
+  \begin{class}[text width=2cm]{History}{3,0}
+  \end{class}
+  \association{Tab}{}{}{History}{}{}
+
+  \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
+  \end{class}
+  \association{Tab}{}{}{Scroller}{}{}
+
+  \begin{class}[text width=2cm]{Caret}{6,0}
+  \end{class}
+  \association{Tab}{}{}{Caret}{}{}
+
+  \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
+  \end{class}
+  \association{Tab}{}{}{Zoom}{}{}
+
+  \begin{class}[text width=2cm]{Search}{9,0}
+  \end{class}
+  \association{Tab}{}{}{Search}{}{}
+
+  \begin{class}[text width=2cm]{Printing}{10.5,4.5}
+  \end{class}
+  \association{Tab}{}{}{Printing}{}{}
+
+  \begin{class}[text width=2cm]{Action}{12,0}
+  \end{class}
+  \association{Tab}{}{}{Action}{}{}
+
+  \begin{class}[text width=2cm]{TabData}{10,2}
+  \end{class}
+  \association{Tab}{}{}{TabData}{}{}
+\end{tikzpicture}
+\caption{Object diagram for tab API}
+\end{figure}
+
+With the exception of \verb|TabData| which is backend-agnostic, all those
+objects exist as an abstract base class and as concrete implementations for
+QtWebKit/QtWebEngine each:
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}
+  \begin{class}[text width=3cm]{AbstractTab}{2,0}
+  \end{class}
+
+  \begin{class}[text width=3cm]{WebKitTab}{0,-2}
+    \inherit{AbstractTab}
+  \end{class}
+
+  \begin{class}[text width=3cm]{WebEngineTab}{4,-2}
+    \inherit{AbstractTab}
+  \end{class}
+\end{tikzpicture}
+\end{center}
+\caption{Inheritance tree of tab API classes}
+\end{figure}
+
+The API exposed by those objects is quite long, so it's not included in full in
+this documentation.\footnote{The full API is available at
+  \url{https://github.com/qutebrowser/qutebrowser/blob/v1.5.2/qutebrowser/browser/browsertab.py},
+accessed 2018-11-09.} As an example, the public API exposed in the main
+\verb|Tab| object is listed in figure \ref{tabapi}.
+
+Some parts of the API (like the \verb|networkaccessmanager()| or
+\verb|user_agent()| methods) are only exposed because there was a need in
+qutebrowser's core to do so, but shouldn't be exposed via the extension API.
+However, for the most part, the tab API can be exposed unmodified to plugins and
+already allow for a wide range of interactions with tabs.
+
+\begin{figure}
+\begin{minted}{python}
+window_close_requested = pyqtSignal()
+link_hovered = pyqtSignal(str)
+load_started = pyqtSignal()
+load_progress = pyqtSignal(int)
+load_finished = pyqtSignal(bool)
+icon_changed = pyqtSignal(QIcon)
+title_changed = pyqtSignal(str)
+load_status_changed = pyqtSignal(str)
+new_tab_requested = pyqtSignal(QUrl)
+url_changed = pyqtSignal(QUrl)
+shutting_down = pyqtSignal()
+contents_size_changed = pyqtSignal(QSizeF)
+add_history_item = pyqtSignal(QUrl, QUrl, str)
+fullscreen_requested = pyqtSignal(bool)
+renderer_process_terminated = pyqtSignal(TerminationStatus, int)
+predicted_navigation = pyqtSignal(QUrl)
+
+def event_target() -> QWidget
+def progress() -> int
+def load_status() -> LoadStatus
+def title() -> str
+def icon() -> QIcon
+def networkaccessmanager() -> QNetworkAccessManager
+def user_agent() -> str
+
+def send_event(evt: QEvent)
+def handle_auto_insert_mode(ok: bool)
+def url(requested: bool) -> QUrl
+def openurl(url: QUrl, predict: bool)
+def reload(force: bool)
+def stop()
+def clear_ssl_errors()
+def key_press(key: Qt.Key, modifier: Qt.KeyboardModifier)
+def dump_async(callback: Callable, plain: bool)
+def run_js_async(code: str, callback: Callable, world: JsWorld)
+def shutdown()
+def set_html(html: str, base_url: QUrl)
+\end{minted}
+  \caption{Main tab API}
+  \label{tabapi}
+\end{figure}
 
 % Bestehende Lösungsansätze und Normen
 %\section{Existing APIs}
