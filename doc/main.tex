@@ -223,9 +223,9 @@ focus being this documentation and the work required for the plugin API.
 
 \fixme{}: Introductory text here?
 
-\section{Firefox XUL plugins}
+\section{Firefox XUL extension API}
 
-Older versions of the Firefox web browser used to have a very powerful plugin
+Older versions of the Firefox web browser used to have a very powerful extension
 API, based on its XUL (XML User Interface Language) technology. However, this
 approach presented various challenges and was thus recently abandoned, while
 adopting the WebExtensions standard.
@@ -296,7 +296,7 @@ The key takeaway for qutebrowser is that it should have a minimal and clearly
 outlined plugin API, rather than naively exposing its internal Python code to
 plugins.
 
-\section{WebExtensions}
+\section{WebExtensions API}
 
 Currently, there are ongoing efforts towards an API for browser
 extensions called \emph{WebExtensions}, which is shared between different
@@ -794,6 +794,8 @@ The tab API is grouped into various objects:
 \caption{Object diagram for tab API}
 \end{figure}
 
+\fixme{use filled diamond for composition}
+
 With the exception of \verb|TabData| which is backend-agnostic, all those
 objects exist as an abstract base class and as concrete implementations for
 QtWebKit/QtWebEngine each:
@@ -868,7 +870,7 @@ def run_js_async(code: str, callback: Callable, world: JsWorld)
 def shutdown()
 def set_html(html: str, base_url: QUrl)
 \end{minted}
-  \caption{Main tab API}
+  \caption{Existing main tab API}
   \label{tabapi}
 \end{figure}
 
@@ -877,6 +879,7 @@ Various other existing projects served as an inspiration for qutebrowser's
 plugin API:
 
 \begin{itemize}
+  \item \fixme{Add simplicity details for pytest}
   \item The pytest project\footnote{\url{https://www.pytest.org/}} exposes a
     very simple and ``pythonic'' plugin API. All that's needed to create a
     plugin is a specially named Python file which implements hook functions such
@@ -965,6 +968,7 @@ callback-based API.
 \section{Security}
 \label{security}
 
+\fixme{What about incognito tabs}
 
 
 
@@ -1026,6 +1030,7 @@ behind this project.
 % Anforderung an die Arbeit
 \section{Project Requirements}
 \fixme{How is this different from \ref{goals}?}
+\fixme{okay to remove}
 
 As described in section \ref{goals}, the main goal of this project is adding a
 well designed API for extensions to qutebrowser, and at the same time improving
@@ -1035,7 +1040,6 @@ introducing tools such as the MyPy type checker.
 
 % Use Cases (Success Scenario / Success Diagram)
 \section{Use Cases}
-\fixme{Would an use case diagram make sense?}
 
 This project extends an existing codebase with an extension API rather
 than starting a new project from scratch. By its nature, it's difficult to
@@ -1082,6 +1086,7 @@ extension API:
     plugin API should abstract over those differences, so a plugin written for
     qutebrowser (or core code moved into such a plugin) runs in all situations
     qutebrowser itself can run.
+  \item[Performance] \fixme{Add something about performance vs. small core}
 \end{description}
 
 % Detailspezifikation
@@ -1292,6 +1297,8 @@ third-party changes which would lead to conflicts with refactoring changes.
 % Risiken
 \section{Risks}
 The following risks have been identified in this project:
+
+\fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
 
 \begin{table}[h!]
   \begin{tabulary}{\linewidth}{LLL}
