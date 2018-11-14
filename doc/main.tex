@@ -105,13 +105,13 @@ alternatives.}
 The qutebrowser project has existed since December 2013. It is a keyboard-focused
 web browser with a minimal GUI, based on Python and PyQt5.
 
-A plugin API for users to write their own extensions to qutebrowser is a
+An extension API for users to write their own extensions to qutebrowser is a
 long-standing feature
 request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
 which has often been requested by its users.
 
 It is difficult to estimate qutebrowser's user count, but it is most likely used by a
-couple thousand users, so a plugin API is also vital in order to be able to move
+couple thousand users, so an extension API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
 
 \label{backends}
@@ -138,12 +138,12 @@ documented in section \ref{tabapi}.
 
 Many qutebrowser users are power-users and, as such, have very specific (and
 sometimes unique) feature requests and workflows. It should be made possible for
-those users to extend qutebrowser with custom plugins in an easy way, in order
+those users to extend qutebrowser with custom extensions in an easy way, in order
 to keep qutebrowser's core small.
 
 Since qutebrowser already has a thriving community, this change also intends to
 decentralize development efforts, as it enables power-users and
-developers to maintain their plugins independently from the core development.
+developers to maintain their extensions independently from the core development.
 
 % Ziele und Unterziele
 \section{Goals}
@@ -152,8 +152,8 @@ developers to maintain their plugins independently from the core development.
 Initially, qutebrowser was developed without knowledge of proper software
 engineering practices, which resulted in some maintainability issues. While many
 of those issues have since been resolved, some still remain. Those
-refactorings affect the API exposed to plugins, and therefore should be taken
-care of before attempting to design a plugin API.
+refactorings affect the API exposed to extensions, and therefore should be taken
+care of before attempting to design a extension API.
 
 The full list of relevant refactorings is tracked as a Kanban
 board\footnote{\url{https://github.com/qutebrowser/qutebrowser/projects/3}} in
@@ -166,7 +166,7 @@ qutebrowser's GitHub repository. The biggest planned changes are the following:
     checker such as mypy\footnote{\url{http://mypy-lang.org/}} is currently run
     as part of qutebrowser's continuous integration (CI) pipeline, thus allowing
     regressions to occur. As part of this project, a type checker should be
-    introduced into the CI infrastructure, and any code exposed via the plugin
+    introduced into the CI infrastructure, and any code exposed via the extension
     API should be annotated with proper type annotations.
   \item \url{https://github.com/qutebrowser/qutebrowser/issues/345}: \\
     To generate HTML documentation, qutebrowser currently uses
@@ -210,7 +210,7 @@ it is hard to foresee or control which areas external contributors are changing.
 At the beginning of the SA, some time was allocated for merging external
 contributions (pull requests) which were already open. For the rest of the SA,
 such contributions will be dealt with on a best effort basis, with the main
-focus being this documentation and the work required for the plugin API.
+focus being this documentation and the work required for the extension API.
 
 % Vorgehen, Aufbau der Arbeit
 \section{Methods and Structure}
@@ -293,8 +293,8 @@ bad documentation was one of the criticisms of XUL addons
 into Firefox' core code deeply, no further analysis was performed.
 
 The key takeaway for qutebrowser is that it should have a minimal and clearly
-outlined plugin API, rather than naively exposing its internal Python code to
-plugins.
+outlined extension API, rather than naively exposing its internal Python code to
+extensions.
 
 \section{WebExtensions API}
 
@@ -326,9 +326,9 @@ reasons:
     QtWebKit), which means extension code would have to run in a separate
     JavaScript interpreter (such as Qt's
     \verb|QJSEngine|\footnote{\url{http://doc.qt.io/qt-5/qjsengine.html}} class).
-    However, plugins should have access to web contents. Thus, a secure
+    However, extensions should have access to web contents. Thus, a secure
     communication channel is needed between the backend's JavaScript interpreter
-    (used for the page), and the separate interpreter used for plugins. In
+    (used for the page), and the separate interpreter used for extensions. In
     addition, it should only be possible for extensions to access page content,
     not the other way around, as that would be a security issue. All in all,
     this approach is prohibitively complex, and thus out of scope for this SA.
@@ -338,13 +338,13 @@ reasons:
     Python API will make it easier for users to write custom additions to
     qutebrowser to suit their needs.
   \item The security model of WebExtensions is fundamentally different from
-    what's intended for qutebrowser plugins -- WebExtension code is sandboxed,
+    what's intended for qutebrowser extensions -- WebExtension code is sandboxed,
     and unable to run arbitrary code on the user's machine. This can be worked
 around by using WebExtension's ``native
     messaging''\footnote{\url{https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging}}
     capability with a separate application running in the background, but doing
     so is cumbersome. See \ref{security} for an explanation on the security
-    model of qutebrowser plugins.
+    model of qutebrowser extensions.
   \item The WebExtension API was not designed with the Qt APIs in mind, yet
     qutebrowser is bound to using those. In some cases it might be possible to
     write an adapter to bring the two approaches together; but if they are
@@ -358,7 +358,7 @@ While it is not possible for qutebrowser to implement support for WebExtensions,
 they are still useful as a source for API design inspiration. However, it
 should be noted that the WebExtension API is closely tied to the JavaScript
 language, so architecture decisions taken there will not necessarily be
-applicable to qutebrowser's Python plugin API.
+applicable to qutebrowser's Python extension API.
 
 \subsection{Anatomy of a WebExtension}
 \label{anatomy}
@@ -391,13 +391,13 @@ consist of a single standalone \verb|.py| file which implements the necessary
 functionality. This mechanism is inspired by the plugin handling of the pytest
 project\footnote{\url{https://docs.pytest.org/en/latest/writing_plugins.html},
   accessed 2018-11-08}. In the future, this makes it trivial for users to add
-their own plugins to qutebrowser. It's also a very straightforward solution and
+their own extensions to qutebrowser. It's also a very straightforward solution and
 appropriate for the initial goal of refactoring qutebrowser's core code into
 extensions.
 
 Due to extensions being written in Python, the above separation between content
 and background scripts also doesn't fully apply to qutebrowser's API. The Python
-plugins can be seen as a background script. It initially won't be able to
+extensions can be seen as a background script. It initially won't be able to
 interact with web pages, as this functionality isn't needed before third-party
 extensions are enabled. See the API analysis below for further details.
 
@@ -431,8 +431,8 @@ with qutebrowser bookmarks.
 
 There's an ongoing
 contribution\footnote{\url{https://github.com/qutebrowser/qutebrowser/pull/3855}}
-to add such features, and it would make little sense to add a plugin API before
-that contribution is merged. Since access to bookmarks isn't vital for a plugin
+to add such features, and it would make little sense to add an extension API before
+that contribution is merged. Since access to bookmarks isn't vital for an extension
 API, it is currently out of scope.
 
 \subsubsection{browserAction, menus, pageAction, sidebarAction}
@@ -461,7 +461,7 @@ browser, as shown in figure \ref{img:browser-action}.
 
 It should be able for custom qutebrowser extensions to add their own user
 interface elements. However, this functionality is unlikely to be needed
-when moving core functionality into plugins (which is the main focus of this
+when moving core functionality into extensions (which is the main focus of this
 SA). Therefore, this API is currently out of scope.
 
 \subsubsection{browserSettings}
@@ -510,13 +510,13 @@ With the contentScripts API, an extension can register and unregister scripts at
 \end{quote}
 
 Injecting custom JavaScript code into websites will be an useful feature for
-custom plugins at a later stage, but isn't needed to move code out of
+custom extensions at a later stage, but isn't needed to move code out of
 qutebrowser's core, as it's expected for internal JavaScript code to stay in the
 core part. Thus, this module is currently out of scope.
 
 Running JavaScript one-off snippets (triggered manually, rather than
 automatically on page load) is already implemented in the tab API, and should be
-trivial to expose to plugins.
+trivial to expose to extensions.
 
 \subsubsection{contextualIdentities, i18n, identity, idle, notifications, pkcs11, topSites}
 \begin{quote}
@@ -616,7 +616,7 @@ Finds text in a web page, and highlights matches.
 \end{quote}
 
 This functionality is already available as part of qutebrowser's tab API (see
-section \ref{tabapi}), and should be trivial to expose to plugins.
+section \ref{tabapi}), and should be trivial to expose to extensions.
 
 \subsubsection{history}
 \begin{quote}
@@ -624,7 +624,7 @@ Use the history API to interact with the browser history.
 \end{quote}
 
 Accessing and manipulating the history might be an useful feature for future
-user-contributed plugins, but is likely not needed for moving code out of
+user-contributed extensions, but is likely not needed for moving code out of
 qutebrowser's core. Thus, the history module is currently out of scope.
 
 \subsubsection{management}
@@ -653,7 +653,7 @@ Access and modify various privacy-related browser settings.
 In qutebrowser, those settings (like
 \verb|privacy.network.webRTCIPHandlingPolicy|) are exposed as normal qutebrowser
 setttings (like \verb|content.webrtc_ip_handling_policy|), so there's no need
-for a similar module in the plugin API.
+for a similar module in the extension API.
 
 \subsubsection{proxy}
 \begin{quote}
@@ -677,8 +677,8 @@ without the need for a dedicated API.
 Use the sessions API to list, and restore, tabs and windows that have been closed while the browser has been running.
 \end{quote}
 
-While qutebrowser does have a session feature, access to it is not vital for a
-plugin API, so this is currently out of scope.
+While qutebrowser does have a session feature, access to it is not vital for an
+extension API, so this is currently out of scope.
 
 \subsubsection{storage}
 \begin{quote}
@@ -698,9 +698,9 @@ windows: Interact with browser windows. You can use this API to get information 
 
 Various functionality already exists in qutebrowser as part of the ``tab API''
 (documented in section \ref{tabapi}), which should be trivial to expose to the
-plugin API. Furthermore, the \verb|tabs| and \verb|windows| modules contains
+extension API. Furthermore, the \verb|tabs| and \verb|windows| modules contains
 various functionality to retrieve tabs, which should be added to qutebrowser's
-plugin API.
+extension API.
 
 \subsubsection{theme}
 \begin{quote}
@@ -827,8 +827,8 @@ accessed 2018-11-09.} As an example, the public API exposed in the main
 Some parts of the API (like the \verb|networkaccessmanager()| or
 \verb|user_agent()| methods) are only exposed because there was a need in
 qutebrowser's core to do so, but shouldn't be exposed via the extension API.
-However, for the most part, the tab API can be exposed unmodified to plugins and
-already allow for a wide range of interactions with tabs.
+However, for the most part, the tab API can be exposed unmodified to extensions
+and already allow for a wide range of interactions with tabs.
 
 \begin{figure}
 \begin{minted}{python}
@@ -876,12 +876,12 @@ def set_html(html: str, base_url: QUrl)
 
 \section{Other inspirations}
 Various other existing projects served as an inspiration for qutebrowser's
-plugin API:
+extension API:
 
 \begin{itemize}
   \item \fixme{Add simplicity details for pytest}
   \item The pytest project\footnote{\url{https://www.pytest.org/}} exposes a
-    very simple and ``pythonic'' plugin API. All that's needed to create a
+    very simple and ``pythonic'' extension API. All that's needed to create a
     plugin is a specially named Python file which implements hook functions such
     as \py{def pytest_runtest_setup(item)}. However, giving trainings about
     pytest in companies, the author of this SA has noticed that some aspects of
@@ -905,49 +905,49 @@ plugin API:
 
 \label{criteria}
 
-There are various forces which affect design decisions for qutebrowser's plugin
-API:
+There are various forces which affect design decisions for qutebrowser's
+extension API:
 
 \begin{description}
 \item[Qt APIs] qutebrowser is built on top of the QtWebEngine/QtWebKit
 rendering engines (which of the two to use is user-configurable). To some
 degree, the APIs exposed by those libraries also dictates how the API
-qutebrowser can expose to plugins can look. The API to get the selected text
+qutebrowser can expose to extensions can look. The API to get the selected text
 from a web page is an ideal example: The most straightforward API would be a
 \py{def selection() -> str} method. However, JavaScript execution is needed to get
 the selection, which is only available from Qt as a callback-based interface.
-Thus, the plugin API will need to look like
+Thus, the extension API will need to look like
 \py{def selection(cb: Callable[[str], None]) -> None} --
 in other words, the \py{selection} method will take a
 callback function, which then gets called with the selected text.
 
 \item[Internal qutebrowser code] One of the main goals (as per the task
 description) of this SA is moving code from qutebrowser's core into internal
-``plugins'' shipped alongside qutebrowser. Components which use general-purpose
+``extensions'' shipped alongside qutebrowser. Components which use general-purpose
 APIs (like the adblocker, which needs to intercept network requests) can
-conveniently moved out of the core, and result in plugin APIs which are also
+conveniently moved out of the core, and result in extension APIs which are also
 usable for other purposes.
 
-\item[Ideas for future plugins] While external plugins (contributed by the
+\item[Ideas for future extensions] While external extensions (contributed by the
 qutebrowser community) are not the primary focus of this SA, a lot of use-cases
-for plugins have been collected based on users' feature requests. Care should be
-taken so the plugin API can also satisfy those use cases in the future.
+for extensions have been collected based on users' feature requests. Care should be
+taken so the extension API can also satisfy those use cases in the future.
 
-\item[Other plugin APIs] There is a general consensus from browser vendors
-around the WebExtension plugin API. Unfortunately, that API is unsuitable for
+\item[Other extension APIs] There is a general consensus from browser vendors
+around the WebExtension API. Unfortunately, that API is unsuitable for
 qutebrowser, for reasons explained in chapter \ref{unsuitable}. It can still
 serve as a source for inspiration.
 
 \item[Python and Qt] While some higher-level architectural decisions are
 independent from the programming language used to implement them, what is
 commonly considered a ``good'' API certainly depends on the underlying
-programming language and the idioms used therein. Since qutebrowser's plugin API
-is used from Python, it should aim to be ``Pythonic'' (i.e., adhering to Python
-idioms\footnote{\url{https://blog.startifact.com/posts/older/what-is-pythonic.html}})
+programming language and the idioms used therein. Since qutebrowser's extension
+API is used from Python, it should aim to be ``Pythonic'' (i.e., adhering to
+Python idioms\footnote{\url{https://blog.startifact.com/posts/older/what-is-pythonic.html}})
 and also use features made available by Qt. As an example, a Pythonic API might
 favor Python
 decorators\footnote{\url{https://docs.python.org/3/glossary.html\#term-decorator}}
-over inheritance to set up plugin hooks; or a Qt API might prefer Qt's
+over inheritance to set up extension hooks; or a Qt API might prefer Qt's
 signals/slots
 facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
 callback-based API.
@@ -1057,7 +1057,7 @@ focus for the extension API) is reducing the complexity of qutebrowser's core.
 \section{System Sequence Diagrams}
 \fixme{TODO}
 
-Rough idea: Plugin -> Proxy -> Tab API; link to chapters about proxy and tab API.
+Rough idea: extension -> Proxy -> Tab API; link to chapters about proxy and tab API.
 
 % Weitere Funktionen, die nicht erfasst wurden
 %\section{Further Functionality}
@@ -1077,15 +1077,15 @@ extension API:
     requiring packing multiple files into a custom format. Also see section
     \ref{anatomy} for an explanation on how this topic is handled for
     WebExtensions, and how qutebrowser's API differs from that.
-  \item[Learnability] When the plugin API is opened for third-party
+  \item[Learnability] When the extension API is opened for third-party
     contributions, it should be easy to get accustomed to it. Therefore, the API
     should be intuitive for Python programmers, and well documented.
   \item[Compability] The qutebrowser project runs on a variety of different
     software versions -- various operating systems (Linux, macOS, Windows,
     and more) are supported, including different Qt and Python versions. The
-    plugin API should abstract over those differences, so a plugin written for
-    qutebrowser (or core code moved into such a plugin) runs in all situations
-    qutebrowser itself can run.
+    extension API should abstract over those differences, so an extension
+    written for qutebrowser (or core code moved into such an extension) runs in
+    all situations qutebrowser itself can run.
   \item[Performance] \fixme{Add something about performance vs. small core}
 \end{description}
 
@@ -1170,10 +1170,10 @@ However, the following releases are planned:
   \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
     is completed, in order to get the changes out to users as soon as possible.
   \item v1.6.x patch releases as needed (probably after the SA is finished)
-  \item In the future, after the extension API is open for third-party plugins,
-    a v2.0.0 release with some other big changes (like dropping support for the
-    older QtWebKit backend, as it's rarely updated upstream, even for security
-    issues).
+  \item In the future, after the extension API is open for third-party
+    extensions, a v2.0.0 release with some other big changes (like dropping support
+    for the older QtWebKit backend, as it's rarely updated upstream, even for
+    security issues).
 \end{itemize}
 
 At the end of week 11, an API review milestone is planned, where the extension
@@ -1196,7 +1196,7 @@ Professor \emph{Stefan Keller}, institute partner at the Institute for Software
 The qutebrowser community is not directly involved in this research project, but
 is the primary audience of the resulting work. It has also contributed many
 ideas and use cases for future
-plugins\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
+extensions\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
 There's no external industry partner.
 
 \label{fiete}
@@ -1316,7 +1316,7 @@ The following risks have been identified in this project:
     contributions yet & 3 \\
     \hline
     Migrating documentation toolchain to Sphinx (done by external contributor)
-    is not done in time & Initial plugin API documentation can be separate from
+    is not done in time & Initial extension API documentation can be separate from
     qutebrowser documentation & 3 \\
     \bottomrule
   \end{tabulary}
