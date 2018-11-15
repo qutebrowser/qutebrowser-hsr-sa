@@ -12,6 +12,7 @@
 \usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
+\usepackage[page]{appendix}
 % http://wiki.luatex.org/index.php/Attributes
 % conflicts with \attribute from pgf-umlcd
 \let\attribute\relax
@@ -87,9 +88,6 @@ Date: {\today}
 
 % Aufgabenstellung
 \chapter*{Task Definition}
-
-% Technischer Bericht
-\part{Technical Report}
 
 % Einführung
 \chapter{Introduction}
@@ -216,6 +214,272 @@ focus being this documentation and the work required for the extension API.
 \section{Methods and Structure}
 
 
+% Projektmanagement (Planung, Soll)
+\chapter{Project Management}
+
+% Prototypen, Releases, Meilensteine
+\section{Prototypes, Releases, Milestones}
+Since this project is done without any external industry partner, there is no
+immediate need for fixed releases or prototypes during the SA.
+
+However, the following releases are planned:
+
+\begin{itemize}
+  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream
+    \begin{itemize}
+      \item v1.5.0 was released in week 3
+    \end{itemize}
+  \item Patch releases for v1.5.x as needed in case of regressions or serious
+    enough bugs:
+    \begin{itemize}
+      \item v1.5.1 was released in week 4
+      \item v1.5.2 in week 6
+      \item v1.5.3 in week \fixme{}
+    \end{itemize}
+  \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
+    is completed, in order to get the changes out to users as soon as possible.
+  \item v1.6.x patch releases as needed (probably after the SA is finished)
+  \item In the future, after the extension API is open for third-party
+    extensions, a v2.0.0 release with some other big changes (like dropping support
+    for the older QtWebKit backend, as it's rarely updated upstream, even for
+    security issues).
+\end{itemize}
+
+At the end of week 11, an API review milestone is planned, where the extension
+API design gets reviewed by employees of the IFS (Institute for Software) at the
+HSR.
+
+% Team, Rollen und Verantwortlichkeiten
+\section{Team and Roles}
+\emph{Florian Bruhin} is both the primary maintainer of qutebrowser and the
+sole author of this student research project. He has been working on qutebrowser since
+December 2013 and started studying Computer Science at HSR in 2016.
+
+\emph{Joël Schwab} intended to co-author this research project, but
+unfortunately didn't pass some exams, which were a precondition to be allowed to
+do the SA project this semester.
+
+Professor \emph{Stefan Keller}, institute partner at the Institute for Software
+(IFS) at HSR is the advisor for this project.
+
+The qutebrowser community is not directly involved in this research project, but
+is the primary audience of the resulting work. It has also contributed many
+ideas and use cases for future
+extensions\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
+There's no external industry partner.
+
+\label{fiete}
+\emph{Fritz Reichwald} (fiete201\footnote{\url{https://github.com/fiete201}})
+is a long-time qutebrowser user who is working on migrating qutebrowser's
+documentation system from asciidoc\footnote{\url{http://asciidoc.org/}} (which
+is deprecated) to the Sphinx\footnote{\url{http://www.sphinx-doc.org/}}
+documentation generator. This change was
+planned\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/345}}
+since December 2014, so his help with tackling this is very much appreciated.
+This project will benefit from his work, as Sphinx, unlike asciidoc, is a
+very good fit for documenting APIs. His work is clearly marked as such in this
+documentation.
+
+% Prozessmodel
+\section{Process Model}
+Because of previous experience as part of HSR's ``Engineering Project'', the
+``Scrum+'' process model will be used, i.e., an agile Scrum process with an
+additional ``End of Elaboration'' milestone.
+
+At the beginning of the SA, there was a phase with the goal of merging existing
+third-party contributions (pull requests) into qutebrowser, so that the changes
+required for extensions don't conflict with existing work. Thus, an additional
+\emph{preparation} phase has been introduced, resulting in the following phases:
+
+Inception, Preparation, Elaboration, Construction, Transition
+
+% Aufwandschätzung, Zeitplan, Projektplan
+\section{Project Schedule}
+\label{schedule}
+
+8 ECTS credits are awarded for the SA-course. Since one ECTS point is equivalent
+to a workload of 25--30 hours \citep{ects} and this SA is written by a single
+author, this amounts to 200--240 hours of work. The semester consists of 14
+weeks, thus, an average workload of 14--17 hours per week is expected. This time
+is allotted as shown in figure \ref{img:schedule}.
+
+\begin{figure}[h!]
+  \begin{ganttchart}[
+        title height = 1,
+        y unit title=.5cm,
+        y unit chart=.5cm,
+        bar/.append style={fill=green!20},
+        vgrid={
+          *1{blue!60},
+          *4{gray, dashed},
+          *1{blue!60},
+          *2{gray, dashed},
+          *1{blue!60},
+          *2{gray, dashed},
+          *1{gray, dashed}
+        }]{1}{14}
+    \gantttitle{\hspace{-6.5em}\footnotesize{Calendar week}}{0}{0}
+    \gantttitlelist{38,...,51}{1} \\
+    \gantttitle{\hspace{-6.5em}\footnotesize{Semester week}}{0}{0}
+    \gantttitlelist{1,...,14}{1} \\
+
+    \ganttgroup{Inception}{1}{1} \\
+    \ganttmilestone{M0: Kickoff}{1} \\
+
+    \ganttgroup{Preparation}{2}{6} \\
+    \ganttbar{Qt 5.12 release}{2}{2} \\
+    \ganttbar{Merge contributions}{3}{5} \\
+    \ganttbar{Buffer}{6}{6} \\
+
+    \ganttmilestone{M1: Most contributions addressed}{6} \\
+
+    \ganttgroup{Elaboration}{7}{9} \\
+    \ganttbar{Existing approaches}{7}{7} \\
+    \ganttbar{Project documentation}{8}{8} \\
+    \ganttbar{API design}{9}{9} \\
+
+    \ganttgroup{Construction}{10}{13} \\
+    \ganttbar{Introducing MyPy}{10}{10} \\
+    \ganttbar{Adding extension API}{11}{12} \\
+    \ganttmilestone{M2: API review}{11} \\
+    \ganttbar{Refactoring core into extensions}{11}{12} \\
+    \ganttmilestone{M3: v1.6.0 release}{12} \\
+    \ganttbar{Buffer}{13}{13} \\
+
+    \ganttgroup{Transition}{14}{14} \\
+    \ganttbar{Finishing documentation}{14}{14} \\
+
+    \ganttmilestone{M4: Project end}{14}
+  \end{ganttchart}
+  \caption{Project schedule}
+  \label{img:schedule}
+\end{figure}
+
+Due to the relatively long \emph{preparation} phase at the beginning of the
+project, the \emph{construction} phase gets unusually short. This is
+unfortunate but unavoidable -- it's important to integrate existing
+contributions before starting to refactor the existing code, at least for
+third-party changes which would lead to conflicts with refactoring changes.
+
+% Risiken
+\section{Risks}
+The following risks have been identified in this project:
+
+\fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
+
+\begin{table}[h!]
+  \begin{tabulary}{\linewidth}{LLL}
+    \toprule
+    Risk & Mitigation & Probability (1-5) \\
+    \midrule
+    Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions & 5 \\
+    \hline
+    Little time in construction phase & Work on extension API is very
+    scalable, buffers in schedule & 4 \\
+    \hline
+    Sickness of author & Work on extension API is very scalable & 3 \\
+    \hline
+    Future breaking API changes needed & API is not exposed for third-party
+    contributions yet & 3 \\
+    \hline
+    Migrating documentation toolchain to Sphinx (done by external contributor)
+    is not done in time & Initial extension API documentation can be separate from
+    qutebrowser documentation & 3 \\
+    \bottomrule
+  \end{tabulary}
+\end{table}
+
+As explained in section \ref{context}, it's expected that third-party
+contributors continue to submit changes (in the form of pull requests) while
+this SA is ongoing. An
+announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html},
+  accessed 2018-11-12} was sent out, asking contributors to cut back external
+contributions. However, a similar announcement was sent out during past exam
+seasons, with mixed results -- many contributors continue to submit changes
+regardless. Initially, there's a phase focused on merging existing
+contributions (see the project schedule in section \ref{schedule}). Afterwards,
+contributions are dealt with on a best effort basis, being ignored if they
+are non-trivial.
+
+There's little time in the construction phase compared to other projects.
+Additionally, this SA is written by a single author. Thus, sickness or other
+obstructions have a bigger than usual impact. This is counteracted by trying to
+keep the scope of the SA clear, but flexible. Additionally, buffer time is
+added after the preparation and construction phases in the project schedule
+(section \ref{schedule}).
+
+If some preparatory work isn't finished fully, it's possible that upcoming
+changes cause incompatible changes in the extension API. However, this SA
+is focused on moving core code into extensions, rather than providing an
+extension API for third-party extensions. Therefore, it's still possible to do
+those changes after the SA is finished, without breaking third-party code.
+
+
+\chapter{Requirements Specification}
+
+% Use Cases (Success Scenario / Success Diagram)
+\section{Use Cases}
+
+This project extends an existing codebase with an extension API rather
+than starting a new project from scratch. By its nature, it's difficult to
+predict how an extension API will be used in the future. Because of that, an
+use-case diagram would not adequately describe the motivation for the extension
+API.
+
+Various ideas for future third-party extensions have been voiced by the
+qutebrowser community; they are collected in a GitHub
+issue\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30},
+  accessed 2018-11-08}. However, the main aim of this project (and thus the main
+focus for the extension API) is reducing the complexity of qutebrowser's core.
+
+% System-Sequenzdiagramme
+\section{System Sequence Diagrams}
+\fixme{TODO}
+
+Rough idea: extension -> Proxy -> Tab API; link to chapters about proxy and tab API.
+
+% Weitere Funktionen, die nicht erfasst wurden
+%\section{Further Functionality}
+
+% Nicht-funktionale Anforderungen (Rahmbenbedingungen, evtl. Verweis auf 1.3)
+\section{Non-functional Requirements}
+The following non-functional requirements are relevant for qutebrowser's
+extension API:
+
+\begin{description}
+  \item[Security] The security model used for qutebrowser extensions assumes
+    that extensions are trusted, i.e., may run arbitrary code. See
+    section \ref{security} for a more detailed explanation.
+  \item[Simplicity] It should be trivial for a user to extend her qutebrowser
+    setup with a custom extension. Thus, getting started with writing a
+    third-party extension should be as straightforward as possible, without
+    requiring packing multiple files into a custom format. Also see section
+    \ref{anatomy} for an explanation on how this topic is handled for
+    WebExtensions, and how qutebrowser's API differs from that.
+  \item[Learnability] When the extension API is opened for third-party
+    contributions, it should be easy to get accustomed to it. Therefore, the API
+    should be intuitive for Python programmers, and well documented.
+  \item[Compability] The qutebrowser project runs on a variety of different
+    software versions -- various operating systems (Linux, macOS, Windows,
+    and more) are supported, including different Qt and Python versions. The
+    extension API should abstract over those differences, so an extension
+    written for qutebrowser (or core code moved into such an extension) runs in
+    all situations qutebrowser itself can run.
+  \item[Performance] \fixme{Add something about performance vs. small core}
+\end{description}
+
+% % Detailspezifikation
+% \section{Detailed Specification}
+% \fixme{???}
+% 
+% % Analyse (Business Model)
+% \chapter{Analysis}
+% 
+% % Domain Modell, Klassendiagramme (konzeptionell)
+% \section{Domain Model}
+% 
+% % Objektkatalog (Beschreibung der Konzepte, bzw. Entitätsmengen)
+% \section{Objects}
 
 % "Stand der Technik" (Was gibt es schon?)
 \chapter{Existing APIs}
@@ -1005,14 +1269,71 @@ them. This is for a variety of reasons:
     presents a trade-off between a user's freedom and security.
 \end{itemize}
 
+% 
+% 
+% % Design (Entwurf)
+% \chapter{Design}
+% 
+% % Architektur
+% \section{Architecture}
+% 
+% % Objektkatalog (Klassenkonzepte, Verantwortlichkeiten und Konsistenzbedingungen)
+% \section{Objects}
+% 
+% % Package- und Klassendiagramme (konzeptionell)
+% \section{Packages and Classes}
+% 
+% % Sequenzdiagramm, UI Design
+% \section{Sequence Diagrams}
+
+% Implementation (Entwicklung)
+\chapter{Implementation and Test}
+
+% Implementation: Erläuterungen wichtiger konkreter Klassen
+\section{Important Classes}
+
+% Automatische Testverfahren
+\section{Automated Testing}
+
+% Manuelle Testverfahren, etc.
+\section{Manual Testing}
+
+
 % Resultate, Bewerung und Ausblick
 \chapter{Results}
 
 % Zielerreichung
 \section{Achievement of Objectives}
 
+
+% Projektmonitoring (Ist-Beschreibung, so ist es passiert)
+% \chapter{Project Monitoring}
+% Soll-Ist-Zeit-Vergleich
+\section{Allocated/Actual Time}
+% Codestatistik (Zeilen: Kommentare, Klassen, Packages)
+\section{Code Statistics}
+
+\section{Software Documentation}
+% Maybe separate (Sphinx)
+
+
 % Ausblick: Weiterentwicklung (nur wichtigste Punkte)
 \section{Future Work}
+
+% From project management part:
+% % Resultate und Weiterentwicklung
+% \chapter{Results and Future Work}
+% 
+% % Resultate (ev. nach oben in Teil I Kap. 5 eingleidern)
+% \section{Results}
+% 
+% % Möglichkeiten der Weiterentwicklung
+% \section{Possible Future Work}
+% 
+% % Vorgehen (welche Mögl. würde man nun wie weiterentwickeln?)
+% \section{Future Approach}
+
+
 
 % Persönliche Berichte
 \section{Personal Review}
@@ -1045,357 +1366,9 @@ Last but not least, thanks to Méline~Sieber for her constant encouragement
 throughout the semester, and for always helping me out of the maze when I got
 stuck somewhere.
 
-% Teil II SW-Projektdokumentation ("klassisches" RUP 2/HSR)
-\part{Project Documentation}
 
-\chapter{Introduction}
-This part of the documentation describes project requirements, use cases, and
-potential end users of the project. Refer to section \ref{vision} for the vision
-behind this project.
 
-%\chapter{Vision}
-%See chapter \ref{vision}.
-
-% Anforderungsspezifikation
-\chapter{Requirements Specification}
-\fixme{???}
-
-% Anforderung an die Arbeit
-\section{Project Requirements}
-\fixme{How is this different from \ref{goals}?}
-\fixme{okay to remove}
-
-As described in section \ref{goals}, the main goal of this project is adding a
-well designed API for extensions to qutebrowser, and at the same time improving
-its overall software architecture. The latter is achieved by moving parts of
-qutebrowser's code into ``extensions'' which are shipped with qutebrowser, and
-introducing tools such as the MyPy type checker.
-
-% Use Cases (Success Scenario / Success Diagram)
-\section{Use Cases}
-
-This project extends an existing codebase with an extension API rather
-than starting a new project from scratch. By its nature, it's difficult to
-predict how an extension API will be used in the future. Because of that, an
-use-case diagram would not adequately describe the motivation for the extension
-API.
-
-Various ideas for future third-party extensions have been voiced by the
-qutebrowser community; they are collected in a GitHub
-issue\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30},
-  accessed 2018-11-08}. However, the main aim of this project (and thus the main
-focus for the extension API) is reducing the complexity of qutebrowser's core.
-
-% System-Sequenzdiagramme
-\section{System Sequence Diagrams}
-\fixme{TODO}
-
-Rough idea: extension -> Proxy -> Tab API; link to chapters about proxy and tab API.
-
-% Weitere Funktionen, die nicht erfasst wurden
-%\section{Further Functionality}
-
-% Nicht-funktionale Anforderungen (Rahmbenbedingungen, evtl. Verweis auf 1.3)
-\section{Non-functional Requirements}
-The following non-functional requirements are relevant for qutebrowser's
-extension API:
-
-\begin{description}
-  \item[Security] The security model used for qutebrowser extensions assumes
-    that extensions are trusted, i.e., may run arbitrary code. See
-    section \ref{security} for a more detailed explanation.
-  \item[Simplicity] It should be trivial for a user to extend her qutebrowser
-    setup with a custom extension. Thus, getting started with writing a
-    third-party extension should be as straightforward as possible, without
-    requiring packing multiple files into a custom format. Also see section
-    \ref{anatomy} for an explanation on how this topic is handled for
-    WebExtensions, and how qutebrowser's API differs from that.
-  \item[Learnability] When the extension API is opened for third-party
-    contributions, it should be easy to get accustomed to it. Therefore, the API
-    should be intuitive for Python programmers, and well documented.
-  \item[Compability] The qutebrowser project runs on a variety of different
-    software versions -- various operating systems (Linux, macOS, Windows,
-    and more) are supported, including different Qt and Python versions. The
-    extension API should abstract over those differences, so an extension
-    written for qutebrowser (or core code moved into such an extension) runs in
-    all situations qutebrowser itself can run.
-  \item[Performance] \fixme{Add something about performance vs. small core}
-\end{description}
-
-% Detailspezifikation
-\section{Detailed Specification}
-\fixme{???}
-
-% Analyse (Business Model)
-\chapter{Analysis}
-
-% Domain Modell, Klassendiagramme (konzeptionell)
-\section{Domain Model}
-
-% Objektkatalog (Beschreibung der Konzepte, bzw. Entitätsmengen)
-\section{Objects}
-
-
-% Design (Entwurf)
-\chapter{Design}
-
-% Architektur
-\section{Architecture}
-
-% Objektkatalog (Klassenkonzepte, Verantwortlichkeiten und Konsistenzbedingungen)
-\section{Objects}
-
-% Package- und Klassendiagramme (konzeptionell)
-\section{Packages and Classes}
-
-% Sequenzdiagramm, UI Design
-\section{Sequence Diagrams}
-
-
-% Implementation (Entwicklung)
-\chapter{Implementation and Test}
-
-% Implementation: Erläuterungen wichtiger konkreter Klassen
-\section{Important Classes}
-
-% Automatische Testverfahren
-\section{Automated Testing}
-
-% Manuelle Testverfahren, etc.
-\section{Manual Testing}
-
-
-% Resultate und Weiterentwicklung
-\chapter{Results and Future Work}
-
-% Resultate (ev. nach oben in Teil I Kap. 5 eingleidern)
-\section{Results}
-
-% Möglichkeiten der Weiterentwicklung
-\section{Possible Future Work}
-
-% Vorgehen (welche Mögl. würde man nun wie weiterentwickeln?)
-\section{Future Approach}
-
-
-% Projektmanagement (Planung, Soll)
-\chapter{Project Management}
-
-% Prototypen, Releases, Meilensteine
-\section{Prototypes, Releases, Milestones}
-Since this project is done without any external industry partner, there is no
-immediate need for fixed releases or prototypes during the SA.
-
-However, the following releases are planned:
-
-\begin{itemize}
-  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream
-    \begin{itemize}
-      \item v1.5.0 was released in week 3
-    \end{itemize}
-  \item Patch releases for v1.5.x as needed in case of regressions or serious
-    enough bugs:
-    \begin{itemize}
-      \item v1.5.1 was released in week 4
-      \item v1.5.2 in week 6
-      \item v1.5.3 in week \fixme{}
-    \end{itemize}
-  \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
-    is completed, in order to get the changes out to users as soon as possible.
-  \item v1.6.x patch releases as needed (probably after the SA is finished)
-  \item In the future, after the extension API is open for third-party
-    extensions, a v2.0.0 release with some other big changes (like dropping support
-    for the older QtWebKit backend, as it's rarely updated upstream, even for
-    security issues).
-\end{itemize}
-
-At the end of week 11, an API review milestone is planned, where the extension
-API design gets reviewed by employees of the IFS (Institute for Software) at the
-HSR.
-
-% Team, Rollen und Verantwortlichkeiten
-\section{Team and Roles}
-\emph{Florian Bruhin} is both the primary maintainer of qutebrowser and the
-sole author of this student research project. He has been working on qutebrowser since
-December 2013 and started studying Computer Science at HSR in 2016.
-
-\emph{Joël Schwab} intended to co-author this research project, but
-unfortunately didn't pass some exams, which were a precondition to be allowed to
-do the SA project this semester.
-
-Professor \emph{Stefan Keller}, institute partner at the Institute for Software
-(IFS) at HSR is the advisor for this project.
-
-The qutebrowser community is not directly involved in this research project, but
-is the primary audience of the resulting work. It has also contributed many
-ideas and use cases for future
-extensions\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
-There's no external industry partner.
-
-\label{fiete}
-\emph{Fritz Reichwald} (fiete201\footnote{\url{https://github.com/fiete201}})
-is a long-time qutebrowser user who is working on migrating qutebrowser's
-documentation system from asciidoc\footnote{\url{http://asciidoc.org/}} (which
-is deprecated) to the Sphinx\footnote{\url{http://www.sphinx-doc.org/}}
-documentation generator. This change was
-planned\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/345}}
-since December 2014, so his help with tackling this is very much appreciated.
-This project will benefit from his work, as Sphinx, unlike asciidoc, is a
-very good fit for documenting APIs. His work is clearly marked as such in this
-documentation.
-
-% Prozessmodel
-\section{Process Model}
-\fixme{Is it okay to move this before ``Project Schedule''?}
-
-Because of previous experience as part of HSR's ``Engineering Project'', the
-``Scrum+'' process model will be used, i.e., an agile Scrum process with an
-additional ``End of Elaboration'' milestone.
-
-At the beginning of the SA, there was a phase with the goal of merging existing
-third-party contributions (pull requests) into qutebrowser, so that the changes
-required for extensions don't conflict with existing work. Thus, an additional
-\emph{preparation} phase has been introduced, resulting in the following phases:
-
-Inception, Preparation, Elaboration, Construction, Transition
-
-% Aufwandschätzung, Zeitplan, Projektplan
-\section{Project Schedule}
-\label{schedule}
-
-8 ECTS credits are awarded for the SA-course. Since one ECTS point is equivalent
-to a workload of 25--30 hours \citep{ects} and this SA is written by a single
-author, this amounts to 200--240 hours of work. The semester consists of 14
-weeks, thus, an average workload of 14--17 hours per week is expected. This time
-is allotted as shown in figure \ref{img:schedule}.
-
-\begin{figure}[h!]
-  \begin{ganttchart}[
-        title height = 1,
-        y unit title=.5cm,
-        y unit chart=.5cm,
-        bar/.append style={fill=green!20},
-        vgrid={
-          *1{blue!60},
-          *4{gray, dashed},
-          *1{blue!60},
-          *2{gray, dashed},
-          *1{blue!60},
-          *2{gray, dashed},
-          *1{gray, dashed}
-        }]{1}{14}
-    \gantttitle{\hspace{-6.5em}\footnotesize{Calendar week}}{0}{0}
-    \gantttitlelist{38,...,51}{1} \\
-    \gantttitle{\hspace{-6.5em}\footnotesize{Semester week}}{0}{0}
-    \gantttitlelist{1,...,14}{1} \\
-
-    \ganttgroup{Inception}{1}{1} \\
-    \ganttmilestone{M0: Kickoff}{1} \\
-
-    \ganttgroup{Preparation}{2}{6} \\
-    \ganttbar{Qt 5.12 release}{2}{2} \\
-    \ganttbar{Merge contributions}{3}{5} \\
-    \ganttbar{Buffer}{6}{6} \\
-
-    \ganttmilestone{M1: Most contributions addressed}{6} \\
-
-    \ganttgroup{Elaboration}{7}{9} \\
-    \ganttbar{Existing approaches}{7}{7} \\
-    \ganttbar{Project documentation}{8}{8} \\
-    \ganttbar{API design}{9}{9} \\
-
-    \ganttgroup{Construction}{10}{13} \\
-    \ganttbar{Introducing MyPy}{10}{10} \\
-    \ganttbar{Adding extension API}{11}{12} \\
-    \ganttmilestone{M2: API review}{11} \\
-    \ganttbar{Refactoring core into extensions}{11}{12} \\
-    \ganttmilestone{M3: v1.6.0 release}{12} \\
-    \ganttbar{Buffer}{13}{13} \\
-
-    \ganttgroup{Transition}{14}{14} \\
-    \ganttbar{Finishing documentation}{14}{14} \\
-
-    \ganttmilestone{M4: Project end}{14}
-  \end{ganttchart}
-  \caption{Project schedule}
-  \label{img:schedule}
-\end{figure}
-
-Due to the relatively long \emph{preparation} phase at the beginning of the
-project, the \emph{construction} phase gets unusually short. This is
-unfortunate but unavoidable -- it's important to integrate existing
-contributions before starting to refactor the existing code, at least for
-third-party changes which would lead to conflicts with refactoring changes.
-
-% Risiken
-\section{Risks}
-The following risks have been identified in this project:
-
-\fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
-
-\begin{table}[h!]
-  \begin{tabulary}{\linewidth}{LLL}
-    \toprule
-    Risk & Mitigation & Probability (1-5) \\
-    \midrule
-    Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions & 5 \\
-    \hline
-    Little time in construction phase & Work on extension API is very
-    scalable, buffers in schedule & 4 \\
-    \hline
-    Sickness of author & Work on extension API is very scalable & 3 \\
-    \hline
-    Future breaking API changes needed & API is not exposed for third-party
-    contributions yet & 3 \\
-    \hline
-    Migrating documentation toolchain to Sphinx (done by external contributor)
-    is not done in time & Initial extension API documentation can be separate from
-    qutebrowser documentation & 3 \\
-    \bottomrule
-  \end{tabulary}
-\end{table}
-
-As explained in section \ref{context}, it's expected that third-party
-contributors continue to submit changes (in the form of pull requests) while
-this SA is ongoing. An
-announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html},
-  accessed 2018-11-12} was sent out, asking contributors to cut back external
-contributions. However, a similar announcement was sent out during past exam
-seasons, with mixed results -- many contributors continue to submit changes
-regardless. Initially, there's a phase focused on merging existing
-contributions (see the project schedule in section \ref{schedule}). Afterwards,
-contributions are dealt with on a best effort basis, being ignored if they
-are non-trivial.
-
-There's little time in the construction phase compared to other projects.
-Additionally, this SA is written by a single author. Thus, sickness or other
-obstructions have a bigger than usual impact. This is counteracted by trying to
-keep the scope of the SA clear, but flexible. Additionally, buffer time is
-added after the preparation and construction phases in the project schedule
-(section \ref{schedule}).
-
-If some preparatory work isn't finished fully, it's possible that upcoming
-changes cause incompatible changes in the extension API. However, this SA
-is focused on moving core code into extensions, rather than providing an
-extension API for third-party extensions. Therefore, it's still possible to do
-those changes after the SA is finished, without breaking third-party code.
-
-% Projektmonitoring (Ist-Beschreibung, so ist es passiert)
-\chapter{Project Monitoring}
-% Soll-Ist-Zeit-Vergleich
-\section{Allocated/Actual Time}
-% Codestatistik (Zeilen: Kommentare, Klassen, Packages)
-\section{Code Statistics}
-
-
-\chapter{Software Documentation}
-% Maybe separate (Sphinx)
-
-
-
-\part{Appendices}
-
-
+\begin{appendices}
 \chapter{Glossary and Abbreviations}
 \begin{description}
   \item[API]{Application Programming Interface, i.e., in
@@ -1437,5 +1410,6 @@ those changes after the SA is finished, without breaking third-party code.
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \bibliographystyle{IEEEtranN}
 \bibliography{bibliography}
+\end{appendices}
 
 \end{document}
