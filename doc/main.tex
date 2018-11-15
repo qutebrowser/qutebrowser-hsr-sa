@@ -279,16 +279,10 @@ in Mozilla's blog post \citep{mozilla-webext} were as follows:
 \end{itemize}
 
 While qutebrowser should learn from the mistakes made in Firefox' legacy API,
-there is a fundamental difference in the two approaches regarding their security
-philosophy: Extensions for qutebrowser should be written in the Python language
-(like qutebrowser itself is), but safely executing untrusted Python code proved
-to be impossible \citep{nedbat-eval, lwn-pysandbox}. See chapter \ref{security}
-for a more detailed explanation.
-
-A more thorough analysis of the XUL API design proved to be difficult. While
-archived API documentation is still
+a more thorough analysis of the XUL API design proved to be difficult. Archived
+API documentation is still
 available\footnote{\url{https://developer.mozilla.org/en-US/docs/Archive/Add-ons}},
-bad documentation was one of the criticisms of XUL addons
+but bad documentation was one of the criticisms of XUL addons
 \citep{mozilla-webext}. Since the API is not in active use anymore, and ties
 into Firefox' core code deeply, no further analysis was performed.
 
@@ -297,6 +291,7 @@ outlined extension API, rather than naively exposing its internal Python code to
 extensions.
 
 \section{WebExtensions API}
+\label{webextensions}
 
 Currently, there are ongoing efforts towards an API for browser
 extensions called \emph{WebExtensions}, which is shared between different
@@ -967,10 +962,48 @@ callback-based API.
 % z.T. Wiederholung im Groben, z.T. Verweise auf Teil II-Kapitel
 \section{Security}
 \label{security}
+As part of this SA, third-party extensions are out of scope; only code which was
+part of qutebrowser's core is moved into extensions. Thus, it seems like there
+are no special security considerations to be made. However, the architecture of
+an extension API is fundamentally influenced by such considerations, and support
+for third-party extensions will be added in the near future. Therefore, the
+security philosophy of qutebrowser's extensions is analyzed in this section.
 
-\fixme{What about incognito tabs}
+The security model of WebExtensions (see section \ref{webextensions}) assumes
+that extensions are untrusted. Even with the limited WebExtensions API,
+malicious extensions are a common issue
+\citep{mozilla-signing,mozilla-trustworthy}. Browser vendors try to alleviate
+this problem with automated and manual code review, extension signing, and
+blacklisting of known-bad extensions. Additionally, the user explicitly needs to
+allow extensions to run in incognito/private browsing mode, as the impact of a
+privacy breach typically is considerably larger in that scenario.
 
+The approach taken qutebrowser extensions is different: Extensions are treated
+as trusted, so users are responsible for reviewing extensions before installing
+them. This is for a variety of reasons:
 
+\begin{itemize}
+  \item Extensions for qutebrowser should be written in Python (like qutebrowser itself
+    is), but safely executing untrusted Python code is commonly regarded to be
+    impossible \citep{nedbat-eval, lwn-pysandbox}.
+  \item The attack surface for a malicious actor trying to distribute a bad
+    extension is much smaller, since qutebrowser caters to a relatively small
+    niche group of users. Thus, malicious extensions are expected to be a seldom
+    occurrence compared to more common browsers such as Google Chrome or Mozilla
+    Firefox.
+  \item Users of qutebrowser are typically power users, due to its
+    keyboard-focused nature. Therefore, compared to a browser focused at casual
+    users, it can be expected that users are much more diligent in what
+    extensions they're installing.
+  \item The volume of available extensions is much lower. Thus, it's conceivable
+    that there's a whitelist of extensions which have been reviewed and approved
+    by one of qutebrowser's core developers. A contributor wishing to distribute
+    a new extension could then ask for it to be reviewed and included in that list.
+  \item Due to the focus on power users, a user should always be able to
+    install an extension manually, or write a custom one. Thus, mandatory
+    extension signing or approval by a central body is undesirable, as it
+    presents a trade-off between a user's freedom and security.
+\end{itemize}
 
 % Resultate, Bewerung und Ausblick
 \chapter{Results}
