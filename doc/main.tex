@@ -99,8 +99,6 @@ Date: {\today}
   second paragraph. Maybe define web browser. Also define Python/PyQt. List
 alternatives.}
 
-\fixme{``has existed'' sounds like it doesn't anymore?}
-
 The qutebrowser project has existed since December 2013. It is a keyboard-focused
 web browser with a minimal GUI, based on Python and PyQt5.
 
@@ -267,7 +265,7 @@ The qutebrowser community is not directly involved in this research project, but
 is the primary audience of the resulting work. It has also contributed many
 ideas and use cases for future
 extensions\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
-There's no external industry partner.
+There is no external industry partner.
 
 \label{fiete}
 \emph{Fritz Reichwald} (fiete201\footnote{\url{https://github.com/fiete201}})
@@ -289,7 +287,7 @@ additional ``End of Elaboration'' milestone.
 
 At the beginning of the SA, there was a phase with the goal of merging existing
 third-party contributions (pull requests) into qutebrowser, so that the changes
-required for extensions don't conflict with existing work. Thus, an additional
+required for extensions does not conflict with existing work. Thus, an additional
 \emph{preparation} phase has been introduced, resulting in the following phases:
 
 Inception, Preparation, Elaboration, Construction, Transition
@@ -412,7 +410,7 @@ added after the preparation and construction phases in the project schedule
 If some preparatory work isn't finished fully, it's possible that upcoming
 changes cause incompatible changes in the extension API. However, this SA
 is focused on moving core code into extensions, rather than providing an
-extension API for third-party extensions. Therefore, it's still possible to do
+extension API for third-party extensions. Therefore, it's still possible to make
 those changes after the SA is finished, without breaking third-party code.
 
 
@@ -636,8 +634,8 @@ a WebExtension consists of various files:
     extension, i.e., until it is disabled or uninstalled.
   \item Content scripts, which are injected into loaded web pages, and can
     interact with their content (access and manipulate the DOM). They also have
-    some additional permissions scripts supplied by the page don't have, such as
-    messaging with an extension's background scripts.
+    some additional permissions, which scripts supplied by the page do not have,
+    such as messaging with an extension's background scripts.
   \item HTML pages for user interfaces such as an extension's option page or sidebar.
   \item Other resources such as icons.
 \end{itemize}
@@ -651,12 +649,12 @@ consist of a single standalone \verb|.py| file which implements the necessary
 functionality. This mechanism is inspired by the plugin handling of the pytest
 project\footnote{\url{https://docs.pytest.org/en/latest/writing_plugins.html},
   accessed 2018-11-08}. In the future, this makes it trivial for users to add
-their own extensions to qutebrowser. It's also a very straightforward solution and
+their own extensions to qutebrowser. That solution is also very straightforward and
 appropriate for the initial goal of refactoring qutebrowser's core code into
 extensions.
 
 Due to extensions being written in Python, the above separation between content
-and background scripts also doesn't fully apply to qutebrowser's API. The Python
+and background scripts also does not fully apply to qutebrowser's API. The Python
 extensions can be seen as a background script. It initially won't be able to
 interact with web pages, as this functionality isn't needed before third-party
 extensions are enabled. See the API analysis below for further details.
@@ -684,9 +682,9 @@ be used for equivalent functionality.
 The WebExtensions bookmarks API lets an extension interact with and manipulate the browser's bookmarking system. You can use it to bookmark pages, retrieve existing bookmarks, and edit, remove, and organize bookmarks.
 \end{quote}
 
-Bookmarks in qutebrowser currently are much simpler than they are in Firefox or
+Bookmarks in qutebrowser are currently much simpler than they are in Firefox or
 Chrome; i.e. they are not organized in a tree-like structure, and features like
-tags are missing. Therefore, the bookmarks WebExtension API doesn't fit well
+tags are missing. Therefore, the bookmarks WebExtension API does not fit well
 with qutebrowser bookmarks.
 
 There's an ongoing
@@ -719,7 +717,7 @@ browser, as shown in figure \ref{img:browser-action}.
   \label{img:browser-action}
 \end{figure}
 
-It should be able for custom qutebrowser extensions to add their own user
+It should be possible for custom qutebrowser extensions to add their own user
 interface elements. However, this functionality is unlikely to be needed
 when moving core functionality into extensions (which is the main focus of this
 SA). Therefore, this API is currently out of scope.
@@ -1285,9 +1283,10 @@ them. This is for a variety of reasons:
     occurrence compared to more common browsers such as Google Chrome or Mozilla
     Firefox.
   \item Users of qutebrowser are typically power users, due to its
-    keyboard-focused nature. Therefore, compared to a browser focused at casual
-    users, it can be expected that users are much more diligent in what
-    extensions they're installing.
+    keyboard-focused nature. With a browser aimed at casual users, it might be
+    easy to trick them into installing an extension which is malicious. In
+    contrast, users of qutebrowser can be expected to be much more diligent in ensuring that
+    the extensions they're installing are not malicious.
   \item The volume of available extensions is much lower. Thus, it's conceivable
     that there's a whitelist of extensions which have been reviewed and approved
     by one of qutebrowser's core developers. A contributor wishing to distribute
@@ -1380,7 +1379,7 @@ just a personal pet project of mine. Without this community, I doubt I would
 still be working on it after five years -- when I started, I never imagined that
 it would get that far.
 
-I'm thankful towards all qutebrowser contributors for their patience and
+I'm thankful to all qutebrowser contributors for their patience and
 understanding when I couldn't attend to their contributions in a timely manner
 while working on this project. I'd especially like to thank Fritz~Reichwald for
 his contributions towards switching to the Sphinx documentation generator, and
@@ -1388,7 +1387,7 @@ our careful coordination in order to not interfere with my own work on this
 project.
 
 Thanks to AnneMarie~O'Neill for her careful English reviews and constructive
-feedback on possible improvements. Her suggestions always were very welcome and
+feedback on possible improvements. Her suggestions were always very welcome and
 accurate.
 
 Last but not least, thanks to Méline~Sieber for her constant encouragement
