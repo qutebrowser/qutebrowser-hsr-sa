@@ -17,6 +17,7 @@
 % conflicts with \attribute from pgf-umlcd
 \let\attribute\relax
 \usepackage{pgf-umlcd}
+\usepackage{pgf-umlsd}
 
 \setlist{parsep=10pt}
 
@@ -1012,48 +1013,46 @@ The tab API is grouped into various objects:
 
   \begin{class}[text width=2cm]{Audio}{0,0}
   \end{class}
-  \association{Tab}{}{}{Audio}{}{}
+  \composition{Tab}{}{}{Audio}{}{}
 
   \begin{class}[text width=2cm]{Elements}{1.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Elements}{}{}
+  \composition{Tab}{}{}{Elements}{}{}
 
   \begin{class}[text width=2cm]{History}{3,0}
   \end{class}
-  \association{Tab}{}{}{History}{}{}
+  \composition{Tab}{}{}{History}{}{}
 
   \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Scroller}{}{}
+  \composition{Tab}{}{}{Scroller}{}{}
 
   \begin{class}[text width=2cm]{Caret}{6,0}
   \end{class}
-  \association{Tab}{}{}{Caret}{}{}
+  \composition{Tab}{}{}{Caret}{}{}
 
   \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Zoom}{}{}
+  \composition{Tab}{}{}{Zoom}{}{}
 
   \begin{class}[text width=2cm]{Search}{9,0}
   \end{class}
-  \association{Tab}{}{}{Search}{}{}
+  \composition{Tab}{}{}{Search}{}{}
 
   \begin{class}[text width=2cm]{Printing}{10.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Printing}{}{}
+  \composition{Tab}{}{}{Printing}{}{}
 
   \begin{class}[text width=2cm]{Action}{12,0}
   \end{class}
-  \association{Tab}{}{}{Action}{}{}
+  \composition{Tab}{}{}{Action}{}{}
 
   \begin{class}[text width=2cm]{TabData}{10,2}
   \end{class}
-  \association{Tab}{}{}{TabData}{}{}
+  \composition{Tab}{}{}{TabData}{}{}
 \end{tikzpicture}
 \caption{Object diagram for tab API}
 \end{figure}
-
-\fixme{use filled diamond for composition}
 
 With the exception of \verb|TabData| which is backend-agnostic, all those
 objects exist as an abstract base class and as concrete implementations for
@@ -1212,9 +1211,39 @@ facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
 callback-based API.
 \end{description}
 
+In addition to those external forces, it's helpful to have a set of self-imposed
+design guidelines in mind when designing an API. For this project, it was
+decided to adopt the \emph{``Characteristics of good APIs''} listed in
+Jasmin~Blanchette's \emph{Little Manual of API Design}
+\citep[p.~7ff]{api-design}:
+
+\begin{description}
+  \item[Easy to learn and memorize:] This also implies consistency and minimalism,
+    as well as clear semantics, following the principle of least surprise.
+  \item[Leads to readable code:] As the manual puts it: \emph{``Readable code can be
+  concise or verbose. Either way, it is always at the right level of abstraction
+  -- neither hiding important things nor forcing the programmer to specify
+  irrelevant information''}.
+  \item[Hard to misuse:] A well-designed API should assist its user in
+    writing correct and clear code. 
+  \item[Easy to extend:] New concepts will appear over time, and existing
+    APIs will grow. While it's hard to anticipate the future, those concerns
+    should be taken into account while designing an API.
+  \item[Complete:] The manual claims \emph{``Ideally, an API should be
+    complete and let users do everything they want.''}. However, this statement
+    is later revised by adding \emph{``Completeness is also something that can appear
+    over time, by incrementally adding functionality to existing APIs. However,
+    it usually helps even in those cases to have a clear idea of the direction
+    for future developments, so that each addition is a step in the right
+    direction.''}
+\end{description}
 
 % Schlussfolgerungen, eigener Lösungsansatz
 \section{Conclusion}
+Designing an API always is a trade-off between various, sometimes conflicting,
+forces. For qutebrowser's extension API, the focus should lie on being as
+minimal and straightforward as possible, with the primary goal of moving
+internal qutebrowser code to extensions.
 
 
 % Umsetzungskonzept (des eigenen Lösungsansatzes)
