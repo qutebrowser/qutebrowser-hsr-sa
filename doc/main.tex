@@ -1002,7 +1002,7 @@ qutebrowser's code never has to access backend-specific functionality (like the
 \verb|QWebEngineView|\footnote{\url{https://doc.qt.io/qt-5/qwebengineview.html}}
 class) directly, and uses the abstraction layer instead.
 
-The tab API is grouped into various objects:
+The tab API is grouped into various classes:
 
 \begin{figure}[h]
 \begin{tikzpicture}
@@ -1011,45 +1011,45 @@ The tab API is grouped into various objects:
 
   \begin{class}[text width=2cm]{Audio}{0,0}
   \end{class}
-  \composition{Tab}{}{}{Audio}{}{}
+  \association{Tab}{}{}{Audio}{}{}
 
   \begin{class}[text width=2cm]{Elements}{1.5,4.5}
   \end{class}
-  \composition{Tab}{}{}{Elements}{}{}
+  \association{Tab}{}{}{Elements}{}{}
 
   \begin{class}[text width=2cm]{History}{3,0}
   \end{class}
-  \composition{Tab}{}{}{History}{}{}
+  \association{Tab}{}{}{History}{}{}
 
   \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
   \end{class}
-  \composition{Tab}{}{}{Scroller}{}{}
+  \association{Tab}{}{}{Scroller}{}{}
 
   \begin{class}[text width=2cm]{Caret}{6,0}
   \end{class}
-  \composition{Tab}{}{}{Caret}{}{}
+  \association{Tab}{}{}{Caret}{}{}
 
   \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
   \end{class}
-  \composition{Tab}{}{}{Zoom}{}{}
+  \association{Tab}{}{}{Zoom}{}{}
 
   \begin{class}[text width=2cm]{Search}{9,0}
   \end{class}
-  \composition{Tab}{}{}{Search}{}{}
+  \association{Tab}{}{}{Search}{}{}
 
   \begin{class}[text width=2cm]{Printing}{10.5,4.5}
   \end{class}
-  \composition{Tab}{}{}{Printing}{}{}
+  \association{Tab}{}{}{Printing}{}{}
 
   \begin{class}[text width=2cm]{Action}{12,0}
   \end{class}
-  \composition{Tab}{}{}{Action}{}{}
+  \association{Tab}{}{}{Action}{}{}
 
   \begin{class}[text width=2cm]{TabData}{10,2}
   \end{class}
-  \composition{Tab}{}{}{TabData}{}{}
+  \association{Tab}{}{}{TabData}{}{}
 \end{tikzpicture}
-\caption{Object diagram for tab API}
+\caption{Class diagram for tab API}
 \end{figure}
 
 With the exception of \verb|TabData| which is backend-agnostic, all those
