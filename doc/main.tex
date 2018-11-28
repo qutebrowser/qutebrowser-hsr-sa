@@ -1166,16 +1166,16 @@ extension API:
 
 \begin{description}
 \item[Qt APIs] qutebrowser is built on top of the QtWebEngine/QtWebKit
-rendering engines (which of the two to use is user-configurable). To some
-degree, the APIs exposed by those libraries also dictates how the API
-qutebrowser can expose to extensions can look. The API to get the selected text
-from a web page is an ideal example: The most straightforward API would be a
-\py{def selection() -> str} method. However, JavaScript execution is needed to get
-the selection, which is only available from Qt as a callback-based interface.
-Thus, the extension API will need to look like
-\py{def selection(cb: Callable[[str], None]) -> None} --
-in other words, the \py{selection} method will take a
-callback function, which then gets called with the selected text.
+rendering engines (which of the two to use is user-configurable). Sometimes,
+while a clean API design for a given problem would exist, constraints imposed by
+those libraries are a limiting factor and thus influence the API design.
+The API to get the selected text from a web page is an ideal example: The most
+straightforward API would be a \py{def selection() -> str} method. However,
+JavaScript execution is needed to get the selection, which is only available
+from Qt as a callback-based interface. Thus, the extension API will need to look
+like \py{def selection(cb: Callable[[str], None])} \\ \py{-> None} -- in other words,
+the \py{selection} method will take a callback function, which then gets called
+with the selected text.
 
 \item[Internal qutebrowser code] One of the main goals (as per the task
 description) of this SA is moving code from qutebrowser's core into internal
