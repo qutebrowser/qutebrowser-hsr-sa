@@ -98,14 +98,22 @@ Date: {\today}
 
 \section{Background}
 
-\fixme{main focus: What's qutebrowser about? When/technology should be in the
-  second paragraph. Maybe define web browser. Also define Python/PyQt. List
-alternatives.}
+The qutebrowser project is a web browser which is focused on being
+keyboard-driven and having a minimal user interface. It is aimed at power users
+who value customizability and efficiency, but are willing to accept a rather
+steep learning curve compared to ``traditional'' web browsers such as
+Mozilla~Firefox or Google~Chrome.
 
-The qutebrowser project has existed since December 2013. It is a keyboard-focused
-web browser with a minimal GUI, based on Python and PyQt5.
+Its philosophy and keybindings are inspired by the Vim
+editor\footnote{\url{https://www.vim.org/}} which is available on almost any
+UNIX system (such as macOS or Linux). Similar projects exist as addons for
+Firefox (such as Tridactyl\footnote{\url{https://github.com/tridactyl/tridactyl}})
+or Chrome (Vimium\footnote{\url{https://vimium.github.io/}}). However, due to
+being constrained by the extension API exposed by Firefox and Chrome, those
+projects lack various features which qutebrowser offers.
 
-An extension API for users to write their own extensions to qutebrowser is a
+The project was started in December 2013 and is based on Python and PyQt5. An
+extension API for users to write their own extensions to qutebrowser is a
 long-standing feature
 request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
 which has often been requested by its users.
@@ -133,8 +141,6 @@ documented in section \ref{tabapi}.
 % Problemstellung, Vision
 \section{Vision}
 \label{vision}
-
-\fixme{further define power users}
 
 Many qutebrowser users are power-users and, as such, have very specific (and
 sometimes unique) feature requests and workflows. It should be made possible for
@@ -215,6 +221,23 @@ focus being this documentation and the work required for the extension API.
 % Vorgehen, Aufbau der Arbeit
 \section{Methods and Structure}
 
+In order to take informed and sustainable design decisions, the
+\emph{Y-Approach} \citep{yapproach} was evaluated. It proposes the following
+template for design decisions:
+
+\begin{quote}
+  \begin{itemize}
+    \item In the context of \emph{use case uc and/or component co},
+    \item \ldots facing \emph{non-functional concern c},
+    \item \ldots we decided for \emph{option o1}
+    \item and neglected \emph{options o2 to on},
+    \item \ldots to achieve \emph{quality q},
+    \item \ldots accepting downside \emph{consequence c}.
+  \end{itemize}
+\end{quote}
+
+\fixme{continue}
+
 
 % Projektmanagement (Planung, Soll)
 \chapter{Project Management}
@@ -263,6 +286,9 @@ do the SA project this semester.
 
 Professor \emph{Stefan Keller}, institute partner at the Institute for Software
 (IFS) at HSR is the advisor for this project.
+
+\emph{Raphael Das Gupta}, research assistant at the IFS, helped out with code
+reviews and architectural decisions.
 
 The qutebrowser community is not directly involved in this research project, but
 is the primary audience of the resulting work. It has also contributed many
@@ -461,7 +487,13 @@ extension API:
     extension API should abstract over those differences, so an extension
     written for qutebrowser (or core code moved into such an extension) runs in
     all situations qutebrowser itself can run.
-  \item[Performance] \fixme{Add something about performance vs. small core}
+  \item[Performance] Having code in extensions rather than the core part of a
+    project can result in performance degradations due to more moving parts and
+    more layers being involved. Since those impacts are usually small
+    individually (but might be big enough to be relevant collectively), no
+    relevant impact is expected in the scope of this SA. However, performance
+    considerations might be a good reason to keep some code in the core rather
+    than moving it to extensions in the future.
 \end{description}
 
 % % Detailspezifikation
@@ -481,7 +513,11 @@ extension API:
 \chapter{Existing APIs}
 \label{unsuitable}
 
-\fixme{}: Introductory text here?
+Other browsers (such as Firefox or Chrome) have been supporting extensions for a
+long time. When designing an extension API, it is useful to understand this
+previous work as an inspiration, in order to follow common standards and learn
+from mistakes made in the past. Therefore, various existing extension APIs have
+been analyzed.
 
 \section{Firefox XUL extension API}
 
@@ -1243,14 +1279,20 @@ internal qutebrowser code to extensions.
 While extensibility and completeness are valid concerns, they are less relevant
 as the API is not open to third-party extensions yet.
 
-\fixme{continue?}
-
 % Umsetzungskonzept (des eigenen Lösungsansatzes)
 \chapter{Concept}
 
 % Grobe Beschreibung des eigenen Lösungskonzepts
 \section{Summary}
-\fixme{}
+As shown in previous chapters, there are ample reasons for qutebrowser's
+extension API to differ from existing approaches in other browsers. Much of the
+functionality being used in extensions already exists as a cleanly defined API
+in qutebrowser, which could be exposed (after minor refactorings) in the
+extension API.
+
+Due to time constraints, not all considerations made could find their way into
+an API design. Instead, the work being done was centered on improving APIs which
+already exist in qutebrowser, in order to separate existing code into extensions.
 
 \section{Exposing existing APIs}
 Many of the APIs which should be exposed to extensions already exist in
