@@ -95,6 +95,7 @@ Date: {\today}
 
 % Einführung
 \chapter{Introduction}
+\label{ch:intro}
 
 \section{Background}
 
@@ -220,6 +221,24 @@ focus being this documentation and the work required for the extension API.
 
 % Vorgehen, Aufbau der Arbeit
 \section{Methods and Structure}
+\subsection{Structure of this document}
+This document is organized in roughly chronological order.
+
+In this chapter \ref{ch:intro}, the background necessary to understand the
+project and its goals is explained. Chapter \ref{ch:projectman} documents the
+project methodology used and schedules the time available into various topics.
+It also analyzes the risks involved. Chapter \ref{ch:requirements} specifies the
+project requirements in more detail. In chapter \ref{ch:existing}, existing
+similar work is examined. Chapter \ref{ch:evaluation} notes the criteria being
+considered for the project, based on which a concept was designed in chapter
+\ref{ch:concept}. Finally, chapter \ref{ch:implementation} explains the actual
+implementation, while chapter \ref{ch:results} analyzes the results.
+
+In appendix \ref{ch:glossary}, a glossary of the terms and abbreviations used
+can be found.
+
+\subsection{Design decisions}
+\fixme{How to cite y-approach?}
 
 In order to take informed and sustainable design decisions, the
 \emph{Y-Approach} \citep{yapproach} was evaluated. It proposes the following
@@ -227,20 +246,33 @@ template for design decisions:
 
 \begin{quote}
   \begin{itemize}
-    \item In the context of \emph{use case uc and/or component co},
-    \item \ldots facing \emph{non-functional concern c},
-    \item \ldots we decided for \emph{option o1}
-    \item and neglected \emph{options o2 to on},
-    \item \ldots to achieve \emph{quality q},
-    \item \ldots accepting downside \emph{consequence c}.
+    \item In the context of \emph{use case $uc$ and/or component $co$},
+    \item \ldots facing \emph{non-functional concern $c$},
+    \item \ldots we decided for \emph{option $o_1$}
+    \item and neglected \emph{options $o_2$ to $o_n$},
+    \item \ldots to achieve \emph{quality $q$},
+    \item \ldots accepting downside \emph{consequence $c$}.
   \end{itemize}
 \end{quote}
 
-\fixme{continue}
+The template serves as a good reminder of the aspects to keep in mind
+while taking a decision. However, it was found to not be very helpful for
+documentation, as a different structure (such as a list of considerations, or
+prose text) is often more readable. Thus, it was used as an inspiration only,
+but the explanations in this document do not strictly follow its structure.
 
+\subsection{Tools used}
+Since this project was realized by a single author (rather than in a group ),
+project management tooling was kept to a minimum. GitHub issues and its project
+board features were used for project management, together with
+Clockify\footnote{\url{https://www.clockify.me/}} for time tracking.
+
+This document was typeset in \LaTeX{} using the \emph{Computer Modern Bright}
+font and various additional packages. GNU Emacs was used as text editor.
 
 % Projektmanagement (Planung, Soll)
 \chapter{Project Management}
+\label{ch:projectman}
 
 % Prototypen, Releases, Meilensteine
 \section{Prototypes, Releases, Milestones}
@@ -444,6 +476,7 @@ those changes after the SA is finished, without breaking third-party code.
 
 
 \chapter{Requirements Specification}
+\label{ch:requirements}
 
 % Use Cases (Success Scenario / Success Diagram)
 \section{Use Cases}
@@ -511,6 +544,7 @@ extension API:
 
 % "Stand der Technik" (Was gibt es schon?)
 \chapter{Existing APIs}
+\label{ch:existing}
 \label{unsuitable}
 
 Other browsers (such as Firefox or Chrome) have been supporting extensions for a
@@ -1188,6 +1222,7 @@ extension API:
 
 % Bewertung (Evaluation)
 \chapter{Evaluation}
+\label{ch:evaluation}
 
 % Kriterien (Wie wird bewertet?)
 \section{Criteria}
@@ -1281,6 +1316,7 @@ as the API is not open to third-party extensions yet.
 
 % Umsetzungskonzept (des eigenen Lösungsansatzes)
 \chapter{Concept}
+\label{ch:concept}
 
 % Grobe Beschreibung des eigenen Lösungskonzepts
 \section{Summary}
@@ -1439,6 +1475,7 @@ them. This is for a variety of reasons:
 
 % Implementation (Entwicklung)
 \chapter{Implementation and Test}
+\label{ch:implementation}
 
 % Implementation: Erläuterungen wichtiger konkreter Klassen
 \section{Important Classes}
@@ -1452,6 +1489,7 @@ them. This is for a variety of reasons:
 
 % Resultate, Bewerung und Ausblick
 \chapter{Results}
+\label{ch:results}
 
 % Zielerreichung
 \section{Achievement of Objectives}
@@ -1521,6 +1559,7 @@ stuck somewhere.
 
 \begin{appendices}
 \chapter{Glossary and Abbreviations}
+\label{ch:glossary}
 \begin{description}
   \item[API]{Application Programming Interface, i.e., in
       case of an extension API, the functions and classes (names, arguments,
@@ -1557,7 +1596,6 @@ stuck somewhere.
       technologies such as HTML.}
 \end{description}
 
-\nocite{yapproach}
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \bibliographystyle{IEEEtranN}
 \bibliography{bibliography}
