@@ -23,4 +23,4 @@ addons:
 
 script:
   - cd doc
-  - latexmk -pdf -pdflatex=lualatex -latexoption=-shell-escape -Werror main.tex
+  - latexmk -pdf -pdflatex=lualatex -latexoption=-shell-escape main.tex
