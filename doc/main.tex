@@ -25,6 +25,8 @@
 \setlist{parsep=10pt}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
+\newcommand{\js}[1]{\mintinline{javascript}{#1}}
+\newcommand{\mono}[1]{\mintinline{text}{#1}}
 \newcommand{\fixme}[1]{\textbf{FIXME} \emph{#1}}
 
 \hyphenation{Web-Extension}
@@ -1477,6 +1479,327 @@ them. This is for a variety of reasons:
 \chapter{Implementation and Test}
 \label{ch:implementation}
 
+\section{Type checking}
+\subsection{Background}
+When it comes to type systems, programming languages are usually categorized
+using two properties: Them being either \emph{dynamically} or \emph{statically}
+typed, and being either \emph{weakly} or \emph{strongly} typed.
+
+Weak and strong typing describe how a language reacts when incompatible types
+are combined. Weakly typed languages (such as JavaScript) convert between types
+implicitly. In other words, in an expression such as
+\js{3 - '1'}, the string \js{'1'} is converted to a number (since it should be
+subtracted from another number), with the expression resulting in the number
+\js{2}.
+
+Python is strongly typed, therefore, the same expression in Python raises an
+exception:
+
+\begin{minted}{pycon}
+>​>​> 3 - '1'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for -: 'int' and 'str'
+\end{minted}
+
+Dynamic and static typing describe at what point the types need to be known.
+With statically typed languages, types need to be specified at compile time
+(such as \mintinline{c}{void func(int a)} in C). In more modern statically typed
+languages, types can often be inferred automatically instead of having to be
+specified by the programmer.
+
+Python started as a dynamically typed language, which means that types are only
+known at runtime. However, with Python 3.0 (released in 2008), syntax for
+function annotations was added. Thus, the following code raised a
+\verb|SyntaxError| in Python 2, but is valid syntax in Python 3:
+
+\begin{minted}{python}
+def add(a: int, b: int) -> int:
+    return a + b
+\end{minted}
+
+However, how the type annotation syntax would be used was left to the
+applications using them. Annotations are completely ignored at runtime, which
+means a call like \py{sub("1", "2")} would not be rejected based on annotations
+(and return the string \py{"12"}).
+
+The annotation feature was not commonly used, but it started to gain traction
+in 2014 with PEP 484\footnote{\url{https://www.python.org/dev/peps/pep-0484/}}.
+``Python Enhancement Proposals'' (PEPs) are commonly written as a discussion
+ground for larger changes to the Python language or ecosystem.
+
+PEP 484 was accepted in May 2015, and a \verb|typing| module used to specify types
+was added to the Python 3.5 standard library, released in September 2015. The
+introduction of the \verb|typing| module allowed to specify types such as
+\py{Optional[int]} (either an integer, or the special \py{None} value) or
+\py{Mapping[str, int]} (a mapping from strings to integers).
+
+However, Python remains a dynamically typed language, and those annotations are
+still ignored at runtime. Apart from serving as documentation, there are various
+projects interpreting them:
+
+\label{typecheck-tools}
+\begin{itemize}
+  \item The PyCharm\footnote{\url{https://www.jetbrains.com/pycharm/}} IDE by
+    JetBrains uses them for autocompletion and to notify the user about type
+    errors.
+  \item mypy\footnote{\url{http://www.mypy-lang.org/}} is the de-facto standard
+    tool used to check type annotations for correctness: It can be run
+    independently from Python and fails if there is a mismatch between the
+    annotations and the implementation. Much of its development is supported by
+    Dropbox.
+  \item pytype\footnote{\url{https://github.com/google/pytype}} is an
+    alternative to mypy, written by Google.
+  \item pyre\footnote{\url{https://pyre-check.org/}} is another alternative
+    to mypy, written by Facebook.
+\end{itemize}
+
+Python's approach of not requiring type annotations, as well as delegating their
+interpretation to an external tool, is commonly referred to as
+\emph{gradual typing}. A similar approach can be seen in Microsoft's
+TypeScript\footnote{\url{http://www.typescriptlang.org/}} language, which is
+type-checked and then compiled to JavaScript.
+
+With both mypy and typescript, all type annotations are optional. Types which
+are not annotated are assumed to be of a special type \verb|Any|. This type is
+compatible with any other type (thus, an object of the type \verb|Any| can for
+example passed as an argument annotated with \verb|int|), and also supports all
+operations. In other words, objects of type \verb|Any| are not type-checked at
+all.
+
+Additionally, by default mypy only type-checks the inside of functions which
+themselves have type annotations, in order to avoid flooding its user with
+false-positives.
+
+This approach allows to incrementally introduce ``static'' typing into an
+existing codebase which previously had no type annotations at all, gradually
+introducing more type annotations over a longer time, fixing errors as they
+appear.
+
+Since type checking in Python is a relatively new feature, not all third-party
+libraries used by qutebrowser come with type information. For Python's standard
+library and some third-party libraries, the
+typeshed\footnote{\url{https://github.com/python/typeshed}} project exists,
+where type information is maintained separately from Python itself.
+
+\label{pep561}
+Additionally, a more recent change to the Python ecosystem (PEP
+561\footnote{\url{https://www.python.org/dev/peps/pep-0561/}}, accepted in June
+2018) also allows type information (so-called ``stub files'' with a \verb|.pyi|
+extension, similar to \verb|.h| header files in C or C++) to be distributed
+independently from a library package itself.
+
+\subsection{Introducing type checking}
+As per the task description, type annotations were introduced into qutebrowser's
+code base. Before starting this project, very few functions already carried type
+annotations (since they were contributed by developers who prefer using them),
+but the majority of qutebrowser's code was unannotated. Additionally, no type
+checker was run systematically as part of qutebrowser's continuous integration
+toolchain.
+
+The tools mentioned in \ref{typecheck-tools} were evaluated, with the choice
+falling on mypy since it's widely used and backed (and used) by a more diverse
+community than either pytype and pyre (which are mostly developed and used by
+Google and Facebook, respectively).
+
+The introduction of mypy was split into several phases, with the goal of getting
+mypy to run without any errors/warnings as quickly as possible, and then making
+its checking stricter or more accurate.
+
+\subsubsection{Initial run}
+When running mypy over qutebrowser's codebase without any changes, 324 errors
+were reported. Most errors looked similar to:
+
+\begin{quote}
+\begin{verbatim}
+qutebrowser/utils/qtutils.py:36: error:
+No library stub file for module 'PyQt5.QtCore'
+\end{verbatim}
+\end{quote}
+
+with mypy complaining that it found no type information at all for various PyQt
+modules.
+
+\subsubsection{Ignoring missing imports}
+
+Mypy provides a \verb|--ignore-missing-imports| switch which allows ignoring
+such missing modules. Note that its usage is discouraged in mypy's documentation:
+\emph{``We recommend using this approach only as a last resort''}\footnote{\url{https://mypy.readthedocs.io/en/latest/running_mypy.html\#missing-imports},
+accessed 2018-12-03}. Nevertheless, it was deemed useful in order to focus on
+the other existing error messages.
+
+With the \verb|--ignore-missing-imports| option, mypy only produced 88 errors.
+
+Analyzing those errors revealed that they could be split into various
+categories:
+
+\begin{itemize}
+  \item Mypy not recognizing how qutebrowser adds an additional \verb|VDEBUG|
+    (verbose debugging) logging level to Python's logging system. This was
+    solved by adding \py{# type: ignore} comments to make mypy ignore those
+    issues as appropriate.
+  \item Trouble with a common pattern of handling optional library imports like so:
+    \begin{minted}{python}
+try:
+    import secrets
+except ImportError:
+    secrets = None
+\end{minted}
+    There, mypy complained since setting a module type to the
+    \verb|None| value is an invalid operation from the type system's view, but
+    it still perfectly valid (if later guarded via \py{if secrets is not None:})
+    in Python. Thus, those issues also were ignored via \py{# type: ignore}
+    comments. An issue for better handling of this case in mypy was already
+    open in mypy's issue tracker: \url{https://github.com/python/mypy/issues/1153}
+  \item Mypy not handling Python's \py{enum.IntEnum} correctly when used via
+    its function-based (rather than class-based) API. This was worked around by
+    using the class-based API instead; an issue was already open in mypy's issue
+    tracker: \url{https://github.com/python/mypy/issues/4865}.
+  \item Additional type annotations being needed by mypy in places where types
+    could not be inferred (such as \mintinline{python}{cmd_dict = {} # type: typing.Dict[str, Command]}).
+  \item Module-level globals which are set to \py{None} initially and then
+    initialized in a \py{init()} method. Mypy asserted that those could be \py{None}
+    throughout the codebase (thus resulting in many potentially invalid operations),
+    while their initialization happens very early, so they can be safely assumed
+    to never be \py{None} despite their initial value. This was solved by
+    overriding the assumed type via \py{instance = typing.cast('Config', None)}.
+  \item Other values which similarly never are \py{None} when a certain function
+    gets called, despite them having been \py{None} at some point before. Since
+    mypy understands additional hints in the form of \py{assert val is not
+      None} or \py{assert isinstance(index, int)}, such assertions could be used
+    to silence those errors.
+  \item One case were an existing annotation falsely claimed that a value could
+    be either \py{str} or \py{int} (\py{typing.Union[str, int]}), while it
+    always was a string.
+  \item Various other cases where existing type annotations had to be refined to
+    be more accurate.
+\end{itemize}
+
+After fixing those issues, mypy finished without showing any errors, but without
+having type information for libraries being used by qutebrowser.
+
+\subsubsection{Adding library type information}
+
+After removing the \verb|--ignore-missing-imports| switch again, the main issue
+were missing stubs for PyQt, the main library being used by qutebrowser. While
+PyQt comes with a way to generate stub files from C++ type information (being a
+quite simple wrapper over C++ code), those stubs come with various issues making
+them unsuitable for use with mypy.
+
+As a substitute, a PyQt5-stubs project
+exists\footnote{\url{https://github.com/stlehmann/PyQt5-stubs/}}, packaging
+adjusted type stubs for PyQt5 as a separate package (via PEP 561, see
+\ref{pep561}).
+
+With those installed and the switch removed, 55 new errors appeared. Those again
+could be classified into various categories:
+
+\begin{itemize}
+  \item Issues with the PyQt5-stubs project where type annotations where
+    inaccurate. Those were fixed in a copy (GitHub fork) of the stubs in the
+    qutebrowser
+    organization\footnote{\url{https://github.com/qutebrowser/PyQt5-stubs}} and
+    contributed to the upstream project. However, a reply from its maintainer is
+    still pending as of December 2018, so qutebrowser currently installs its own
+    copy instead.
+  \item Missing stub files for Python standard library modules in the typeshed
+    project. For the \verb|faulthandler| module, writing stubs was
+    straightforward, so those were
+    contributed\footnote{\url{https://github.com/python/typeshed/pull/2627}} to
+    the typeshed project. For more complex cases, those modules were ignored in
+    the mypy config file instead.
+  \item Bugs in the type annotations in typeshed, for which fixes were
+    contributed\footnote{\url{https://github.com/python/typeshed/pull/2635}, \\
+      \url{https://github.com/python/typeshed/pull/2636}} as well.
+  \item Missing type annotations for other third-party modules. For those, an
+    issue was opened in order to inform the respective developers about the
+    possibilities to add type information to their packages, and the module was
+    then ignored via the mypy config file.
+  \item New places where mypy needed some additional type annotations in
+    qutebrowser's code base for types it could not infer correctly.
+\end{itemize}
+
+\subsection{Increasing strictness}
+
+After returning to a clean mypy invocation with additional type information, it
+was attempted to add the \verb|--strict| switch to mypy, causing it to be more
+pedantic about various checks. However, after enabling the strict option, mypy
+displayed 5385 new errors. Most new errors were due to untyped functions (and
+calls into such functions) being prohibited entirely in that case.
+
+Instead, the more fine-grained options implied by \verb|--strict| were evaluated
+individually:
+
+\begin{description}
+  \item[--warn-unused-configs] warns about unused module-specific settings in
+    the config file, which could be caused by a typo. However, this could not be
+    turned on due to a
+    bug\footnote{\url{https://github.com/python/mypy/issues/5957}} causing
+    false-positive warnings in mypy.
+  \item[--disallow-subclassing-any] disallows subclassing from an object of an
+    unknown (\verb|Any|) type. This was enabled globally except for a
+    module (\verb|browser.webkit.rfc6266|) in qutebrowser describing a parser
+    grammar, which relies on dynamic typing.
+  \item[--disallow-untyped-calls] disallows calls into any function which does
+    not have type information. This was causing a huge number of errors (since
+    most of qutebrowser's codebase is not annotated yet), and thus was not
+    enabled.
+  \item[--disallow-untyped-defs] disallows defining any function without type
+    annotation. This was not enabled since qutebrowser's codebase will gradually
+    become more annotated. However, it was enabled for modules which were
+    annotated as a part of this SA, so that any future additions to those
+    modules will also need to carry type information.
+  \item[--disallow-incomplete-defs] disallows partially annotated functions,
+    where only some arguments are annotated. This was initially enabled and
+    some partial annotations were completed, but it was later disabled due to
+    false-positives in
+    mypy\footnote{\url{https://github.com/python/mypy/issues/5954}}.
+  \item[--check-untyped-defs] causes mypy to check the inside of functions which
+    are not annotated yet. This caused 392 new errors and thus could not be
+    enabled yet. However, reviewing those errors revealed that many were
+    false-positives or mypy limitations, but also uncovered a crash (which was
+    then fixed) in qutebrowser.
+  \item[--disallow-untyped-decorators] disallows applying a decorator to a
+    function which strips its type information (since the type of the decorator
+    is unknown). This was enabled as it did not lead to any new errors.
+  \item[--no-implicit-optional] disallows annotations with a \py{None} default
+    value such as \py{def f(a: str = None)}, instead requiring the more
+    accurate \py{typing.Optional[str]} annotation. Since this would lead to more
+    verbose type annotations without any perceived benefit (the same
+    information can be seen by looking at the default value), it was not enabled.
+  \item[--warn-redundant-casts] warns about constructs like \py{typing.cast(int,
+      x)} when \py{x} already is of type \py{int}. It was enabled since it
+    did not result in any new errors.
+  \item[--warn-unused-ignores] warns about \mintinline{python}{# type: ignore}
+    comment on lines where no error would have had occurred. This was enabled as
+    it did not result in any new errors.
+  \item[--warn-return-any] warns when a function returns a value of unknown
+    (\verb|Any|) type, since that can propagate into other places which then are
+    not type-checked either. This was not enabled as doing so would require many
+    additional type annotation for qutebrowser's codebase.
+\end{description}
+
+\subsection{Adding annotations}
+
+After mypy's configuration was completed and it still ran without any issues,
+additional type annotations were introduced in qutebrowser's codebase. The task
+description requires anything exposed by the extension API to carry type
+annotations. Additionally, much of the config system (which is not exposed yet)
+was also annotated in order to gain some additional experience with mypy.
+
+This resulted in the following modules being fully annotated (in addition to
+some being partially annotated):
+
+\begin{itemize}
+  \item \verb|browser.browsertab| (``tab API'')
+  \item \verb|misc.objects|
+  \item \verb|commands.cmdutils| (registering commands)
+  \item Most config-related modules: \verb|config|, \verb|configcache|,
+    \verb|configcommands|, \verb|configdata|, \verb|configdiff|,
+    \verb|configexc|, \verb|configfiles|, \verb|configinit|, \verb|configutils|
+\end{itemize}
+
+
 % Implementation: Erläuterungen wichtiger konkreter Klassen
 \section{Important Classes}
 
@@ -1576,6 +1899,8 @@ stuck somewhere.
   \item[GUI]{Graphical User Interface}
   \item[HSR]{The Hochschule für Technik (University of Applied Sciences) in
       Rapperswil, Switzerland.}
+  \item[IDE]{Integrated Development Environment -- a software application
+      providing tools (such as a source editor) for development.}
   \item[IFS]{The Institute for Software at \emph{HSR}.}
   \item[plugin]{In most contexts, the same as an \emph{extension}. Note that
       qutebrowser initially used \emph{plugin API} to refer to its extension
