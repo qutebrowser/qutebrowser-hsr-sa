@@ -19,6 +19,13 @@
 \usepackage{pgf-umlcd}
 \usepackage{pgf-umlsd}
 
+\newcommand{\mycomposition}[4]
+{
+\draw[umlcd style, fill=\umldrawcolor, diamond-] (#1) -- (#4)
+node[near end, above]{#2}
+node[near end, below]{#3};
+}
+
 %\usepackage{showframe}
 \usepackage{geometry}
 %\geometry{top=2cm,bottom=2.5cm,includeheadfoot}
@@ -59,7 +66,7 @@
 \end{minipage}
 \\[4cm]
 
-{\huge \bfseries qutebrowser made extendible}\\[0.5cm]
+{\huge \bfseries qutebrowser made extensible}\\[0.5cm]
 %{\large \bfseries Student Research Project (Studienarbeit)}\\[2cm]
 {\large \bfseries Term Project (Studienarbeit) \\[0.2cm] Autumn Term 2018/2019}\\[2cm]
 
@@ -240,7 +247,7 @@ In appendix \ref{ch:glossary}, a glossary of the terms and abbreviations used
 can be found.
 
 \subsection{Design decisions}
-\fixme{How to cite y-approach?}
+\fixme{How to cite y-approach? - cite SATURN presentation instead}
 
 In order to take informed and sustainable design decisions, the
 \emph{Y-Approach} \citep{yapproach} was evaluated. It proposes the following
@@ -263,8 +270,10 @@ documentation, as a different structure (such as a list of considerations, or
 prose text) is often more readable. Thus, it was used as an inspiration only,
 but the explanations in this document do not strictly follow its structure.
 
+\fixme{we don't need high-level decisions}
+
 \subsection{Tools used}
-Since this project was realized by a single author (rather than in a group ),
+Since this project was realized by a single author (rather than in a group),
 project management tooling was kept to a minimum. GitHub issues and its project
 board features were used for project management, together with
 Clockify\footnote{\url{https://www.clockify.me/}} for time tracking.
@@ -1080,45 +1089,45 @@ The tab API is grouped into various classes:
 
   \begin{class}[text width=2cm]{Audio}{0,0}
   \end{class}
-  \association{Tab}{}{}{Audio}{}{}
+  \mycomposition{Tab}{}{}{Audio}{}{}
 
   \begin{class}[text width=2cm]{Elements}{1.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Elements}{}{}
+  \mycomposition{Tab}{}{}{Elements}{}{}
 
   \begin{class}[text width=2cm]{History}{3,0}
   \end{class}
-  \association{Tab}{}{}{History}{}{}
+  \mycomposition{Tab}{}{}{History}{}{}
 
   \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Scroller}{}{}
+  \mycomposition{Tab}{}{}{Scroller}{}{}
 
   \begin{class}[text width=2cm]{Caret}{6,0}
   \end{class}
-  \association{Tab}{}{}{Caret}{}{}
+  \mycomposition{Tab}{}{}{Caret}{}{}
 
   \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Zoom}{}{}
+  \mycomposition{Tab}{}{}{Zoom}{}{}
 
   \begin{class}[text width=2cm]{Search}{9,0}
   \end{class}
-  \association{Tab}{}{}{Search}{}{}
+  \mycomposition{Tab}{}{}{Search}{}{}
 
   \begin{class}[text width=2cm]{Printing}{10.5,4.5}
   \end{class}
-  \association{Tab}{}{}{Printing}{}{}
+  \mycomposition{Tab}{}{}{Printing}{}{}
 
   \begin{class}[text width=2cm]{Action}{12,0}
   \end{class}
-  \association{Tab}{}{}{Action}{}{}
+  \mycomposition{Tab}{}{}{Action}{}{}
 
   \begin{class}[text width=2cm]{TabData}{10,2}
   \end{class}
-  \association{Tab}{}{}{TabData}{}{}
+  \mycomposition{Tab}{}{}{TabData}{}{}
 \end{tikzpicture}
-\caption{Class diagram for tab API (all relations are 1:1)}
+\caption{Class diagram for tab API}
 \end{figure}
 
 With the exception of \verb|TabData| which is backend-agnostic, all those
