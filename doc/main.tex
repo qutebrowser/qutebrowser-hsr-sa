@@ -6,12 +6,14 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{natbib}
 \usepackage{minted}
 \usepackage{microtype}
 \usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=authoryear-ibid,autocite=inline]{biblatex}
+\addbibresource{bibliography.bib}
 \usepackage[page]{appendix}
 % http://wiki.luatex.org/index.php/Attributes
 % conflicts with \attribute from pgf-umlcd
@@ -145,7 +147,7 @@ There are two backends (rendering engines) which can be used with qutebrowser:
 
 In order to allow using either backend, qutebrowser provides an abstraction
 layer over the two libraries, implementing the adapter pattern
-\citep[p.~139ff]{gof}. This abstraction layer is referred to as ``tab API'', and
+\autocite[139ff]{gof}. This abstraction layer is referred to as ``tab API'', and
 documented in section \ref{tabapi}.
 
 % Problemstellung, Vision
@@ -250,7 +252,7 @@ can be found.
 \fixme{How to cite y-approach? - cite SATURN presentation instead}
 
 In order to take informed and sustainable design decisions, the
-\emph{Y-Approach} \citep{yapproach} was evaluated. It proposes the following
+\emph{Y-Approach} \autocite{yapproach} was evaluated. It proposes the following
 template for design decisions:
 
 \begin{quote}
@@ -369,7 +371,7 @@ Inception, Preparation, Elaboration, Construction, Transition
 \label{schedule}
 
 8 ECTS credits are awarded for the SA-course. Since one ECTS point is equivalent
-to a workload of 25--30 hours \citep{ects} and this SA is written by a single
+to a workload of 25--30 hours \autocite{ects} and this SA is written by a single
 author, this amounts to 200--240 hours of work. The semester consists of 14
 weeks, thus, an average workload of 14--17 hours per week is expected. This time
 is allotted as shown in figure \ref{img:schedule}.
@@ -576,7 +578,7 @@ customizability from extensions -- however, this came with various drawbacks
 which ultimately led to Mozilla abandoning that approach.
 
 The motivations to deprecate and subsequently remove the legacy addon API listed
-in Mozilla's blog post \citep{mozilla-webext} were as follows:
+in Mozilla's blog post \autocite{mozilla-webext} were as follows:
 
 \begin{itemize}
   \item Chrome and Opera (and nowadays also Microsoft Edge) already supported
@@ -603,7 +605,7 @@ in Mozilla's blog post \citep{mozilla-webext} were as follows:
     started to become an attractive attack vector for bad actors. With legacy
     addons, addon code is able to run arbitrary code and freely modify Firefox
     internals on the user's machine, which turns untrusted addons into a
-    security liability \citep{mozilla-signing}.
+    security liability \autocite{mozilla-signing}.
   \item Legacy addons hindered Firefox development in general, since its
     powerful addon API introduced a tight coupling between Firefox' internal
     code, and the code in third-party addons: \emph{``A permissive add-on model
@@ -624,7 +626,7 @@ a more thorough analysis of the XUL API design proved to be difficult. Archived
 API documentation is still
 available\footnote{\url{https://developer.mozilla.org/en-US/docs/Archive/Add-ons}},
 but bad documentation was one of the criticisms of XUL addons
-\citep{mozilla-webext}. Since the API is not in active use anymore, and ties
+\autocite{mozilla-webext}. Since the API is not in active use anymore, and ties
 into Firefox' core code deeply, no further analysis was performed.
 
 The key takeaway for qutebrowser is that it should have a minimal and clearly
@@ -638,7 +640,7 @@ Currently, there are ongoing efforts towards an API for browser
 extensions called \emph{WebExtensions}, which is shared between different
 browsers. WebExtensions are supported by Chrome, Opera, Firefox and Edge.
 Efforts are currently underway to standardize the API as a W3C specification
-\citep{w3c-webext}. At the moment, each browser has a slightly different set of
+\autocite{w3c-webext}. At the moment, each browser has a slightly different set of
 supported APIs, with some divergence in naming. As an example, the
 \verb|chrome.| module is used in Chromium for browser-specific features, while
 Firefox uses \verb|browser.|.
@@ -1292,7 +1294,7 @@ In addition to those external forces, it's helpful to have a set of self-imposed
 design guidelines in mind when designing an API. For this project, it was
 decided to adopt the \emph{``Characteristics of good APIs''} listed in
 Jasmin~Blanchette's \emph{Little Manual of API Design}
-\citep[p.~7ff]{api-design}:
+\autocite[7ff]{api-design}:
 
 \begin{description}
   \item[Easy to learn and memorize:] This also implies consistency and minimalism,
@@ -1347,7 +1349,7 @@ qutebrowser. However, exposing formerly private APIs carries certain risks:
 
 \begin{itemize}
   \item Often, APIs do not undergo any review before they are made public
-    \citep[p.18f]{api-design}, This can lead to mistakes which were not regarded
+    \autocite[18f]{api-design}, This can lead to mistakes which were not regarded
     as important (or not noticed at all) to be exposed publicly, without a way
     to remedy the mistakes (since that would be an incompatible change).
   \item Looking at the tab API explained in section \ref{tabapi}, some methods
@@ -1375,7 +1377,7 @@ In order to catch possible issues with existing APIs planning to be exposed to
 extensions, the existing APIs were reviewed by Raphael~Das~Gupta from the IFS
 (Institute for Software).
 
-It was considered to implement the object adapter pattern \citep[p.139]{gof} to
+It was considered to implement the object adapter pattern \autocite[139]{gof} to
 limit the methods exposed in the API to what is actually necessary:
 
 \begin{figure}[h]
@@ -1435,7 +1437,7 @@ security philosophy of qutebrowser's extensions is analyzed in this section.
 The security model of WebExtensions (see section \ref{webextensions}) assumes
 that extensions are untrusted. Even with the limited WebExtensions API,
 malicious extensions are a common issue
-\citep{mozilla-signing,mozilla-trustworthy}. Browser vendors try to alleviate
+\autocite{mozilla-signing,mozilla-trustworthy}. Browser vendors try to alleviate
 this problem with automated and manual code review, extension signing, and
 blacklisting of known-bad extensions. Additionally, the user explicitly needs to
 allow extensions to run in incognito/private browsing mode, as the impact of a
@@ -1448,7 +1450,7 @@ them. This is for a variety of reasons:
 \begin{itemize}
   \item Extensions for qutebrowser should be written in Python (like qutebrowser itself
     is), but safely executing untrusted Python code is commonly regarded to be
-    impossible \citep{nedbat-eval, lwn-pysandbox}.
+    impossible \autocite{nedbat-eval, lwn-pysandbox}.
   \item The attack surface for a malicious actor trying to distribute a bad
     extension is much smaller, since qutebrowser caters to a relatively small
     niche group of users. Thus, malicious extensions are expected to be a seldom
@@ -1937,8 +1939,7 @@ stuck somewhere.
 \end{description}
 
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
-\bibliographystyle{IEEEtranN}
-\bibliography{bibliography}
+\printbibliography
 \end{appendices}
 
 \end{document}
