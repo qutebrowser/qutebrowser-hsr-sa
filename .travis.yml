@@ -8,6 +8,8 @@ addons:
       - texlive-fonts-extra
       - texlive-lang-german
       - texlive-latex-extra
+      - texlive-bibtex-extra
+      - biber
       - texlive-pictures
       - texlive-publishers
       - texlive-font-utils
