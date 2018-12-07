@@ -9,6 +9,7 @@ addons:
       - texlive
       - texlive-fonts-extra
       - texlive-lang-german
+      - texlive-latex-recommended
       - texlive-latex-extra
       - texlive-bibtex-extra
       - biber
@@ -17,9 +18,7 @@ addons:
       - texlive-font-utils
       - texlive-luatex
       - ghostscript
-      - latex-xcolor
       - python-pygments
-      - pgf
       - latexmk
       - cm-super
 
