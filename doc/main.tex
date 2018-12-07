@@ -235,13 +235,13 @@ focus being this documentation and the work required for the extension API.
 \subsection{Structure of this document}
 This document is organized in roughly chronological order.
 
-In this chapter \ref{ch:intro}, the background necessary to understand the
+In this chapter, the background necessary to understand the
 project and its goals is explained. Chapter \ref{ch:projectman} documents the
-project methodology used and schedules the time available into various topics.
+project methodology used and allocates the time available.
 It also analyzes the risks involved. Chapter \ref{ch:requirements} specifies the
 project requirements in more detail. In chapter \ref{ch:existing}, existing
 similar work is examined. Chapter \ref{ch:evaluation} notes the criteria being
-considered for the project, based on which a concept was designed in chapter
+considered for the project. Based on those criteria, a concept was designed in chapter
 \ref{ch:concept}. Finally, chapter \ref{ch:implementation} explains the actual
 implementation, while chapter \ref{ch:results} analyzes the results.
 
@@ -277,7 +277,7 @@ but the explanations in this document do not strictly follow its structure.
 \subsection{Tools used}
 Since this project was realized by a single author (rather than in a group),
 project management tooling was kept to a minimum. GitHub issues and its project
-board features were used for project management, together with
+board features were used for project management, along with
 Clockify\footnote{\url{https://www.clockify.me/}} for time tracking.
 
 This document was typeset in \LaTeX{} using the \emph{Computer Modern Bright}
@@ -533,8 +533,8 @@ extension API:
     extension API should abstract over those differences, so an extension
     written for qutebrowser (or core code moved into such an extension) runs in
     all situations qutebrowser itself can run.
-  \item[Performance] Having code in extensions rather than the core part of a
-    project can result in performance degradations due to more moving parts and
+  \item[Performance] Having code in extensions (rather than in the core part of a
+    project) can result in performance degradations due to more moving parts and
     more layers being involved. Since those impacts are usually small
     individually (but might be big enough to be relevant collectively), no
     relevant impact is expected in the scope of this SA. However, performance
@@ -562,7 +562,7 @@ extension API:
 
 Other browsers (such as Firefox or Chrome) have been supporting extensions for a
 long time. When designing an extension API, it is useful to understand this
-previous work as an inspiration, in order to follow common standards and learn
+previous work. It can serve as an inspiration, in order to follow common standards and learn
 from mistakes made in the past. Therefore, various existing extension APIs have
 been analyzed.
 
@@ -1493,7 +1493,7 @@ them. This is for a variety of reasons:
 \section{Type checking}
 \subsection{Background}
 When it comes to type systems, programming languages are usually categorized
-using two properties: Them being either \emph{dynamically} or \emph{statically}
+using two properties: Being either \emph{dynamically} or \emph{statically}
 typed, and being either \emph{weakly} or \emph{strongly} typed.
 
 Weak and strong typing describe how a language reacts when incompatible types
@@ -1609,9 +1609,9 @@ checker was run systematically as part of qutebrowser's continuous integration
 toolchain.
 
 The tools mentioned in \ref{typecheck-tools} were evaluated, with the choice
-falling on mypy since it's widely used and backed (and used) by a more diverse
-community than either pytype and pyre (which are mostly developed and used by
-Google and Facebook, respectively).
+falling on mypy since it is widely used and backed by a more diverse community
+than either pytype and pyre (which are mostly developed and used by Google and
+Facebook, respectively).
 
 The introduction of mypy was split into several phases, with the goal of getting
 mypy to run without any errors/warnings as quickly as possible, and then making
@@ -1692,7 +1692,7 @@ having type information for libraries being used by qutebrowser.
 \subsubsection{Adding library type information}
 
 After removing the \verb|--ignore-missing-imports| switch again, the main issue
-were missing stubs for PyQt, the main library being used by qutebrowser. While
+was missing stubs for PyQt, the main library being used by qutebrowser. While
 PyQt comes with a way to generate stub files from C++ type information (being a
 quite simple wrapper over C++ code), those stubs come with various issues making
 them unsuitable for use with mypy.
@@ -1706,7 +1706,7 @@ With those installed and the switch removed, 55 new errors appeared. Those again
 could be classified into various categories:
 
 \begin{itemize}
-  \item Issues with the PyQt5-stubs project where type annotations where
+  \item Issues with the PyQt5-stubs project where type annotations were
     inaccurate. Those were fixed in a copy (GitHub fork) of the stubs in the
     qutebrowser
     organization\footnote{\url{https://github.com/qutebrowser/PyQt5-stubs}} and
