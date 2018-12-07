@@ -3,8 +3,6 @@ language: generic
 group: edge
 addons:
   apt:
-    sources:
-      - sourceline: "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
     packages:
       - texlive
       - texlive-fonts-extra
