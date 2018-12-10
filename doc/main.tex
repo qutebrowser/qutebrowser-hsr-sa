@@ -1844,6 +1844,41 @@ some being partially annotated):
 % Codestatistik (Zeilen: Kommentare, Klassen, Packages)
 \section{Code Statistics}
 
+\section{Demo extension}
+\begin{listing}
+\begin{minted}{python}
+import typing
+
+from qutebrowser.api import cmdutils, apitypes, hook, message
+
+
+@cmdutils.register()
+@cmdutils.argument('tab', value=cmdutils.Value.cur_tab)
+def has_leaflet(tab: apitypes.Tab) -> None:
+    """Check whether a website uses leaflet."""
+    tab.elements.find_css('.leaflet-container',
+                          callback=show_message,
+                          error_cb=show_error_message)
+
+
+def show_error_message(error: str) -> None:
+    message.error(str(error))
+
+
+def show_message(elements: typing.List[apitypes.WebElement]) -> None:
+    if elements:
+        message.info("Yay, this site uses Leaflet!")
+    else:
+        message.info("This site does not use Leaflet...")
+
+
+@hook.init()
+def init(_context: apitypes.InitContext) -> None:
+    message.info("osmtest initialized")
+\end{minted}
+\caption{Demo extension}
+\end{listing}
+
 \section{Software Documentation}
 % Maybe separate (Sphinx)
 
