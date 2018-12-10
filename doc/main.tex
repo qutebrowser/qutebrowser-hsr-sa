@@ -97,8 +97,10 @@ Date: {\today}
 
 
 \tableofcontents
+
 \listoffigures
 \listoftables
+\listoflistings
 
 
 % Aufgabenstellung
@@ -1158,7 +1160,7 @@ The API exposed by those objects is quite long, so it's not included in full in
 this documentation.\footnote{The full API is available at
   \url{https://github.com/qutebrowser/qutebrowser/blob/v1.5.2/qutebrowser/browser/browsertab.py},
 accessed 2018-11-09.} As an example, the public API exposed in the main
-\verb|Tab| object is listed in figure \ref{fig:tabapi}.
+\verb|Tab| object is listed in figure \ref{lst:tabapi}.
 
 Some parts of the API (like the \verb|networkaccessmanager()| or
 \verb|user_agent()| methods) are only exposed because there was a need in
@@ -1166,7 +1168,7 @@ qutebrowser's core to do so, but shouldn't be exposed via the extension API.
 However, for the most part, the tab API can be exposed unmodified to extensions
 and already allow for a wide range of interactions with tabs.
 
-\begin{figure}
+\begin{listing}
 \begin{minted}{python}
 window_close_requested = pyqtSignal()
 link_hovered = pyqtSignal(str)
@@ -1207,8 +1209,8 @@ def shutdown()
 def set_html(html: str, base_url: QUrl)
 \end{minted}
   \caption{Existing main tab API}
-  \label{fig:tabapi}
-\end{figure}
+  \label{lst:tabapi}
+\end{listing}
 
 \section{Other inspirations}
 Various other existing projects served as an inspiration for qutebrowser's
