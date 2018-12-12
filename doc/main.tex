@@ -17,6 +17,7 @@
 \usepackage{csquotes}
 \usepackage[backend=biber,style=authoryear-ibid,autocite=inline]{biblatex}
 \addbibresource{bibliography.bib}
+\setlength\bibitemsep{\baselineskip}
 
 % http://wiki.luatex.org/index.php/Attributes
 % conflicts with \attribute from pgf-umlcd
@@ -1983,6 +1984,7 @@ stuck somewhere.
 
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \printbibliography
+\fixme{fit on one page}
 \end{appendices}
 
 \end{document}
