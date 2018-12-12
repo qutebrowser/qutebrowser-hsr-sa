@@ -11,17 +11,18 @@
 \usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
+\usepackage[page]{appendix}
+\usepackage{pdfpages}
+
 \usepackage{csquotes}
 \usepackage[backend=biber,style=authoryear-ibid,autocite=inline]{biblatex}
 \addbibresource{bibliography.bib}
-\usepackage[page]{appendix}
+
 % http://wiki.luatex.org/index.php/Attributes
 % conflicts with \attribute from pgf-umlcd
 \let\attribute\relax
 \usepackage{pgf-umlcd}
 \usepackage{pgf-umlsd}
-\usepackage{pdfpages}
-
 \newcommand{\mycomposition}[4]
 {
 \draw[umlcd style, fill=\umldrawcolor, diamond-] (#1) -- (#4)
