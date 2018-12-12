@@ -20,6 +20,7 @@
 \let\attribute\relax
 \usepackage{pgf-umlcd}
 \usepackage{pgf-umlsd}
+\usepackage{pdfpages}
 
 \newcommand{\mycomposition}[4]
 {
@@ -1882,10 +1883,6 @@ def init(_context: apitypes.InitContext) -> None:
 \caption{Demo extension}
 \end{listing}
 
-\section{Software Documentation}
-% Maybe separate (Sphinx)
-
-
 % Ausblick: Weiterentwicklung (nur wichtigste Punkte)
 \section{Future Work}
 
@@ -1977,6 +1974,11 @@ stuck somewhere.
   \item[W3C]{World Wide Web Consortium, the standards body for web-related
       technologies such as HTML.}
 \end{description}
+
+\chapter{API documentation}
+\label{ch:sphinx}
+\fixme{some text}
+\includepdf[pages=5-18]{./img/sphinx.pdf}
 
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \printbibliography
