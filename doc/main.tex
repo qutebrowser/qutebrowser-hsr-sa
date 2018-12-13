@@ -1939,10 +1939,11 @@ individually:
     function which strips its type information (since the type of the decorator
     is unknown). This was enabled as it did not lead to any new errors.
   \item[--no-implicit-optional] disallows annotations with a \py{None} default
-    value such as \py{def f(a: str = None)}, instead requiring the more
-    accurate \py{typing.Optional[str]} annotation. Since this would lead to more
-    verbose type annotations without any perceived benefit (the same
-    information can be seen by looking at the default value), it was not enabled.
+    value. An example of such an annotation is \py{def f(a: str = None)}.
+    Instead, this option requires the more accurate \py{typing.Optional[str]}
+    annotation. Since this would lead to more verbose type annotations without any
+    perceived benefit (the same information can be seen by looking at the default
+    value), it was not enabled.
   \item[--warn-redundant-casts] warns about constructs like \py{typing.cast(int,
       x)} when \py{x} already is of type \py{int}. It was enabled since it
     did not result in any new errors.
