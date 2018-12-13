@@ -14,6 +14,10 @@
 \usepackage[page]{appendix}
 \usepackage{pdfpages}
 
+% https://tex.stackexchange.com/a/28334/28697
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+
 \usepackage{csquotes}
 \usepackage[backend=biber,style=authoryear-ibid,autocite=inline]{biblatex}
 \addbibresource{bibliography.bib}
