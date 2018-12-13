@@ -13,6 +13,7 @@
 \usepackage{tabulary}
 \usepackage[page]{appendix}
 \usepackage{pdfpages}
+\usepackage{multicol}
 
 % https://tex.stackexchange.com/a/28334/28697
 \usepackage{chngcntr}
@@ -84,7 +85,7 @@ University of Applied Sciences Rapperswil (HSR)\\
 \url{www.hsr.ch}\\[1cm]
 
 % Author and advisor
-Author: Florian Bruhin\\[0.3cm]
+Author: Florian~Bruhin\\[0.3cm]
 Advisor: Prof.~Stefan Keller, HSR
 
 % Bottom of the page
@@ -1942,8 +1943,9 @@ stuck somewhere.
 
 \begin{appendices}
 \chapter{Glossary and Abbreviations}
+\begin{multicols}{2}
 \label{ch:glossary}
-\begin{description}
+\begin{description}[leftmargin=0pt]
   \item[API]{Application Programming Interface, i.e., in
       case of an extension API, the functions and classes (names, arguments,
       etc.) an extension can implement.}
@@ -1980,11 +1982,12 @@ stuck somewhere.
   \item[W3C]{World Wide Web Consortium, the standards body for web-related
       technologies such as HTML.}
 \end{description}
+\end{multicols}
 
 \chapter{API documentation}
 \label{ch:sphinx}
 \fixme{some text}
-\includepdf[pages=5-18]{./img/sphinx.pdf}
+\includepdf[pages=5-18,trim=0 2cm 0 1.8cm,clip,pagecommand=,offset=0 1cm]{./img/sphinx.pdf}
 
 \renewcommand{\bibname}{\chapter{Literature and Sources}}
 \printbibliography
