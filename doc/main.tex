@@ -1437,6 +1437,77 @@ documentation and the name of the attribute) what part of the API is intended
 for usage in the core only. This solution also still allows the core to access
 those APIs, and the private API can still be documented properly.
 
+\newenvironment{umlhighlight}{%
+  \let\oldumlfillcolor\umlfillcolor%
+  \renewcommand{\umlfillcolor}{yellow}%
+}{%
+  \renewcommand\umlfillcolor{\oldumlfillcolor}
+}
+
+\begin{figure}[h]
+\begin{tikzpicture}
+  \begin{umlhighlight}
+    \begin{class}[text width=2cm]{TabPrivate}{2,2}
+    \end{class}
+    \mycomposition{Tab}{}{}{TabPrivate}{}{}
+  \end{umlhighlight}
+
+  \begin{class}[text width=2cm]{Tab}{6,2}
+  \end{class}
+
+  \begin{class}[text width=2cm]{Audio}{0,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Audio}{}{}
+
+  \begin{class}[text width=2cm]{Elements}{1.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Elements}{}{}
+
+  \begin{class}[text width=2cm]{History}{3,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{History}{}{}
+
+  \begin{umlhighlight}
+  \begin{class}[text width=3cm]{HistoryPrivate}{3,-2}
+  \end{class}
+  \mycomposition{History}{}{}{HistoryPrivate}{}{}
+  \end{umlhighlight}
+
+  \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Scroller}{}{}
+
+  \begin{class}[text width=2cm]{Caret}{6,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Caret}{}{}
+
+  \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Zoom}{}{}
+
+  \begin{class}[text width=2cm]{Search}{9,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Search}{}{}
+
+  \begin{class}[text width=2cm]{Printing}{10.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Printing}{}{}
+
+  \begin{class}[text width=2cm]{Action}{12,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Action}{}{}
+
+  \begin{class}[text width=2cm]{Data}{10,2}
+  \end{class}
+  \mycomposition{Tab}{}{}{Data}{}{}
+\end{tikzpicture}
+\caption[Class diagram for refactored tab API]{Class diagram for refactored tab
+  API, with added classes highlighted}
+\end{figure}
+
+The full refactored API can be found in the developer documentation in appendix
+\ref{ch:sphinx}.
+
 % z.T. Wiederholung im Groben, z.T. Verweise auf Teil II-Kapitel
 \section{Security}
 \label{security}
