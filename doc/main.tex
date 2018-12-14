@@ -2171,6 +2171,78 @@ registered hooks correctly.
 
 % Automatische Testverfahren
 \section{Automated Testing}
+When this project was started, the qutebrowser project already existed -- it was
+started in December~2013. Thus, a comprehensive test suite was already present
+at the time:
+
+\begin{itemize}
+  \item Around 7400 tests (including parametrizations with different data)
+  \item Including fuzzing (via hypothesis\footnote{https://hypothesis.works/})
+    and benchmark tests (via pytest-benchmark\footnote{https://pytest-benchmark.readthedocs.io/})
+  \item Testing on Linux, macOS and Windows
+  \item Testing with all supported Python versions (3.5, 3.6 and 3.7)
+  \item Testing with all supported Qt versions (5.7, 5.9, 5.10, 5.11, 5.12)
+  \item Average test coverage of 80\% (including branch coverage)
+\end{itemize}
+
+Therefore, the aim in this project was to build upon the existing testing
+infrastructure, and make sure the total coverage does not decrease with the
+newly added code. Ideally, the coverage of newly added modules should surpass
+the existing average coverage of 80\%\footnote{The author is well aware that
+  coverage alone is not necessarily a useful metric. Blindly following a
+  ``coverage goal'' thus is of little value. However, it is useful when using it
+  as a guideline while consciously developing good tests, which is what has been
+  done.}.
+
+Unfortunately, there were no good uses for the hypothesis (fuzzing, i.e.,
+testing with many random values) and pytest-benchmark libraries while adding
+tests for the code added/changed during this project.
+
+The test coverage for modules added for the extension API (or modules with major
+changes) is shown in table \ref{tab:coverage}.
+
+% >>> v = [100, 100, 100, 70, 90, 100, 100, 93, 82, 73, 96, 85, 94, 88]
+% >>> sum(v)/len(v)
+% 90.78571428571429
+\begingroup
+\renewcommand{\arraystretch}{1}
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{rlrL}
+    \toprule
+    Directory & File & Coverage (\%) & Comment \\
+    \midrule
+    api/ & \emph{Average} & 80 & \\
+    & apitypes.py & 100 & \\
+    & cmdutils.py & 100 & \\
+    & config.py & 100 & \\
+    & downloads.py & 70 & \fixme{} \\
+    & hook.py & 90 & \\
+    & interceptor.py & 100 & \\
+    & downloads.py & 100 & \strut\vspace{0.5em} \\
+    components/ & \emph{Average} & 85 & \\
+    & adblock.py & 93 & \\
+    & caretcommands.py & 82 & \\
+    & misccommands.py & 73 & \fixme{} \\
+    & scrollcommands.py & 96 & \\
+    & zoomcommands.py & 85 & \strut\vspace{0.5em} \\
+    extensions/ & \emph{Average} & 89 \\
+    & interceptors.py & 94 \\
+    & loader.py & 88 \\
+    browser/ & browsertab.py & 87 \\
+    commands/ & command.py & 89 \\
+    \midrule
+    Average & & 90 \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Test coverage for added/changed modules}
+  \label{tab:coverage}
+\end{table}
+\endgroup
+
+Based on this data, the goal of surpassing the existing average coverage of 80\%
+was met: In the files relevant to this SA, an average test coverage of 90\% has
+been achieved.
 
 % Manuelle Testverfahren, etc.
 \section{Manual Testing}
