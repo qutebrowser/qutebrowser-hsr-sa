@@ -1250,6 +1250,7 @@ QtWebKit/QtWebEngine each:
 \end{tikzpicture}
 \end{center}
 \caption{Inheritance tree of tab API classes}
+  \label{fig:tabapi-inherit}
 \end{figure}
 
 The API exposed by those objects is quite long, so it's not included in full in
@@ -1973,22 +1974,200 @@ some being partially annotated):
 
 \begin{itemize}
   \item \verb|browser.browsertab| (``tab API'')
+  \item \verb|browser.webelem|, \verb|browser.webkit.webkitelem|,
+    \verb|browser.webengine.webenginelem| (``web element API'')
   \item \verb|misc.objects|
   \item \verb|commands.cmdutils| (registering commands)
-  \item Most config-related modules: \verb|config|, \verb|configcache|,
+  \item All modules in the \verb|qutebrowser.config| package (\verb|config|, \verb|configcache|,
     \verb|configcommands|, \verb|configdata|, \verb|configdiff|,
-    \verb|configexc|, \verb|configfiles|, \verb|configinit|, \verb|configutils|
+    \verb|configexc|, \verb|configfiles|, \verb|configinit|, \verb|configtypes|,
+    \verb|configutils|, \verb|websettings|).
+  \item All modules in the \verb|qutebrowser.api| package (see section \ref{sec:important})
+  \item All modules in the \verb|qutebrowser.components| package (see section \ref{sec:important})
+  \item All modules in the \verb|qutebrowser.extension| package (see section \ref{sec:important})
 \end{itemize}
 
 
 % Implementation: Erläuterungen wichtiger konkreter Klassen
-\section{Important Classes}
-% tab API
-% apitypes
-% cmdutils
-% config
-% message
-% requestfilter (?)
+\section{Important packages, modules and classes}
+\label{sec:important}
+The modules added for qutebrowser's extension API are spread across three
+packages:
+
+\begin{itemize}
+\item The \verb|qutebrowser.api| package contains the API exposed to
+  extensions (in other words, any code which is part of the extension API).
+\item The \verb|qutebrowser.extensions| package contains supporting infrastructure and
+  internal code for handling extensions.
+\item The \verb|qutebrowser.components| package contains modules which formerly
+was part of qutebrowser's core and only uses the extension API -- that is, it
+only imports code from the \verb|qutebrowser.api| package, but not from any
+other \verb|qutebrowser.*| packages.
+\end{itemize}
+
+\subsection[The qutebrowser.api package]{The qutebrowser.api package: Public extension API}
+
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{lL}
+    \toprule
+    Module & Description \\
+    \midrule
+    \verb|apitypes.py| & Various basic types which can be used by extensions.
+                         Those are either used as type annotations (such as
+                         \verb|Tab|, which is an \verb|AbstractTab| from figure
+                         \ref{fig:tabapi-inherit}) or as enumerations (such as
+                         \verb|ClickTarget| which is used to specify how to open
+                         a clicked link). \\
+    \verb|cmdutils.py| & Utilities related to registering command handlers from
+                         extensions, such as the \py{@cmdutils.register()}
+                         decorator. \\
+    \verb|config.py| & Access to the config from extensions, by either using a
+                       shorthand like
+                       \verb|config.val.content.javascript.enabled|, or the
+                       \verb|get()| function like
+                       \py{config.get('content.javascript.enabled')}. \\
+    \verb|downloads.py| & Used to trigger download of temporary files (such as
+                          adblock filter lists) from extensions. In the future,
+                          this module could be extended to allow interacting
+                          with existing downloads triggered by the user. \\
+    \verb|hook.py| & Allows extensions to register hooks for certain events via
+                     decorators, such as \py{@hook.init()} or
+                     \py{@hook.config_changed()} \\
+    \verb|interceptor.py| & Can by used by extensions to register a
+                            \emph{request interceptor}, which then gets called
+                            for every network request made by qutebrowser. Based
+                            on the URL of the page and the URL being requested,
+                            the extension may decide to block the request. \\
+    \verb|message.py| & Used to show messages to the user via functions like
+                        \py{message.info("...")} or \py{message.error("...")}. \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Modules in the qutebrowser.api package.}
+  \label{tab:apimodule}
+\end{table}
+
+The \verb|qutebrowser.api| package is described in more detail in the developer
+documentation in appendix \ref{ch:sphinx}.
+
+\subsection[The qutebrowser.extensions package]{The qutebrowser.extensions package: Internal extension machinery}
+
+The \verb|qutebrowser.extensions| package consists of two modules, which are
+explained in further detail below.
+
+\subsubsection{extensions.interceptors module}
+This module implements the internal logic so extensions can intercept and
+optionally block network requests made by qutebrowser.
+
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{lL}
+    \toprule
+    Class / Function & Description \\
+    \midrule
+    \verb|Request| & A class representing a network request, containing
+                     information such as \verb|first_party_url| (the page being
+                     visited) or \verb|request_url| (the URL of the resource
+                     being requested). The request can be blocked by calling its
+                     \verb|block()| method. \\
+    \verb|InterceptorType| & The type of an interceptor function, intended to be
+                             used in type annotations (exposed to extensions as
+                             \verb|qutebrowser.api.interceptor.InterceptorType|). \\
+    \verb|register()| & Register a new request interceptor (exposed to
+                       extensions as \verb|qutebrowser.api.interceptor.register()|) \\
+    \verb|run()| & Used internally by qutebrowser to run all registered
+                  interceptors over a request. \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Classes and functions in the qutebrowser.extensions.interceptors package.}
+\end{table}
+
+\subsubsection{extensions.loader module}
+This module implements the internal loading and initializing of
+extensions/components. It is responsible for dynamically finding all modules
+in the \verb|qutebrowser.components| package, loading them, and calling their
+registered hooks correctly.
+
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{lL}
+    \toprule
+    Class / Function & Description \\
+    \midrule
+    \verb|InitContext| & Information passed to an extension when it gets
+                         initialized (if it declares a function decorated with
+                         \py{@hook.init()}, see \verb|hook.py| in table
+                         \ref{tab:apimodule}). Contains information such as the
+                         commandline arguments passed to qutebrowser, or the
+                         data/config directories used. Used via a
+                         \verb|_get_init_context()| factory method.\\
+    \verb|ModuleInfo| & Information attached to a Python module object. It is
+                        used to record internal information by decorators like
+                        \py{@hook.init()} (see \verb|hook.py| in table
+                        \ref{tab:apimodule}). \\
+    \verb|ExtensionInfo| & Meta-information about an extension. Currently only
+                           contains the name of an extension, but could be
+                           extended in the future to record additional
+                           information such as version numbers or the author of
+                           a third-party extension. \\
+    \verb|add_module_info()| & Used internally to add a \verb|ModuleInfo|
+                               instance to a Python module object. \\
+    \verb|load_components()| & Finds and loads all modules in the
+                               \verb|qutebrowser.components| package (see
+                               section \ref{sec:components}). Uses a
+                               \verb|_load_component()| utility function
+                               internally which loads a single component. \\
+    \verb|walk_components()| & Find all available components. Used by
+                               \verb|load_components()| and by qutebrowser's
+                               packaging infrastructure so all component modules
+                               are added to Windows/macOS builds (via
+                               PyInstaller). Uses two different implementations
+                               internally: \verb|_walk_normal()| and
+                               \verb|_walk_pyinstaller()|. The latter needs to
+                               be used because the simpler approach doesn't work
+                               in builds built via
+                               PyInstaller
+                               \footnote{\url{https://github.com/pyinstaller/pyinstaller/issues/1905}}. \\
+    \verb|_on_config_changed()| & Triggered on a configuration change, takes
+                                  care of finding and calling all extension
+                                  methods decorated with
+                                  \py{@hook.config_changed()} (see
+                                  \verb|hook.py| in table \ref{tab:apimodule}). \\
+    \bottomrule
+  \end{tabulary}
+  \caption[Important classes and functions in the qutebrowser.extensions.loader
+  package.]{Important classes and functions in the qutebrowser.extensions.loader package.
+    Some private functions were redacted for brevity.}
+\end{table}
+
+\subsection[The qutebrowser.components package]{The qutebrowser.components
+  package: Code moved out of the core}
+\label{sec:components}
+
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{lL}
+    \toprule
+    Module & Description \\
+    \midrule
+    \verb|adblock.py| & qutebrowser's adblocker implementation, blocking
+                         advertisements in websites. \\
+    \verb|caretcommands.py| & Commands related to moving the caret
+                              (cursor) around via keybindings, such as
+                              \verb|:move-to-end-of-document| or
+                              \verb|:toggle-selection| (18 commands total). \\
+    \verb|misccommands.py| & Miscellaneous qutebrowser commands, such as
+                             \verb|:home|, \verb|:reload| or \verb|:print| (15
+                             commands total) \\
+    \verb|scrollcommands.py| & Commands related to scrolling (\verb|:scroll|,
+                               \verb|:scroll-px|, \verb|:scroll-to-perc|,
+                               \verb|:scroll-to-anchor|) \\
+    \verb|zoomcommands.py| & Commands related to zooming (\verb|:zoom-in|,
+                             \verb|:zoom-out|, \verb|:zoom|) \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Modules in the qutebrowser.components package.}
+\end{table}
 
 % Automatische Testverfahren
 \section{Automated Testing}
