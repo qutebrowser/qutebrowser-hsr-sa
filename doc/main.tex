@@ -1,4 +1,4 @@
-\documentclass[a4paper,parskip=full,DIV=14,BCOR=15mm]{scrreprt}
+\documentclass[a4paper,parskip=half,DIV=14,BCOR=15mm]{scrreprt}
 %\usepackage{showframe}
 
 \usepackage[T1]{fontenc}
@@ -8,13 +8,13 @@
 \usepackage{graphicx}
 \usepackage{minted}
 \usepackage{microtype}
-\usepackage{enumitem}
 \usepackage{pgfgantt}
 \usepackage{tabulary}
 \usepackage[page]{appendix}
 \usepackage{pdfpages}
 \usepackage{multicol}
 \interfootnotelinepenalty=10000
+
 
 \usepackage{booktabs}
 \renewcommand{\arraystretch}{1.3}
@@ -40,6 +40,7 @@ node[near end, above]{#2}
 node[near end, below]{#3};
 }
 
+\usepackage{enumitem}
 \setlist{parsep=10pt}
 
 \newcommand{\py}[1]{\mintinline{python}{#1}}
@@ -302,7 +303,7 @@ should be refactored to use better alternatives such as constructor arguments
 
 The software and version constraints are mostly given by the existing project:
 
-\begin{itemize}
+\begin{itemize}[parsep=5pt]
   \item Python\footnote{\url{https://www.python.org/}} 3 (3.5 or newer)
   \item Qt\footnote{\url{https://www.qt.io/}} 5 (5.7 or newer), used via PyQt5\footnote{\url{https://www.riverbankcomputing.com/software/pyqt/intro}}
   \item pytest\footnote{\url{https://pytest.org/}} as test framework
@@ -352,7 +353,7 @@ In order to take informed and sustainable design decisions, the
 template for design decisions:
 
 \begin{quote}
-  \begin{itemize}
+  \begin{itemize}[parsep=5pt]
     \item In the context of \emph{use case $uc$ and/or component $co$},
     \item \ldots facing \emph{non-functional concern $c$},
     \item \ldots we decided for \emph{option $o_1$}
@@ -1972,7 +1973,7 @@ was also annotated in order to gain some additional experience with mypy.
 This resulted in the following modules being fully annotated (in addition to
 some being partially annotated):
 
-\begin{itemize}
+\begin{itemize}[parsep=5pt]
   \item \verb|browser.browsertab| (``tab API'')
   \item \verb|browser.webelem|, \verb|browser.webkit.webkitelem|,
     \verb|browser.webengine.webenginelem| (``web element API'')
@@ -2175,7 +2176,7 @@ When this project was started, the qutebrowser project already existed -- it was
 started in December~2013. Thus, a comprehensive test suite was already present
 at the time:
 
-\begin{itemize}
+\begin{itemize}[parsep=5pt]
   \item Around 7400 tests (including parametrizations with different data)
   \item Including fuzzing (via hypothesis\footnote{https://hypothesis.works/})
     and benchmark tests (via pytest-benchmark\footnote{https://pytest-benchmark.readthedocs.io/})
