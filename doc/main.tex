@@ -260,8 +260,13 @@ decentralize development efforts, as it enables users and developers to maintain
 their extensions independently from the core development.
 
 % Ziele und Unterziele
-\section{Goals}
+\section{Objectives}
 \label{goals}
+
+\subsection{Merging contributions}
+
+\subsection{Refactorings}
+\label{sec:goals-refactorings}
 
 Initially, qutebrowser was developed without knowledge of proper software
 engineering practices, which resulted in some maintainability issues. While many
@@ -297,6 +302,12 @@ breaks tooling such as the mypy type checker. All code using the object registry
 should be refactored to use better alternatives such as constructor arguments
 (dependency injection).
 \end{itemize}
+
+\subsection{Extension API}
+
+\subsection{Documentation}
+
+\fixme{continue!}
 
 % Rahmenbedingungen, Umfeld, Definitionen, Abgrenzungen
 \section{Context}
@@ -536,6 +547,7 @@ third-party changes which would lead to conflicts with refactoring changes.
 
 % Risiken
 \section{Risks}
+\label{sec:risks}
 The following risks have been identified in this project:
 
 \fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
@@ -1663,6 +1675,7 @@ them. This is for a variety of reasons:
 \label{ch:implementation}
 
 \section{Type checking}
+\label{sec:mypy}
 \subsection{Background}
 When it comes to type systems, programming languages are usually categorized
 using two properties: Being either \emph{dynamically} or \emph{statically}
@@ -2220,17 +2233,17 @@ changes) is shown in table \ref{tab:coverage}.
                           stub/mock exists yet. \\
     & hook.py & 90 & \\
     & interceptor.py & 100 & \\
-    & downloads.py & 100 & \strut\vspace{2.5em} \\
+    & downloads.py & 100 & \strut\vspace{1em} \\
     components/ & \emph{Average} & 85 & \\
     & adblock.py & 93 & \\
     & caretcommands.py & 82 & \\
     & misccommands.py & 73 & Some commands (like printing) contain
-                             GUI-interactions which are hard to test. \\
+                             hard to test GUI-interactions \\
     & scrollcommands.py & 96 & \\
-    & zoomcommands.py & 85 & \strut\vspace{2.5em} \\
+    & zoomcommands.py & 85 & \strut\vspace{1em} \\
     extensions/ & \emph{Average} & 89 & \\
     & interceptors.py & 94 & \\
-    & loader.py & 88 & \strut\vspace{2.5em} \\
+    & loader.py & 88 & \strut\vspace{1em} \\
     browser/ & browsertab.py & 87 & \\
     commands/ & command.py & 89 & \\
     \midrule
@@ -2260,9 +2273,8 @@ automated tests were insufficient:
   \item Verifying that visiting a website containing ads
     (\url{https://www.20min.ch/}) is displayed without ads.
   \item Running \verb|:print| to display the print dialog and printing the
-    website into a PDF file.
-  \item Using the \verb|:print --pdf| file to generate a PDF file directly.
-  \item Verifying that those PDF files look correct.
+    website into a PDF file; using the \verb|:print --pdf| file to generate a
+    PDF file directly.
 \end{itemize}
 
 % Resultate, Bewerung und Ausblick
@@ -2272,17 +2284,268 @@ automated tests were insufficient:
 % Zielerreichung
 \section{Achievement of Objectives}
 
+In this chapter, the objectives set in section \ref{goals} will be reviewed.
+
+\subsection{Merging contributions}
+At the beginning of this project, various third-party contributions were pending
+a code review, due to being ignored during the exam session preceding this
+semester.
+
+Since those contributions would conflict with the refactorings needed before
+work on the extension API starts, a block of time was reserved for those code
+reviews at the beginning of this project (see figure \ref{img:schedule} on page
+\pageref{img:schedule}).
+
+To avoid receiving more contributions while working on those refactorings, the
+following notice was added to qutebrowser's contribution guidelines:
+
+\begin{quote}
+Important: \emph{Currently, bigger changes are going on in qutebrowser, as
+part of a student research project about adding a plugin API to qutebrowser
+and moving a lot of code from the code into plugins.} Due to that, bandwidth
+for pull request review is currently very limited, and contributions might lead
+to merge conflicts due to ongoing refactorings.
+\end{quote}
+
+The impact of such a notice is hard to measure, but pull requests (where
+contributors request their changes to be pulled into the main repository)
+continued to be opened regularly throughout the project.
+
+Thus, the decision was taken to continue with the next step despite many
+remaining open contributions, and only merge new contributions if they are
+trivial enough.
+
+\subsection{Refactorings}
+In section \ref{sec:goals-refactorings}, three major refactorings related to the
+extension API were identified:
+
+\begin{itemize}
+  \item qutebrowser should introduce ``gradual typing'' and a type checker such
+    as MyPy into its toolchain. This goal was fully achieved despite some issues
+    with third-party projects (which were fixed as part of this project), see
+    section \ref{sec:mypy}.
+  \item The documentation toolchain used in qutebrowser should be switched to
+    the Sphinx tool. Some work on this was started by an external contributor,
+    but not finished in time, which was identified as one of the possible risks
+    in section \ref{sec:risks}. To remedy this, Sphinx was introduced alongside
+    the existing documentation toolchain, and only used to document the
+    extension API (see appendix \ref{ch:sphinx}). The author of this report
+    (Florian~Bruhin) will meet with the external contributor (Fritz~Reichwald)
+    at the 35th Chaos Communication
+    Congress\footnote{\url{https://en.wikipedia.org/wiki/Chaos_Communication_Congress}}
+    after this project is done (December 27th to 30th, 2018).
+    There, they plan to finish migrating the entire existing documentation to
+    the Sphinx tool.
+  \item The ``object registry'' (\texttt{objreg} module) in qutebrowser should
+    be refactored, as it has various issues and influences the public API. Work
+    on this goal was started but not completed due to some deeper issues with
+    its implementation\footnote{See \url{https://github.com/qutebrowser/qutebrowser/issues/640\#issuecomment-443143463}}.
+    Fixing those properly would take more time than anticipated, thus this
+    refactoring was not completed. However, care was taken to not add the object
+    registry to the API exposed to extensions, so this change can still be done
+    after the API has been implemented.
+\end{itemize}
+
+The initial refactoring goals were only met partially -- however, it was
+possible to continue with implementing the extension API despite that. Care was
+taken to make that work absolutely necessary for the extension API was finished.
+
+\subsection{Extension API}
+
+While the extension API resulting from this work is rather minimal, it is
+already quite powerful: As described in section \ref{sec:components}, it allowed
+various components to be moved from qutebrowser's core to use the extension API.
+It also implements dynamic loading of extensions, as a first stepping stone
+towards loading third-party extensions in the future.
+
+Originally, it was intended to start opening the API to third-party extensions
+as part of this project -- however, this decision was later revised: Since the
+API is very new, it should be allowed to gain some maturity before making it
+public. Otherwise, problems noticed in the API could not be fixed easily, as
+doing so would result in a breaking API change.
+
+\subsection{Documentation}
+
+The value of a good documentation for work like this is not to be
+underestimated. However, neither is the effort that needs to be put into such a
+documentation, especially since both this documentation and the resulting code
+was written by a single author. Juggling both code and documentation at the same
+time was difficult at times, but their author is pleased with the outcome of
+both. This project also showed that documenting thoughts and ideas lead to a
+clearer picture of how the resulting code should look.
 
 % Projektmonitoring (Ist-Beschreibung, so ist es passiert)
 % \chapter{Project Monitoring}
 % Soll-Ist-Zeit-Vergleich
 \section{Allocated/Actual Time}
+\fixme{}
+
 % Codestatistik (Zeilen: Kommentare, Klassen, Packages)
 \section{Code Statistics}
+Since the work on this project was on an existing codebase, it is difficult to
+distinguish in code statistics what work was pre-existing, compared to work done
+as part of the project.
+
+In the following table, code statistics as calculated by the
+cloc\footnote{\url{https://github.com/AlDanial/cloc}} tool (``count lines of
+code'') are presented for all files created as part of this project, as well as
+files with major changes:
+
+\begingroup
+\renewcommand{\arraystretch}{1}
+\begin{table}[H]
+  \centering
+  \begin{tabulary}{\linewidth}{rlrrrrr}
+    \toprule
+    Directory & File & Blank & Comment & Code & Func./Meth. & Classes \\
+    \midrule
+    api/ & \emph{Total} & 133 & 304 & 111 & 20 & 6 \\
+    & \_\_init\_\_.py & 4 & 22 & 0 & 0 & 0 \\
+    & apitypes.py & 3 & 19 & 5 & 0 & 0 \\
+    & cmdutils.py & 59 & 108 & 52 & 6 & 3 \\
+    & config.py & 8 & 29 & 6 & 1 & 0 \\
+    & downloads.py & 20 & 33 & 22 & 3 & 1 \\
+    & hook.py & 26 & 46 & 20 & 8 & 2 \\
+    & interceptor.py & 10 & 28 & 5 & 2 & 0 \\
+    & message.py & 3 & 19 & 1 & 0 & 0\vspace{1em} \\
+    components/ & \emph{Total} & 213 & 338 & 556 & 65 & 2 \\
+    & \_\_init\_\_.py & 2 & 18 & 0 & 0 & 0 \\
+    & adblock.py & 64 & 76 & 207 & 19 & 2 \\
+    & caretcommands.py & 52 & 72 & 87 & 18 & 0 \\
+    & misccommands.py & 61 & 91 & 160 & 21 & 0 \\
+    & scrollcommands.py & 20 & 44 & 58 & 4 & 0 \\
+    & zoomcommands.py & 14 & 37 & 44 & 3 & 0\vspace{1em} \\
+    extensions/ & \emph{Total} & 70 & 68 & 112 & 13 & 4 \\
+    & interceptors.py & 20 & 24 & 19 & 3 & 1 \\
+    & loader.py & 50 & 44 & 93 & 10 & 3\vspace{1em} \\
+    browser/ & browsertab.py & 256 & 251 & 617 & 136 & 15 \\
+    commands/ & command.py & 75 & 130 & 371 & 20 & 2 \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Line count for added/changed modules}
+  \label{tab:coverage}
+\end{table}
+\endgroup
+
+Notes:
+
+\begin{itemize}[parsep=5pt]
+
+  \item \verb|browser/browsertab.py| is relatively large for a single file.
+    Should any additions be required in the future, it should be split into smaller
+    files.
+  \item \verb|__init__.py| files mark a folder as a Python package, thus
+    do not contain any code.
+  \item Some files in \verb|api/| only import code from internal
+    qutebrowser modules in order to expose them to the extension API, and thus
+    do not contain any functions/classes on their own.
+  \item Documentation (such as the API documentation in appendix \ref{ch:sphinx}
+    or the user documentation for qutebrowser commands) is generated from
+    Python docstrings in the code, which cloc counts as ``comments''.
+\end{itemize}
 
 \section{Demo extension}
-\begin{listing}
-\begin{minted}{python}
+In this section, a demo extension using various aspects of the API is
+presented. The extension checks whether a website uses the
+Leaflet\footnote{\url{https://leafletjs.com/}} JavaScript library, which is
+often used to embed OpenStreetMap\footnote{\url{https://www.openstreetmap.org/}}
+maps into websites.
+
+First, the extension imports the \verb|typing| module from Python's standard
+library, and various submodules of the \verb|qutebrowser.api| module:
+
+\begin{minted}[linenos]{python}
+import typing
+
+from qutebrowser.api import cmdutils, apitypes, hook, message
+\end{minted}
+
+Next, it registers a command handler using the \py{@cmdutils.register()}
+decorator, which causes the function to be available to the user as a
+\verb|:has-leaflet| command inside qutebrowser:
+
+\begin{minted}[linenos,firstnumber=6]{python}
+@cmdutils.register()
+@cmdutils.argument('tab', value=cmdutils.Value.cur_tab)
+def has_leaflet(tab: apitypes.Tab) -> None:
+    """Check whether a website uses leaflet."""
+\end{minted}
+
+The command name is automatically deduced from the name of the function, while
+the Python docstring also gets shown in qutebrowser's command completion:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/screenshot-completion.png}
+  \caption{Command completion showing the \texttt{:has-leaflet} command.}
+\end{figure}
+
+The \py{@cmdutils.argument(...)} decorator is used to pass more information
+about the \verb|tab| argument to the API. Due to the
+\py{value=cmdutils.Value.cur_tab} parameter, the \verb|tab| argument is set to
+the tab object of the tab currently being focused when qutebrowser calls the
+command handler.
+
+Next, the extension uses the tab API to find HTML elements on the website:
+
+\begin{minted}[linenos,firstnumber=10]{python}
+    tab.elements.find_css('.leaflet-container',
+                          callback=show_message,
+                          error_cb=show_error_message)
+\end{minted}
+
+The \verb|find_css()| method takes three arguments: A CSS selector, a callback
+which gets called on success, and a callback which gets called in case of an
+error.
+
+The CSS class selector \verb|.leaflet-container| is used to find websites using
+Leaflet, as the library uses that selector for its map display.
+
+The callback used for errors simply uses the \verb|message| module to show an
+error message to the user:
+
+\begin{minted}[linenos,firstnumber=15]{python}
+def show_error_message(error: str) -> None:
+    message.error(str(error))
+\end{minted}
+
+The callback called on success instead checks whether the \verb|elements| lists
+it received contains any elements. Depending on the result, it shows the
+appropriate message:
+
+\begin{minted}[linenos,firstnumber=19]{python}
+def show_message(elements: typing.List[apitypes.WebElement]) -> None:
+    if elements:
+        message.info("Yay, this site uses Leaflet!")
+    else:
+        message.info("This site does not use Leaflet...")
+\end{minted}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/screenshot-leaflet.png} \\[2em]
+  \includegraphics[width=\linewidth]{img/screenshot-leaflet-no.png}
+  \caption{Results of running the \texttt{:has-leaflet} command.}
+\end{figure}
+
+Finally, the extension uses the \py{@hook.init()} decorator to define an
+initialization hook. There, it displays an ``osmtest initialized'' message:
+
+\begin{minted}[linenos,firstnumber=26]{python}
+@hook.init()
+def init(_context: apitypes.InitContext) -> None:
+    message.info("osmtest initialized")
+\end{minted}
+
+Note that it receives an \verb|InitContext| object with additional information
+(such as commandline arguments). Since the argument is unused, its name is
+prefixed by an underscore, a common convention in Python code.
+
+The full code of the demo extension can be found in listing \ref{lst:demo}.
+
+\begin{listing}[H]
+\centering
+\begin{minted}[linenos]{python}
 import typing
 
 from qutebrowser.api import cmdutils, apitypes, hook, message
@@ -2313,10 +2576,41 @@ def init(_context: apitypes.InitContext) -> None:
     message.info("osmtest initialized")
 \end{minted}
 \caption{Demo extension}
+\label{lst:demo}
 \end{listing}
 
 % Ausblick: Weiterentwicklung (nur wichtigste Punkte)
 \section{Future Work}
+While there was a lot of progress for extensions in qutebrowser, there is plenty
+of room for future research and improvements:
+
+\begin{itemize}
+  \item The core of qutebrowser should be further modularized. Ideally, its
+    architecture would be designed with the microkernel pattern \autocite[171ff]{posa1}
+    for operating systems in mind, however, the resulting extension API should
+    always be general enough to be useful for more than one use-case.
+  \item After the extension API is stable enough, extensions should be made open
+    for third-party contributions, initially by allowing users to download
+    extensions they want to use in a folder such as
+    \verb|~/.local/share/qutebrowser/extensions|.
+  \item Many use-cases and ideas for extensions have been
+    suggested\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}
+    by qutebrowser's users. Those should carefully be reviewed and considered
+    for future API additions.
+  \item In order to foster community involvement around extensions and keep
+    users safe, a central place to distribute and update extensions should
+    exist. Furthermore, an ``extension store'' should be added to qutebrowser,
+    which allows users to easily discover, install and upgrade extensions.
+\end{itemize}
+
+The currently existing API has been designed with future additions in mind: The
+\verb|downloads.py| module currently only allows triggering a temporary
+download, but was split off from other modules in order to allow for future
+additions for handling user-initiated downloads. Furthermore, init-hooks which
+can be defined by extensions receive a special \verb|InitContext| instance
+(rather than getting called with the information therein as individual
+arguments) so that the \verb|InitContext| class can be extended in the future
+without extensions needing to adjust their code.
 
 % From project management part:
 % % Resultate und Weiterentwicklung
