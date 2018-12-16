@@ -1,0 +1,208 @@
+% -*- TeX-master: "main.tex" -*-
+
+% Projektmanagement (Planung, Soll)
+\chapter{Project Management}
+\label{ch:projectman}
+
+% Prototypen, Releases, Meilensteine
+\section{Prototypes, Releases, Milestones}
+Since this project is done without any external industry partner, there is no
+immediate need for fixed releases or prototypes during the SA.
+
+However, the following releases are planned:
+
+\begin{itemize}
+  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream
+    \begin{itemize}
+      \item v1.5.0 was released in week 3
+    \end{itemize}
+  \item Patch releases for v1.5.x as needed in case of regressions or serious
+    enough bugs:
+    \begin{itemize}
+      \item v1.5.1 was released in week 4
+      \item v1.5.2 in week 6
+      \item v1.5.3 in week \fixme{}
+    \end{itemize}
+  \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
+    is completed, in order to get the changes out to users as soon as possible.
+  \item v1.6.x patch releases as needed (probably after the SA is finished)
+  \item In the future, after the extension API is open for third-party
+    extensions, a v2.0.0 release with some other big changes (like dropping support
+    for the older QtWebKit backend, as it's rarely updated upstream, even for
+    security issues).
+\end{itemize}
+
+At the end of week 11, an API review milestone is planned, where the extension
+API design gets reviewed by employees of the IFS (Institute for Software) at the
+HSR.
+
+% Team, Rollen und Verantwortlichkeiten
+\section{Team and Roles}
+\emph{Florian Bruhin} is both the primary maintainer of qutebrowser and the
+sole author of this student research project. He has been working on qutebrowser since
+December 2013 and started studying Computer Science at HSR in 2016.
+
+\emph{Joël Schwab} intended to co-author this research project, but
+unfortunately didn't pass some exams, which were a precondition to be allowed to
+do the SA project this semester.
+
+Professor \emph{Stefan Keller}, institute partner at the Institute for Software
+(IFS) at HSR is the advisor for this project.
+
+\emph{Raphael Das Gupta}, research assistant at the IFS, helped out with code
+reviews and architectural decisions.
+
+The qutebrowser community is not directly involved in this research project, but
+is the primary audience of the resulting work. It has also contributed many
+ideas and use cases for future
+extensions\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}.
+There is no external industry partner.
+
+\label{fiete}
+\emph{Fritz Reichwald} (fiete201\footnote{\url{https://github.com/fiete201}})
+is a long-time qutebrowser user who is working on migrating qutebrowser's
+documentation system from asciidoc\footnote{\url{http://asciidoc.org/}} (which
+is deprecated) to the Sphinx\footnote{\url{http://www.sphinx-doc.org/}}
+documentation generator. This change was
+planned\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/345}}
+since December 2014, so his help with tackling this is very much appreciated.
+This project will benefit from his work, as Sphinx, unlike asciidoc, is a
+very good fit for documenting APIs. His work is clearly marked as such in this
+documentation. \fixme{update}
+
+% Prozessmodel
+\section{Process Model}
+Because of previous experience as part of HSR's ``Engineering Project'', the
+``Scrum+'' process model will be used, i.e., an agile Scrum process with an
+additional ``End of Elaboration'' milestone.
+
+At the beginning of the SA, there was a phase with the goal of merging existing
+third-party contributions (pull requests) into qutebrowser, so that the changes
+required for extensions does not conflict with existing work. Thus, an additional
+\emph{preparation} phase has been introduced, resulting in the following phases:
+
+Inception, Preparation, Elaboration, Construction, Transition
+
+% Aufwandschätzung, Zeitplan, Projektplan
+\section{Project Schedule}
+\label{schedule}
+
+8 ECTS credits are awarded for the SA-course. Since one ECTS point is equivalent
+to a workload of 25--30 hours \autocite{ects} and this SA is written by a single
+author, this amounts to 200--240 hours of work. The semester consists of 14
+weeks, thus, an average workload of 14--17 hours per week is expected. This time
+is allotted as shown in figure \ref{img:schedule}.
+
+\begin{figure}[h!]
+  \begin{ganttchart}[
+        title height = 1,
+        y unit title=.5cm,
+        y unit chart=.5cm,
+        bar/.append style={fill=green!20},
+        vgrid={
+          *1{blue!60},
+          *4{gray, dashed},
+          *1{blue!60},
+          *2{gray, dashed},
+          *1{blue!60},
+          *2{gray, dashed},
+          *1{gray, dashed}
+        }]{1}{14}
+    \gantttitle{\hspace{-6.5em}\footnotesize{Calendar week}}{0}{0}
+    \gantttitlelist{38,...,51}{1} \\
+    \gantttitle{\hspace{-6.5em}\footnotesize{Semester week}}{0}{0}
+    \gantttitlelist{1,...,14}{1} \\
+
+    \ganttgroup{Inception}{1}{1} \\
+    \ganttmilestone{M0: Kickoff}{1} \\
+
+    \ganttgroup{Preparation}{2}{6} \\
+    \ganttbar{Qt 5.12 release}{2}{2} \\
+    \ganttbar{Merge contributions}{3}{5} \\
+    \ganttbar{Buffer}{6}{6} \\
+
+    \ganttmilestone{M1: Most contributions addressed}{6} \\
+
+    \ganttgroup{Elaboration}{7}{9} \\
+    \ganttbar{Existing approaches}{7}{7} \\
+    \ganttbar{Project documentation}{8}{8} \\
+    \ganttbar{API design}{9}{9} \\
+
+    \ganttgroup{Construction}{10}{13} \\
+    \ganttbar{Introducing MyPy}{10}{10} \\
+    \ganttbar{Adding extension API}{11}{12} \\
+    \ganttmilestone{M2: API review}{11} \\
+    \ganttbar{Refactoring core into extensions}{11}{12} \\
+    \ganttmilestone{M3: v1.6.0 release}{12} \\
+    \ganttbar{Buffer}{13}{13} \\
+
+    \ganttgroup{Transition}{14}{14} \\
+    \ganttbar{Finishing documentation}{14}{14} \\
+
+    \ganttmilestone{M4: Project end}{14}
+  \end{ganttchart}
+  \caption{Project schedule}
+  \label{img:schedule}
+\end{figure}
+
+\fixme{feature freeze}
+
+Due to the relatively long \emph{preparation} phase at the beginning of the
+project, the \emph{construction} phase gets unusually short. This is
+unfortunate but unavoidable -- it's important to integrate existing
+contributions before starting to refactor the existing code, at least for
+third-party changes which would lead to conflicts with refactoring changes.
+
+% Risiken
+\section{Risks}
+\label{sec:risks}
+The following risks have been identified in this project:
+
+\fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
+
+\begin{table}[h!]
+  \begin{tabulary}{\linewidth}{LLL}
+    \toprule
+    Risk & Mitigation & Probability (1-5) \\
+    \midrule
+    Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions & 5 \\
+    \hline
+    Little time in construction phase & Work on extension API is very
+    scalable, buffers in schedule & 4 \\
+    \hline
+    Sickness of author & Work on extension API is very scalable & 3 \\
+    \hline
+    Future breaking API changes needed & API is not exposed for third-party
+    contributions yet & 3 \\
+    \hline
+    Migrating documentation toolchain to Sphinx (done by external contributor)
+    is not done in time \fixme{update }& Initial extension API documentation can be separate from
+    qutebrowser documentation & 3 \\
+    \bottomrule
+  \end{tabulary}
+\end{table}
+
+As explained in section \ref{context}, it's expected that third-party
+contributors continue to submit changes (in the form of pull requests) while
+this SA is ongoing. An
+announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html},
+  accessed 2018-11-12} was sent out, asking contributors to cut back external
+contributions. However, a similar announcement was sent out during past exam
+seasons, with mixed results -- many contributors continue to submit changes
+regardless. Initially, there's a phase focused on merging existing
+contributions (see the project schedule in section \ref{schedule}). Afterwards,
+contributions are dealt with on a best effort basis, being ignored if they
+are non-trivial.
+
+There's little time in the construction phase compared to other projects.
+Additionally, this SA is written by a single author. Thus, sickness or other
+obstructions have a bigger than usual impact. This is counteracted by trying to
+keep the scope of the SA clear, but flexible. Additionally, buffer time is
+added after the preparation and construction phases in the project schedule
+(section \ref{schedule}).
+
+If some preparatory work isn't finished fully, it's possible that upcoming
+changes cause incompatible changes in the extension API. However, this SA
+is focused on moving core code into extensions, rather than providing an
+extension API for third-party extensions. Therefore, it's still possible to make
+those changes after the SA is finished, without breaking third-party code.

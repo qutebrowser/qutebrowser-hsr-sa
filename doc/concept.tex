@@ -1,0 +1,233 @@
+% -*- TeX-master: "main.tex" -*-
+
+% Umsetzungskonzept (des eigenen Lösungsansatzes)
+\chapter{Concept}
+\label{ch:concept}
+
+% Grobe Beschreibung des eigenen Lösungskonzepts
+\section{Summary}
+As shown in previous chapters, there are ample reasons for qutebrowser's
+extension API to differ from existing approaches in other browsers. Much of the
+functionality being used in extensions already exists as a cleanly defined API
+in qutebrowser, which could be exposed (after minor refactorings) in the
+extension API.
+
+Due to time constraints, not all considerations made could find their way into
+an API design. Instead, the work being done was centered on improving APIs which
+already exist in qutebrowser, in order to separate existing code into extensions.
+
+\section{Exposing existing APIs}
+Many of the APIs which should be exposed to extensions already exist in
+qutebrowser. However, exposing formerly private APIs carries certain risks:
+
+\begin{itemize}
+  \item Often, APIs do not undergo any review before they are made public
+    \autocite[18f]{api-design}, This can lead to mistakes which were not regarded
+    as important (or not noticed at all) to be exposed publicly, without a way
+    to remedy the mistakes (since that would be an incompatible change).
+  \item Looking at the tab API explained in section \ref{tabapi}, some methods
+    exist because there was a need in the core part for them -- but they should
+    not be exposed to plugins, since they are only needed for very specialized
+    reasons.
+  \item When improving or refactoring APIs in the future, care must be taken
+    because third-party extensions might be affected by the change. To avoid
+    extension authors having to catch up with every upgrade of the core (and
+    frustrating users due to breaking extensions), any future changes should be
+    backwards-compatible, which greatly limits the room for future cleanups.
+  \item Even for methods which seem useful for an extension API, their need
+    should be carefully evaluated by looking at proposals for future extensions
+    before blindly exposing them. This approach leads to a smaller (and thus
+    simpler) API. It also increases the maintainability of the core, as parts
+    which aren't exposed can be freely changed without needing to take care of
+    extensions.
+\end{itemize}
+
+It must be noted that many of those issues are less relevant in the scope of
+this SA, as the API will be open to third-party extensions at a later point.
+However, care was taken to mitigate those issues where possible.
+
+In order to catch possible issues with existing APIs planning to be exposed to
+extensions, the existing APIs were reviewed by Raphael~Das~Gupta from the IFS
+(Institute for Software).
+
+It was considered to implement the object adapter pattern \autocite[139]{gof} to
+limit the methods exposed in the API to what is actually necessary:
+
+\begin{figure}[h]
+\centering
+\begin{sequencediagram}
+  \newinst{extension}{:Extension}
+  \newinst{adapter}{:Adapter}
+  \newinst{tab}{:Tab}
+  \newinst{view}{:QWebEngineView}
+
+  \begin{call}{extension}{title()}{adapter}{``Title''}
+    \begin{call}{adapter}{title()}{tab}{``Title''}
+      \begin{call}{tab}{title()}{view}{``Title''}
+      \end{call}
+    \end{call}
+  \end{call}
+\end{sequencediagram}
+\caption{Sequence diagram for the extension API with adapter object}
+\end{figure}
+
+However, this would lead to a considerable amount of duplicated code: Big parts
+of the tab API would need to be duplicated, just to pass calls through. Since
+this solution provided an overhead which was considered too big compared to the
+benefits, the following alternatives were considered:
+
+\begin{itemize}
+  \item The methods could be marked private via the common Python convention to
+    start the name with an underscore (for example, \py{_shutdown()}).
+    However, in the core part, those should \emph{not} be private, as they need to
+    be used from outside the tab API.
+  \item The methods could be lacking a Python docstring, so they are accessible,
+    but excluded from the extension API documentation. However, auto-completion
+    in development environments would still suggest those methods, which could
+    lead to users thinking they are part of the exposed API. Additionally, this
+    would make it impossible to document the affected methods for developers
+    working on the core.
+  \item Similar to existing members like \verb|.scroller| or \verb|.zoom|, a new
+    \verb|.private_api| member could be introduced, which points to an object
+    containing any methods not part of the public API.
+\end{itemize}
+
+The last solution was chosen since it clearly communicates (both in the
+documentation and the name of the attribute) what part of the API is intended
+for usage in the core only. This solution also still allows the core to access
+those APIs, and the private API can still be documented properly.
+
+\newenvironment{umlhighlight}{%
+  \let\oldumlfillcolor\umlfillcolor%
+  \renewcommand{\umlfillcolor}{yellow}%
+}{%
+  \renewcommand\umlfillcolor{\oldumlfillcolor}
+}
+
+\begin{figure}[h]
+\begin{tikzpicture}
+  \begin{umlhighlight}
+    \begin{class}[text width=2cm]{TabPrivate}{2,2}
+    \end{class}
+    \mycomposition{Tab}{}{}{TabPrivate}{}{}
+  \end{umlhighlight}
+
+  \begin{class}[text width=2cm]{Tab}{6,2}
+  \end{class}
+
+  \begin{class}[text width=2cm]{Audio}{0,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Audio}{}{}
+
+  \begin{class}[text width=2cm]{Elements}{1.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Elements}{}{}
+
+  \begin{class}[text width=2cm]{History}{3,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{History}{}{}
+
+  \begin{umlhighlight}
+  \begin{class}[text width=3cm]{HistoryPrivate}{3,-2}
+  \end{class}
+  \mycomposition{History}{}{}{HistoryPrivate}{}{}
+  \end{umlhighlight}
+
+  \begin{class}[text width=2cm]{Scroller}{4.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Scroller}{}{}
+
+  \begin{class}[text width=2cm]{Caret}{6,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Caret}{}{}
+
+  \begin{class}[text width=2cm]{Zoom}{7.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Zoom}{}{}
+
+  \begin{class}[text width=2cm]{Search}{9,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Search}{}{}
+
+  \begin{class}[text width=2cm]{Printing}{10.5,4.5}
+  \end{class}
+  \mycomposition{Tab}{}{}{Printing}{}{}
+
+  \begin{class}[text width=2cm]{Action}{12,0}
+  \end{class}
+  \mycomposition{Tab}{}{}{Action}{}{}
+
+  \begin{class}[text width=2cm]{TabData}{10,2}
+  \end{class}
+  \mycomposition{Tab}{}{}{TabData}{}{}
+\end{tikzpicture}
+\caption[Class diagram for refactored tab API]{Class diagram for refactored tab
+  API, with added classes highlighted}
+\end{figure}
+
+The full refactored API can be found in the developer documentation in appendix
+\ref{ch:sphinx}.
+
+% z.T. Wiederholung im Groben, z.T. Verweise auf Teil II-Kapitel
+\section{Security}
+\label{security}
+As part of this SA, third-party extensions are out of scope; only code which was
+part of qutebrowser's core is moved into extensions. Thus, it seems like there
+are no special security considerations to be made. However, the architecture of
+an extension API is fundamentally influenced by such considerations, and support
+for third-party extensions will be added in the near future. Therefore, the
+security philosophy of qutebrowser's extensions is analyzed in this section.
+
+The security model of WebExtensions (see section \ref{webextensions}) assumes
+that extensions are untrusted. Even with the limited WebExtensions API,
+malicious extensions are a common issue
+\autocite{mozilla-signing,mozilla-trustworthy}. Browser vendors try to alleviate
+this problem with automated and manual code review, extension signing, and
+blacklisting of known-bad extensions. Additionally, the user explicitly needs to
+allow extensions to run in incognito/private browsing mode, as the impact of a
+privacy breach typically is considerably larger in that scenario.
+
+The approach taken qutebrowser extensions is different: Extensions are treated
+as trusted, so users are responsible for reviewing extensions before installing
+them. This is for a variety of reasons:
+
+\begin{itemize}
+  \item Extensions for qutebrowser should be written in Python (like qutebrowser itself
+    is), but safely executing untrusted Python code is commonly regarded to be
+    impossible \autocite{nedbat-eval, lwn-pysandbox}.
+  \item The attack surface for a malicious actor trying to distribute a bad
+    extension is much smaller, since qutebrowser caters to a relatively small
+    niche group of users. Thus, malicious extensions are expected to be a seldom
+    occurrence compared to more common browsers such as Google Chrome or Mozilla
+    Firefox.
+  \item Users of qutebrowser are typically power users, due to its
+    keyboard-focused nature. With a browser aimed at casual users, it might be
+    easy to trick them into installing an extension which is malicious. In
+    contrast, users of qutebrowser can be expected to be much more diligent in ensuring that
+    the extensions they're installing are not malicious.
+  \item The volume of available extensions is much lower. Thus, it's conceivable
+    that there's a whitelist of extensions which have been reviewed and approved
+    by one of qutebrowser's core developers. A contributor wishing to distribute
+    a new extension could then ask for it to be reviewed and included in that list.
+  \item Due to the focus on power users, a user should always be able to
+    install an extension manually, or write a custom one. Thus, mandatory
+    extension signing or approval by a central body is undesirable, as it
+    presents a trade-off between a user's freedom and security.
+\end{itemize}
+
+% % Design (Entwurf)
+% \chapter{Design}
+% 
+% % Architektur
+% \section{Architecture}
+% 
+% % Objektkatalog (Klassenkonzepte, Verantwortlichkeiten und Konsistenzbedingungen)
+% \section{Objects}
+% 
+% % Package- und Klassendiagramme (konzeptionell)
+% \section{Packages and Classes}
+% 
+% % Sequenzdiagramm, UI Design
+% \section{Sequence Diagrams}
+
+% Implementation (Entwicklung)

@@ -1,0 +1,68 @@
+% -*- TeX-master: "main.tex" -*-
+
+\chapter{Requirements Specification}
+\label{ch:requirements}
+
+% Use Cases (Success Scenario / Success Diagram)
+\section{Use Cases}
+
+This project extends an existing codebase with an extension API rather
+than starting a new project from scratch. By its nature, it's difficult to
+predict how an extension API will be used in the future. Because of that, an
+use-case diagram would not adequately describe the motivation for the extension
+API.
+
+Various ideas for future third-party extensions have been voiced by the
+qutebrowser community; they are collected in a GitHub
+issue\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30},
+  accessed 2018-11-08}. However, the main aim of this project (and thus the main
+focus for the extension API) is reducing the complexity of qutebrowser's core.
+
+% Weitere Funktionen, die nicht erfasst wurden
+%\section{Further Functionality}
+
+% Nicht-funktionale Anforderungen (Rahmbenbedingungen, evtl. Verweis auf 1.3)
+\section{Non-functional Requirements}
+The following non-functional requirements are relevant for qutebrowser's
+extension API:
+
+\begin{description}
+  \item[Security] The security model used for qutebrowser extensions assumes
+    that extensions are trusted, i.e., may run arbitrary code. See
+    section \ref{security} for a more detailed explanation.
+  \item[Simplicity] It should be trivial for a user to extend her qutebrowser
+    setup with a custom extension. Thus, getting started with writing a
+    third-party extension should be as straightforward as possible, without
+    requiring packing multiple files into a custom format. Also see section
+    \ref{anatomy} for an explanation on how this topic is handled for
+    WebExtensions, and how qutebrowser's API differs from that.
+  \item[Learnability] When the extension API is opened for third-party
+    contributions, it should be easy to get accustomed to it. Therefore, the API
+    should be intuitive for Python programmers, and well documented.
+  \item[Compability] The qutebrowser project runs on a variety of different
+    software versions -- various operating systems (Linux, macOS, Windows,
+    and more) are supported, including different Qt and Python versions. The
+    extension API should abstract over those differences, so an extension
+    written for qutebrowser (or core code moved into such an extension) runs in
+    all situations qutebrowser itself can run.
+  \item[Performance] Having code in extensions (rather than in the core part of a
+    project) can result in performance degradations due to more moving parts and
+    more layers being involved. Since those impacts are usually small
+    individually (but might be big enough to be relevant collectively), no
+    relevant impact is expected in the scope of this SA. However, performance
+    considerations might be a good reason to keep some code in the core rather
+    than moving it to extensions in the future.
+\end{description}
+
+% % Detailspezifikation
+% \section{Detailed Specification}
+% \fixme{???}
+% 
+% % Analyse (Business Model)
+% \chapter{Analysis}
+% 
+% % Domain Modell, Klassendiagramme (konzeptionell)
+% \section{Domain Model}
+% 
+% % Objektkatalog (Beschreibung der Konzepte, bzw. Entitätsmengen)
+% \section{Objects}

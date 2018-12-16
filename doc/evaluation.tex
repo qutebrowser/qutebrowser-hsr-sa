@@ -1,0 +1,95 @@
+% -*- TeX-master: "main.tex" -*-
+
+% Bewertung (Evaluation)
+\chapter{Evaluation}
+\label{ch:evaluation}
+
+% Kriterien (Wie wird bewertet?)
+\section{Criteria}
+
+\label{criteria}
+
+There are various forces which affect design decisions for qutebrowser's
+extension API:
+
+\begin{description}
+\item[Qt APIs] qutebrowser is built on top of the QtWebEngine/QtWebKit
+rendering engines (which of the two to use is user-configurable). Sometimes,
+while a clean API design for a given problem would exist, constraints imposed by
+those libraries are a limiting factor and thus influence the API design.
+The API to get the selected text from a web page is an ideal example: The most
+straightforward API would be a \py{def selection() -> str} method. However,
+JavaScript execution is needed to get the selection, which is only available
+from Qt as a callback-based interface. Thus, the extension API will need to look
+like \py{def selection(cb: Callable[[str], None])} \\ \py{-> None} -- in other words,
+the \py{selection} method will take a callback function, which then gets called
+with the selected text.
+
+\item[Internal qutebrowser code] One of the main goals (as per the task
+description) of this SA is moving code from qutebrowser's core into internal
+``extensions'' shipped alongside qutebrowser. Components which use general-purpose
+APIs (like the adblocker, which needs to intercept network requests) can
+conveniently moved out of the core, and result in extension APIs which are also
+usable for other purposes.
+
+\item[Ideas for future extensions] While external extensions (contributed by the
+qutebrowser community) are not the primary focus of this SA, a lot of use-cases
+for extensions have been collected based on users' feature requests. Care should be
+taken so the extension API can also satisfy those use cases in the future.
+
+\item[Other extension APIs] There is a general consensus from browser vendors
+around the WebExtension API. Unfortunately, that API is unsuitable for
+qutebrowser, for reasons explained in chapter \ref{unsuitable}. It can still
+serve as a source for inspiration.
+
+\item[Python and Qt] While some higher-level architectural decisions are
+independent from the programming language used to implement them, what is
+commonly considered a ``good'' API certainly depends on the underlying
+programming language and the idioms used therein. Since qutebrowser's extension
+API is used from Python, it should aim to be ``Pythonic'' (i.e., adhering to
+Python idioms\footnote{\url{https://blog.startifact.com/posts/older/what-is-pythonic.html}})
+and also use features made available by Qt. As an example, a Pythonic API might
+favor Python
+decorators\footnote{\url{https://docs.python.org/3/glossary.html\#term-decorator}}
+over inheritance to set up extension hooks; or a Qt API might prefer Qt's
+signals/slots
+facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
+callback-based API.
+\end{description}
+
+In addition to those external forces, it's helpful to have a set of self-imposed
+design guidelines in mind when designing an API. For this project, it was
+decided to adopt the \emph{``Characteristics of good APIs''} listed in
+Jasmin~Blanchette's \emph{Little Manual of API Design}
+\autocite[7ff]{api-design}:
+
+\begin{description}
+  \item[Easy to learn and memorize:] This also implies consistency and minimalism,
+    as well as clear semantics, following the principle of least surprise.
+  \item[Leads to readable code:] As the manual puts it: \emph{``Readable code can be
+  concise or verbose. Either way, it is always at the right level of abstraction
+  -- neither hiding important things nor forcing the programmer to specify
+  irrelevant information''}.
+  \item[Hard to misuse:] A well-designed API should assist its user in
+    writing correct and clear code. 
+  \item[Easy to extend:] New concepts will appear over time, and existing
+    APIs will grow. While it's hard to anticipate the future, those concerns
+    should be taken into account while designing an API.
+  \item[Complete:] The manual claims \emph{``Ideally, an API should be
+    complete and let users do everything they want.''}. However, this statement
+    is later revised by adding \emph{``Completeness is also something that can appear
+    over time, by incrementally adding functionality to existing APIs. However,
+    it usually helps even in those cases to have a clear idea of the direction
+    for future developments, so that each addition is a step in the right
+    direction.''}
+\end{description}
+
+% Schlussfolgerungen, eigener Lösungsansatz
+\section{Conclusion}
+Designing an API always is a trade-off between various, sometimes conflicting,
+forces. For qutebrowser's extension API, the focus should lie on being as
+minimal and straightforward as possible, with the primary goal of moving
+internal qutebrowser code to extensions.
+
+While extensibility and completeness are valid concerns, they are less relevant
+as the API is not open to third-party extensions yet.

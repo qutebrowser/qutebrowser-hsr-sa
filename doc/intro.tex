@@ -1,0 +1,197 @@
+% -*- TeX-master: "main.tex" -*-
+
+% Einführung
+\chapter{Introduction}
+\label{ch:intro}
+
+\section{Background}
+
+The qutebrowser project is a web browser, comparable to Google Chrome or Mozilla
+Firefox, which is focused on being keyboard-driven and having a minimal user
+interface. It is aimed at power users who value customizability and efficiency,
+but are willing to accept a rather steep learning curve compared to
+``traditional'' web browsers.
+
+Its philosophy and keybindings are inspired by the Vim
+editor\footnote{\url{https://www.vim.org/}} which is available on almost any
+UNIX system (such as macOS or Linux). Similar projects exist as addons for
+Firefox (such as Tridactyl\footnote{\url{https://github.com/tridactyl/tridactyl}})
+or Chrome (Vimium\footnote{\url{https://vimium.github.io/}}). However, due to
+being constrained by the extension API exposed by Firefox and Chrome, those
+projects lack various features which qutebrowser offers.
+
+The project was started in December 2013 and is based on Python and PyQt5. An
+extension API for users to write their own extensions to qutebrowser is a
+long-standing feature
+request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
+which has often been requested by its users.
+
+It is difficult to estimate qutebrowser's user count, but it is most likely used by a
+couple thousand users, so an extension API is also vital in order to be able to move
+less popular features out of the core part of qutebrowser.
+
+\fixme{Make clear that we're dealing with existing engines, maybe name, maybe motivation?}
+
+\label{backends}
+There are two backends (rendering engines) which can be used with qutebrowser:
+
+\begin{itemize}
+  \item \emph{QtWebKit} which is based on the
+  WebKit\footnote{\url{https://www.webkit.org/}} project
+  \item \emph{QtWebEngine} which is based on the
+  Chromium\footnote{\url{https://www.chromium.org/}} project, which is also used
+  in Google Chrome (used as default).
+\end{itemize}
+
+In order to allow using either backend, qutebrowser provides an abstraction
+layer over the two libraries, implementing the adapter pattern
+\autocite[139ff]{gof}. This abstraction layer is referred to as ``tab API'', and
+documented in section \ref{tabapi}.
+
+% Problemstellung, Vision
+\section{Vision}
+\label{vision}
+
+Many qutebrowser users are power-users and, as such, have very specific (and
+sometimes unique) feature requests and workflows. It should be possible for
+those users to extend qutebrowser with custom extensions in an easy way, in order
+to keep qutebrowser's core small.
+
+Since qutebrowser already has a thriving community, this change also intends to
+decentralize development efforts, as it enables users and developers to maintain
+their extensions independently from the core development.
+
+% Ziele und Unterziele
+\section{Objectives}
+\label{goals}
+
+\subsection{Merging contributions}
+
+\subsection{Refactorings}
+\label{sec:goals-refactorings}
+
+Initially, qutebrowser was developed without knowledge of proper software
+engineering practices, which resulted in some maintainability issues. While many
+of those issues have since been resolved, some still remain. Those
+refactorings affect the API exposed to extensions, and therefore should be taken
+care of before attempting to design a extension API.
+
+The full list of relevant refactorings is tracked as a Kanban
+board\footnote{\url{https://github.com/qutebrowser/qutebrowser/projects/3}} in
+qutebrowser's GitHub repository. The biggest planned changes are the following:
+
+\begin{itemize}
+  \item \url{https://github.com/qutebrowser/qutebrowser/issues/1456}: \\ Parts of qutebrowser already use Python type
+    annotations\footnote{\url{https://www.python.org/dev/peps/pep-0484/}}, but
+    only if contributors decide to use them. In addition to that, no type
+    checker such as mypy\footnote{\url{http://mypy-lang.org/}} is currently run
+    as part of qutebrowser's continuous integration (CI) pipeline, thus allowing
+    regressions to occur. As part of this project, a type checker should be
+    introduced into the CI infrastructure, and any code exposed via the extension
+    API should be annotated with proper type annotations.
+  \item \url{https://github.com/qutebrowser/qutebrowser/issues/345}: \\
+    To generate HTML documentation, qutebrowser currently uses
+    asciidoc\footnote{\url{http://asciidoc.org/}} which is unsuitable for API
+    documentation and ceased maintenance. An external contributor (see page
+    \pageref{fiete}) is currently working on migrating to the
+    Sphinx\footnote{\url{http://www.sphinx-doc.org/}} toolchain, and should be
+    supported with his work throughout the SA. \fixme{update}
+  \item \url{https://github.com/qutebrowser/qutebrowser/issues/640}: \\
+    Global objects are registered in a object registry based on a name as
+    string (``stringly-typed''\footnote{\url{http://wiki.c2.com/?StringlyTyped}}).
+    This historically caused various object-lifetime related issues, and also
+breaks tooling such as the mypy type checker. All code using the object registry
+should be refactored to use better alternatives such as constructor arguments
+(dependency injection).
+\end{itemize}
+
+\subsection{Extension API}
+
+\subsection{Documentation}
+
+\fixme{continue!}
+
+% Rahmenbedingungen, Umfeld, Definitionen, Abgrenzungen
+\section{Context}
+\label{context}
+
+The software and version constraints are mostly given by the existing project:
+
+\begin{itemize}[parsep=5pt]
+  \item Python\footnote{\url{https://www.python.org/}} 3 (3.5 or newer)
+  \item Qt\footnote{\url{https://www.qt.io/}} 5 (5.7 or newer), used via PyQt5\footnote{\url{https://www.riverbankcomputing.com/software/pyqt/intro}}
+  \item pytest\footnote{\url{https://pytest.org/}} as test framework
+  \item Various code quality tools: pylint\footnote{\url{https://pylint.org/}},
+    flake8\footnote{\url{http://flake8.pycqa.org/}} and others.
+\end{itemize}
+
+As qutebrowser is a pre-existing project with a vibrant community, external
+contributions are expected to continue (despite an
+announcement\footnote{\url{https://lists.schokokeks.org/pipermail/qutebrowser-announce/2018-October/000053.html}, accessed 2018-11-12}
+asking people to refrain from making larger contributions). This can be challenging,
+as it results in refactorings being carried out against a moving target. Because
+of the nature of open-source contributions,
+% http://www.catb.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/
+% https://www.fordfoundation.org/about/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
+it is hard to foresee or control which areas external contributors are changing.
+At the beginning of the SA, some time was allocated for merging external
+contributions (pull requests) which were already open. For the rest of the SA,
+such contributions will be dealt with on a best effort basis, with the main
+focus being this documentation and the work required for the extension API.
+
+\fixme{Describe Python decorators, packages/modules, Qt signals/slots}
+
+% Vorgehen, Aufbau der Arbeit
+\section{Methods and Structure}
+\subsection{Structure of this document}
+This document is organized in roughly chronological order.
+
+In this chapter, the background necessary to understand the
+project and its goals is explained. Chapter \ref{ch:projectman} documents the
+project methodology used and allocates the time available.
+It also analyzes the risks involved. Chapter \ref{ch:requirements} specifies the
+project requirements in more detail. In chapter \ref{ch:existing}, existing
+similar work is examined. Chapter \ref{ch:evaluation} notes the criteria being
+considered for the project. Based on those criteria, a concept was designed in chapter
+\ref{ch:concept}. Finally, chapter \ref{ch:implementation} explains the actual
+implementation, while chapter \ref{ch:results} analyzes the results.
+
+In appendix \ref{ch:glossary}, a glossary of the terms and abbreviations used
+can be found.
+
+\subsection{Design decisions}
+\fixme{How to cite y-approach? - cite SATURN presentation instead}
+
+In order to take informed and sustainable design decisions, the
+\emph{Y-Approach} \autocite{yapproach} was evaluated. It proposes the following
+template for design decisions:
+
+\begin{quote}
+  \begin{itemize}[parsep=5pt]
+    \item In the context of \emph{use case $uc$ and/or component $co$},
+    \item \ldots facing \emph{non-functional concern $c$},
+    \item \ldots we decided for \emph{option $o_1$}
+    \item and neglected \emph{options $o_2$ to $o_n$},
+    \item \ldots to achieve \emph{quality $q$},
+    \item \ldots accepting downside \emph{consequence $c$}.
+  \end{itemize}
+\end{quote}
+
+The template serves as a good reminder of the aspects to keep in mind
+while taking a decision. However, it was found to not be very helpful for
+documentation, as a different structure (such as a list of considerations, or
+prose text) is often more readable. Thus, it was used as an inspiration only,
+but the explanations in this document do not strictly follow its structure.
+
+\fixme{we don't need high-level decisions}
+
+\subsection{Tools used}
+Since this project was realized by a single author (rather than in a group),
+project management tooling was kept to a minimum. GitHub issues and its project
+board features were used for project management, along with
+Clockify\footnote{\url{https://www.clockify.me/}} for time tracking.
+
+This document was typeset in \LaTeX{} using the \emph{Computer Modern Bright}
+font and various additional packages. GNU Emacs was used as text editor.
+
+\fixme{Nutzungsrechte}
