@@ -42,9 +42,9 @@ qutebrowser. However, exposing formerly private APIs carries certain risks:
     extensions.
 \end{itemize}
 
-It must be noted that many of those issues are less relevant in the scope of
+It must be noted that many of these issues are less relevant in the scope of
 this SA, as the API will be open to third-party extensions at a later point.
-However, care was taken to mitigate those issues where possible.
+However, care was taken to mitigate them where possible.
 
 In order to catch possible issues with existing APIs planning to be exposed to
 extensions, the existing APIs were reviewed by Raphael~Das~Gupta from the IFS
@@ -79,7 +79,7 @@ benefits, the following alternatives were considered:
 \begin{itemize}
   \item The methods could be marked private via the common Python convention to
     start the name with an underscore (for example, \py{_shutdown()}).
-    However, in the core part, those should \emph{not} be private, as they need to
+    However, in the core part, they should \emph{not} be private, as they need to
     be used from outside the tab API.
   \item The methods could be lacking a Python docstring, so they are accessible,
     but excluded from the extension API documentation. However, auto-completion

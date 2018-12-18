@@ -15,11 +15,11 @@ a code review, due to being ignored during the exam session preceding this
 semester.
 
 Since those contributions would conflict with the refactorings needed before
-work on the extension API starts, a block of time was reserved for those code
+work on the extension API started, a block of time was reserved for code
 reviews at the beginning of this project (see figure \ref{img:schedule} on page
 \pageref{img:schedule}).
 
-To avoid receiving more contributions while working on those refactorings, the
+To avoid receiving more contributions while refactoring the code, the
 following notice was added to qutebrowser's contribution guidelines:
 
 \begin{quote}
@@ -63,7 +63,7 @@ extension API were identified:
     be refactored, as it has various issues and influences the public API. Work
     on this goal was started but not completed due to some deeper issues with
     its implementation\footnote{See \url{https://github.com/qutebrowser/qutebrowser/issues/640\#issuecomment-443143463}}.
-    Fixing those properly would take more time than anticipated, thus this
+    Fixing these issues properly would take more time than anticipated, thus this
     refactoring was not completed. However, care was taken to not add the object
     registry to the API exposed to extensions, so this change can still be done
     after the API has been implemented.
@@ -71,7 +71,8 @@ extension API were identified:
 
 The initial refactoring goals were only met partially -- however, it was
 possible to continue with implementing the extension API despite that. Care was
-taken to make that work absolutely necessary for the extension API was finished.
+taken to make sure that work absolutely necessary for the extension API was
+finished.
 
 \subsection{Extension API}
 
@@ -92,10 +93,10 @@ doing so would result in a breaking API change.
 The value of a good documentation for work like this is not to be
 underestimated. However, neither is the effort that needs to be put into such a
 documentation, especially since both this documentation and the resulting code
-was written by a single author. Juggling both code and documentation at the same
-time was difficult at times, but their author is pleased with the outcome of
-both. This project also showed that documenting thoughts and ideas lead to a
-clearer picture of how the resulting code should look.
+were written by a single author. Juggling both code and documentation
+simultaneously was difficult at times, but their author is pleased with the
+outcome of both. This project also showed that documenting thoughts and ideas
+lead to a clearer picture of how the resulting code should look.
 
 % Projektmonitoring (Ist-Beschreibung, so ist es passiert)
 % \chapter{Project Monitoring}
@@ -318,7 +319,7 @@ of room for future research and improvements:
     \verb|~/.local/share/qutebrowser/extensions|.
   \item Many use-cases and ideas for extensions have been
     suggested\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}}
-    by qutebrowser's users. Those should carefully be reviewed and considered
+    by qutebrowser's users. These should be carefully reviewed and considered
     for future API additions.
   \item In order to foster community involvement around extensions and keep
     users safe, a central place to distribute and update extensions should

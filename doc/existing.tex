@@ -165,7 +165,7 @@ a WebExtension consists of various files:
   \item Other resources such as icons.
 \end{itemize}
 
-Those files are then packaged into a specially named ZIP file (XPI in case of
+These files are then packaged into a specially named ZIP file (XPI in case of
 Firefox; CRX for Chromium) and distributed via an extension store (a special
 website run by Mozilla/Google).
 
@@ -232,7 +232,7 @@ pageAction: A page action is a clickable icon inside the browser's address bar.
 sidebarAction: Gets and sets properties of an extension's sidebar.
 \end{quote}
 
-Those modules allow extensions to add their own user interface elements to the
+These modules allow extensions to add their own user interface elements to the
 browser, as shown in figure \ref{img:browser-action}.
 
 \begin{figure}[h]
@@ -324,8 +324,8 @@ pkcs11: The pkcs11 API enables an extension to enumerate PKCS\#11 security modul
 topSites: Use the topSites API to get an array containing pages that the user has visited often and frequently.
 \end{quote}
 
-No such functionality is currently implemented in qutebrowser, so those modules
-are out of scope.
+No such functionality is currently implemented in qutebrowser, so the above
+modules are out of scope.
 
 \subsubsection{cookies}
 \begin{quote}
@@ -390,7 +390,7 @@ runtime: This module provides information about your extension and the environme
 types: Defines the BrowserSetting type, which is used to represent a browser setting.
 \end{quote}
 
-Those APIs are specific to the WebExtensions API, and thus irrelevant for
+The above APIs are specific to the WebExtensions API, and thus irrelevant for
 qutebrowser.
 
 \subsubsection{find}
@@ -433,9 +433,9 @@ the extension's commands.
 Access and modify various privacy-related browser settings.
 \end{quote}
 
-In qutebrowser, those settings (like
+In qutebrowser, these settings (like
 \verb|privacy.network.webRTCIPHandlingPolicy|) are exposed as normal qutebrowser
-setttings (like \verb|content.webrtc_ip_handling_policy|), so there's no need
+settings (like \verb|content.webrtc_ip_handling_policy|), so there's no need
 for a similar module in the extension API.
 
 \subsubsection{proxy}
@@ -498,7 +498,7 @@ interface can be customized using its configuration.
 Add event listeners for the various stages of a navigation. A navigation consists of a frame in the browser transitioning from one URL to another, usually (but not always) in response to a user action like clicking a link or entering a URL in the location bar.
 \end{quote}
 
-This exposes various events such as \verb|webNavigation.onCompleted|. Those will
+This exposes various events such as \verb|webNavigation.onCompleted|. These will
 be exposed as part of the tab API in qutebrowser, as Qt signals such as \verb|load_finished|.
 
 \subsubsection{webRequest}
@@ -519,7 +519,7 @@ blocker out from the core.
 
 As explained in section \ref{backends}, qutebrowser supports two rendering
 engines (QtWebKit and QtWebEngine) and provides an abstraction layer (``tab
-API'') over those backends, representing a single tab in the browser.
+API'') over those backends representing a single tab in the browser.
 
 The tab API has been designed with clean API design in mind, as an extension API
 already was on the horizon when implementing it. Its goal is that the rest of

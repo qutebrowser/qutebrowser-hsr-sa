@@ -35,7 +35,7 @@ usable for other purposes.
 \item[Ideas for future extensions] While external extensions (contributed by the
 qutebrowser community) are not the primary focus of this SA, a lot of use-cases
 for extensions have been collected based on users' feature requests. Care should be
-taken so the extension API can also satisfy those use cases in the future.
+taken so the extension API can also satisfy these use cases in the future.
 
 \item[Other extension APIs] There is a general consensus from browser vendors
 around the WebExtension API. Unfortunately, that API is unsuitable for
@@ -57,9 +57,9 @@ facility\footnote{\url{https://doc.qt.io/qt-5/signalsandslots.html}} over a
 callback-based API.
 \end{description}
 
-In addition to those external forces, it's helpful to have a set of self-imposed
-design guidelines in mind when designing an API. For this project, it was
-decided to adopt the \emph{``Characteristics of good APIs''} listed in
+In addition to the mentioned external forces, it's helpful to have a set of
+self-imposed design guidelines in mind when designing an API. For this project,
+it was decided to adopt the \emph{``Characteristics of good APIs''} listed in
 Jasmin~Blanchette's \emph{Little Manual of API Design}
 \autocite[7ff]{api-design}:
 
@@ -73,8 +73,8 @@ Jasmin~Blanchette's \emph{Little Manual of API Design}
   \item[Hard to misuse:] A well-designed API should assist its user in
     writing correct and clear code. 
   \item[Easy to extend:] New concepts will appear over time, and existing
-    APIs will grow. While it's hard to anticipate the future, those concerns
-    should be taken into account while designing an API.
+    APIs will grow. While it's hard to anticipate the future, future
+    extendability should be taken into account while designing an API.
   \item[Complete:] The manual claims \emph{``Ideally, an API should be
     complete and let users do everything they want.''}. However, this statement
     is later revised by adding \emph{``Completeness is also something that can appear

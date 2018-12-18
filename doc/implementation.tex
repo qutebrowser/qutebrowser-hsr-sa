@@ -59,7 +59,7 @@ introduction of the \verb|typing| module allowed to specify types such as
 \py{Optional[int]} (either an integer, or the special \py{None} value) or
 \py{Mapping[str, int]} (a mapping from strings to integers).
 
-However, Python remains a dynamically typed language, and those annotations are
+However, Python remains a dynamically typed language, so annotations are
 still ignored at runtime. Apart from serving as documentation, there are various
 projects interpreting them:
 
@@ -155,7 +155,7 @@ the other existing error messages.
 
 With the \verb|--ignore-missing-imports| option, mypy only produced 88 errors.
 
-Analyzing those errors revealed that they could be split into various
+Analyzing these errors revealed that they could be split into various
 categories:
 
 \begin{itemize}
@@ -173,7 +173,7 @@ except ImportError:
     There, mypy complained since setting a module type to the
     \verb|None| value is an invalid operation from the type system's view, but
     it still perfectly valid (if later guarded via \py{if secrets is not None:})
-    in Python. Thus, those issues also were ignored via \py{# type: ignore}
+    in Python. Thus, these issues also were ignored via \py{# type: ignore}
     comments. An issue for better handling of this case in mypy was already
     open in mypy's issue tracker: \url{https://github.com/python/mypy/issues/1153}
   \item Mypy not handling Python's \py{enum.IntEnum} correctly when used via
@@ -192,7 +192,7 @@ except ImportError:
     gets called, despite them having been \py{None} at some point before. Since
     mypy understands additional hints in the form of \py{assert val is not
       None} or \py{assert isinstance(index, int)}, such assertions could be used
-    to silence those errors.
+    to silence these errors.
   \item One case were an existing annotation falsely claimed that a value could
     be either \py{str} or \py{int} (\py{typing.Union[str, int]}), while it
     always was a string.
@@ -200,7 +200,7 @@ except ImportError:
     be more accurate.
 \end{itemize}
 
-After fixing those issues, mypy finished without showing any errors, but without
+After fixing these issues, mypy finished without showing any errors, but without
 having type information for libraries being used by qutebrowser.
 
 \subsubsection{Adding library type information}
@@ -216,7 +216,7 @@ exists\footnote{\url{https://github.com/stlehmann/PyQt5-stubs/}}, packaging
 adjusted type stubs for PyQt5 as a separate package (via PEP 561, see
 \ref{pep561}).
 
-With those installed and the switch removed, 55 new errors appeared. Those again
+With those installed and the switch removed, 55 new errors appeared. These again
 could be classified into various categories:
 
 \begin{itemize}
@@ -229,14 +229,14 @@ could be classified into various categories:
     copy instead.
   \item Missing stub files for Python standard library modules in the typeshed
     project. For the \verb|faulthandler| module, writing stubs was
-    straightforward, so those were
+    straightforward, so they were
     contributed\footnote{\url{https://github.com/python/typeshed/pull/2627}} to
-    the typeshed project. For more complex cases, those modules were ignored in
+    the typeshed project. For more complex cases, modules were ignored in
     the mypy config file instead.
   \item Bugs in the type annotations in typeshed, for which fixes were
     contributed\footnote{\url{https://github.com/python/typeshed/pull/2635}, \\
       \url{https://github.com/python/typeshed/pull/2636}} as well.
-  \item Missing type annotations for other third-party modules. For those, an
+  \item Missing type annotations for other third-party modules. For these, an
     issue was opened in order to inform the respective developers about the
     possibilities to add type information to their packages, and the module was
     then ignored via the mypy config file.
@@ -281,7 +281,7 @@ individually:
     mypy\footnote{\url{https://github.com/python/mypy/issues/5954}}.
   \item[--check-untyped-defs] causes mypy to check the inside of functions which
     are not annotated yet. This caused 392 new errors and thus could not be
-    enabled yet. However, reviewing those errors revealed that many were
+    enabled yet. However, reviewing these errors revealed that many were
     false-positives or mypy limitations, but also uncovered a crash (which was
     then fixed) in qutebrowser.
   \item[--disallow-untyped-decorators] disallows applying a decorator to a
@@ -356,7 +356,7 @@ other \verb|qutebrowser.*| packages.
     Module & Description \\
     \midrule
     \verb|apitypes.py| & Various basic types which can be used by extensions.
-                         Those are either used as type annotations (such as
+                         These are either used as type annotations (such as
                          \verb|Tab|, which is an \verb|AbstractTab| from figure
                          \ref{fig:tabapi-inherit}) or as enumerations (such as
                          \verb|ClickTarget| which is used to specify how to open
