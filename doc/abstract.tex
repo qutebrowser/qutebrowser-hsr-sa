@@ -18,9 +18,7 @@ HTML/CSS/JavaScript code itself. Instead, it relies on the QtWebEngine project
 to do so, which is largely based on the same code as Google Chrome.
 
 Work on qutebrowser started in December 2013. Since then, it gained a big
-community of thousands of users and dozens of contributors. The aim of this
-research project is to separate functionality implemented in qutebrowser into a
-core and various extensions.
+community of thousands of users and dozens of contributors.
 
 \begin{figure}[H]
   \centering
@@ -32,7 +30,7 @@ core and various extensions.
 
 In contrast to Chrome and Firefox, qutebrowser did not support extending its
 functionality via extensions. Over its lifetime, various features have been
-added to its core by its maintainer (who is the author of this report) and its
+added to its core by its maintainer (who is the author of this report) and
 contributors. However, this caused the core to grow substantially, becoming more
 and more complex over time.
 
@@ -42,12 +40,12 @@ extend qutebrowser with custom extensions in an easy way in order to keep the
 core small and simple.
 
 The goal of this project was to make qutebrowser extensible by introducing a
-clearly defined programming interface (API) which can be used to develop
-extensions.
+clearly defined application programming interface (API) which can be used to
+develop extensions.
 
 Since qutebrowser already has a thriving community, this change also intends to
-decentralize development efforts, as it enables users and developers to maintain
-their extensions independently from qutebrowser's core development.
+decentralize future development efforts, as it enables users and developers to
+maintain their extensions independently from qutebrowser's core.
 
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{img/screenshot-intro.png}
@@ -57,20 +55,19 @@ their extensions independently from qutebrowser's core development.
 \section*{Procedure / Results}
 In order to follow best practices in the software development world,
 tools for checking data types were evaluated. The \emph{mypy} tool is now run
-regularly over the code, which resulted in various lingering defects
+regularly over the code which resulted in various lingering defects
 being found in qutebrowser itself and in related projects. Important parts of
 qutebrowser were annotated with type information in order to prevent such issues
-issues in the future, also serving as additional developer documentation.
+in the future, also serving as additional developer documentation.
 
 Before attempting to expose an interface for extensions from qutebrowser,
 various problematic areas in qutebrowser's codebase had to be cleaned up due to
 ``technical debt'' accumulating in the past. Subsequently, functionality
 suitable for moving out of the core into extensions was identified. Based on
-the selected areas of code, a concept for an extension API\footnote{Application
-programming interface} was developed. After implementing said API , large parts
-of qutebrowser's functionality (such as the adblocker, blocking advertisements
-on websites) could be moved into extensions. The resulting changes increased
-code maintainability and simplicity.
+the selected areas of code, a concept for an extension API was developed. After
+implementing said API, large parts of qutebrowser's functionality (such as the
+adblocker, blocking advertisements on websites) could be moved into extensions.
+The resulting changes increased code maintainability and simplicity.
 
 \section*{Future Work}
 This research project was focused on increasing qutebrowser's software quality
@@ -84,4 +81,4 @@ third-party extensions can be written.
 
 After third-party extensions gain enough traction, an ``extension manager''
 should be developed, so that users can easily install and update available
-extensions via a graphical interface.
+extensions via a graphical user interface.
