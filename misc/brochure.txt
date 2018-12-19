@@ -31,7 +31,7 @@ Work on qutebrowser started in 2013. Since then, it gained a big community of
 thousands of users and dozens of contributors.
 Objective: In contrast to Chrome and Firefox, qutebrowser does not support
 extending its functionality via extensions. Over its lifetime, various features have
-been added to its core by its maintainer and contributors. However, this caused its
+been added to its core by its maintainer and contributors. However, this caused the
 core to grow substantially, becoming more and more complex over time.
 Many users of qutebrowser are power-users and thus have specific feature requests
 and workflows. It should be possible for those users to extend qutebrowser in an
@@ -46,14 +46,14 @@ qutebrowser, various problematic areas in its codebase had to be cleaned up due 
 "technical debt" accumulating in the past. Subsequently, functionality suitable for
 moving out of the core into extensions was identified. Based on the selected areas of
 code, a concept for an extension API was developed. After implementing said API,
-large parts of functionality could be moved into extensions. The resulting changes
-increased code maintainability and simplicity.
+large parts of qutebrowser's functionality could be moved into extensions. The
+resulting changes increased code maintainability and simplicity.
 In order to further follow best practices in the software development world, tools for
-checking data types (thus reducing the chance of accidental software defects) were
-evaluated. The [i]mypy[/i] tool is now run regularly over the code which resulted in
-various lingering defects being found in qutebrowser itself and in related projects.
-Important parts of qutebrowser were annotated with type information in order to find
-such issues, also serving as additional developer documentation.
+checking data types were evaluated. The [i]mypy[/i] tool is now run regularly over the
+code which resulted in various lingering defects being found in qutebrowser itself and
+in related projects. Important parts of qutebrowser were annotated with type
+information in order to prevent such issues in the future, also serving as additional
+developer documentation.
 
 Example extension checking whether a website uses the Leaflet
 library, which is often used to display OpenStreetMap maps
