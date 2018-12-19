@@ -41,19 +41,19 @@ defined API which can be used to develop extensions.
 
 Technologies used
 
-Procedure / Result: Before attempting to expose an interface for extensions from
-qutebrowser, various problematic areas in its codebase had to be cleaned up due to
-"technical debt" accumulating in the past. Subsequently, functionality suitable for
-moving out of the core into extensions was identified. Based on the selected areas of
-code, a concept for an extension API was developed. After implementing said API,
-large parts of qutebrowser's functionality could be moved into extensions. The
-resulting changes increased code maintainability and simplicity.
-In order to further follow best practices in the software development world, tools for
-checking data types were evaluated. The [i]mypy[/i] tool is now run regularly over the
-code which resulted in various lingering defects being found in qutebrowser itself and
-in related projects. Important parts of qutebrowser were annotated with type
-information in order to prevent such issues in the future, also serving as additional
-developer documentation.
+Procedure / Result: In order to follow best practices in the software development
+world, tools for checking data types were evaluated. The [i]mypy[/i] tool is now run
+regularly over the code which resulted in various lingering defects being found in
+qutebrowser itself and in related projects. Important parts of qutebrowser were
+annotated with type information in order to prevent such issues in the future, also
+serving as additional developer documentation.
+Before attempting to expose an interface for extensions from qutebrowser, various
+problematic areas in its codebase had to be cleaned up due to "technical debt"
+accumulating in the past. Subsequently, functionality suitable for moving out of the
+core into extensions was identified. Based on the selected areas of code, a concept
+for an extension API was developed. After implementing said API, large parts of
+qutebrowser's functionality could be moved into extensions. The resulting changes
+increased code maintainability and simplicity.
 
 Example extension checking whether a website uses the Leaflet
 library, which is often used to display OpenStreetMap maps
