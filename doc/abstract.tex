@@ -6,7 +6,7 @@
 \chapter*{Management Summary}
 \section*{Introduction}
 The qutebrowser project is a web browser, comparable to Google Chrome or Mozilla
-Firefox, which is focused on being keyboard-driven and having a minimal user
+Firefox, which is focused on keyboard usage and having a minimal user
 interface. It is aimed at power-users who value customizability and efficiency,
 but are willing to accept a rather steep learning curve compared to
 ``traditional'' web browsers.
@@ -30,18 +30,18 @@ core and various extensions.
 
 \section*{Objective}
 
-In contrast to Chrome and Firefox, qutebrowser does not support extending its
+In contrast to Chrome and Firefox, qutebrowser did not support extending its
 functionality via extensions. Over its lifetime, various features have been
 added to its core by its maintainer (who is the author of this report) and its
-contributors. However, this caused its core to grow substantially, getting more
+contributors. However, this caused the core to grow substantially, becoming more
 and more complex over time.
 
-Many users of qutebrowser are power-users and, as such, have very specific (and
-sometimes unique) feature requests and workflows. It should be possible for
-those users to extend qutebrowser with custom extensions in an easy way, in
-order to keep qutebrowser's core small and simple.
+Many users of qutebrowser are power-users and thus have specific (and sometimes
+unique) feature requests and workflows. It should be possible for those users to
+extend qutebrowser with custom extensions in an easy way in order to keep the
+core small and simple.
 
-The goal of this project was to make qutebrowser extensible, by introducing a
+The goal of this project was to make qutebrowser extensible by introducing a
 clearly defined programming interface (API) which can be used to develop
 extensions.
 
@@ -55,23 +55,22 @@ their extensions independently from qutebrowser's core development.
 \end{figure}
 
 \section*{Procedure / Results}
+In order to follow best practices in the software development world,
+tools for checking data types were evaluated. The \emph{mypy} tool is now run
+regularly over the code, which resulted in various lingering defects
+being found in qutebrowser itself and in related projects. Important parts of
+qutebrowser were annotated with type information in order to prevent such issues
+issues in the future, also serving as additional developer documentation.
+
 Before attempting to expose an interface for extensions from qutebrowser,
 various problematic areas in qutebrowser's codebase had to be cleaned up due to
 ``technical debt'' accumulating in the past. Subsequently, functionality
 suitable for moving out of the core into extensions was identified. Based on
 the selected areas of code, a concept for an extension API\footnote{Application
-programming interface} was developed. After implementing said API in
-qutebrowser, large parts of functionality (such as the adblocker, blocking
-advertisements on websites) could be moved into extensions. The resulting
-changes increased code maintainability and simplicity.
-
-In order to further follow best practices in the software development world,
-tools for checking data types (thus reducing the chance of accidental software
-defects) were evaluated. The \emph{mypy} tool is now run regularly over
-qutebrowser's code, which resulted in various lingering defects being found in
-qutebrowser itself and in related projects. Important parts of qutebrowser were
-annotated with type information in order to find such issues, also serving as
-additional developer documentation.
+programming interface} was developed. After implementing said API , large parts
+of qutebrowser's functionality (such as the adblocker, blocking advertisements
+on websites) could be moved into extensions. The resulting changes increased
+code maintainability and simplicity.
 
 \section*{Future Work}
 This research project was focused on increasing qutebrowser's software quality
