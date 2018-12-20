@@ -32,7 +32,7 @@ thousands of users and dozens of contributors.
 Objective: In contrast to Chrome and Firefox, qutebrowser did not support extending
 its functionality via extensions. Over its lifetime, various features have been added to
 its core by its maintainer and contributors. However, this caused the core to grow
-substantially, becoming more and more complex over time.
+substantially, becoming increasingly complex over time.
 Many users of qutebrowser are power-users and thus have specific feature requests
 and workflows. It should be possible for those users to extend qutebrowser in an
 easy way in order to keep the core small and simple.
