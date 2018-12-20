@@ -224,3 +224,8 @@ TSWLatexianTemp*
 
 # meeting notes
 /meetings/*.html
+
+# time tracking
+/time/.venv/
+/time/*.html
+/time/*.svg
