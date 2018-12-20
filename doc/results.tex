@@ -33,11 +33,9 @@ to merge conflicts due to ongoing refactorings.
 
 The impact of such a notice is hard to measure, but pull requests (where
 contributors request their changes to be pulled into the main repository)
-continued to be opened regularly throughout the project.
-
-Thus, the decision was taken to continue with the next step despite many
-remaining open contributions, and only merge new contributions if they are
-trivial enough.
+continued to be opened regularly throughout the project. Thus, the decision was
+taken to continue with the next step despite many remaining open contributions,
+and only merge new contributions if they are trivial enough.
 
 \subsection{Refactorings}
 In section \ref{sec:goals-refactorings}, three major refactorings related to the
@@ -99,6 +97,14 @@ simultaneously was difficult at times, but their author is pleased with the
 outcome of both. This project also showed that documenting thoughts and ideas
 lead to a clearer picture of how the resulting code should look.
 
+\section{Releases}
+In section \ref{sec:releases}, various qutebrowser releases were scheduled.
+v1.5.0 was released in week 3, following the release of PyQt 5.11.3 as planned.
+Patch release v1.5.1 was shipped in week 4; v1.5.2 in week 6. No further patch
+releases were needed. The release of v1.6.0 was originally intended for week 12,
+however, it was decided to delay it to January. This allows synchronizing it
+with the release of PyQt 5.12\footnote{\url{https://www.riverbankcomputing.com/pipermail/pyqt/2018-December/041192.html}}.
+
 \section{Risk review}
 At the beginning of this project, various possible risks with this project were
 analyzed (see section \ref{sec:risks}). This section reviews the evaluated
@@ -116,7 +122,7 @@ risks at the end of this project.
     qutebrowser commands and a major component (the adblocker) out of the core.
   \item Sickness of author: The author of this document caught a fever in week
     5. Thankfully, it only lasted four days, and thus did not have a major
-    impact on the progress of this project.
+    impact.
   \item Migrating documentation toolchain is not done in time: This was indeed
     the case, but it was possible to generate API documentation with the Sphinx
     tool independently from the existing qutebrowser documentation.
@@ -131,43 +137,35 @@ half a day of time was lost due to the incident.
 % \chapter{Project Monitoring}
 % Soll-Ist-Zeit-Vergleich
 \section{Time evaluation}
-Based on the 30 ECTS points awarded for the SA, a total workload of 200--240
-hours is expected, which is equivalent to 14--17 hours per week (see section
-\ref{schedule}). Analyzing the tracked time each week shows the following
-distribution:
+Based on the 30 ECTS points awarded for the SA, a workload of 14--17
+hours per week is expected (see section \ref{schedule}). Analyzing the
+spent time each week shows the following distribution:
 
 \begin{figure}[H]
-\begin{minipage}[c]{0.6\linewidth}
+\begin{minipage}[c]{0.52\linewidth}
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{img/weekly.pdf}
   \end{figure}
 \end{minipage}
-\begin{minipage}[c]{0.2\linewidth}
+\begin{minipage}[c]{0.3\linewidth}
   \begingroup
   \renewcommand{\arraystretch}{1}
   \begin{table}[H]
     \centering
-    \begin{tabulary}{\linewidth}{rrl}
+    \begin{tabulary}{\linewidth}{rr@{\hspace{3em}}rr}
       \toprule
-      Week & Time (h) & Comment\\
+      Week & Time (h) & Week & Time (h) \\
       \midrule
-      1 & 10 & \\
-      2 & 18 & \\
-      3 & 19 & \\
-      4 & 10 & \\
-      5 & 5 & due to sickness \\
-      6 & 13 & \\
-      7 & 15 & \\
-      8 & 16 & \\
-      9 & 14 & \\
-      10 & 15 & \\
-      11 & 30 & \\
-      12 & 17 & \\
-      13 & 35 & \\
-      14 & 20 & \\
+      1 & 10 & 8 & 16 \\
+      2 & 18 & 9 & 14 \\
+      3 & 19 & 10 & 15 \\
+      4 & 10 & 11 & 30 \\
+      5 & 5 & 12 & 17 \\
+      6 & 13 & 13 & 35 \\
+      7 & 15 & 14 & 20 \\
       \midrule
-      Total & 237 \\
+      & & Total & 237 \\
       \bottomrule
     \end{tabulary}
   \end{table}

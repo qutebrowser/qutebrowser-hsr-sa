@@ -5,43 +5,29 @@
 \label{ch:projectman}
 
 % Prototypen, Releases, Meilensteine
-\section{Prototypes, Releases, Milestones}
-\fixme{Split up actual releases?}
+\section{Releases and Milestones}
+\label{sec:releases}
 
 Since this project is done without any external industry partner, there is no
-immediate need for fixed releases or prototypes during the SA.
-
-However, the following releases were planned and shipped:
+immediate need for fixed releases or prototypes during the SA. However, the
+following releases were planned:
 
 \begin{itemize}
-  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream:
-    \begin{itemize}
-      \item v1.5.0 was released in week 3.
-    \end{itemize}
-  \item Patch releases for v1.5.x as needed in case of regressions or serious
-    enough bugs:
-    \begin{itemize}
-      \item v1.5.1 was released in week 4;
-      \item v1.5.2 in week 6;
-      \item No further patch releases were needed.
-    \end{itemize}
+  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream,
+    with v1.5.x patch releases as needed in case of regressions or serious
+    enough bugs.
   \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
     is completed, in order to get the changes out to users as soon as possible.
-    \begin{itemize}
-      \item It was decided to delay the v1.6.0 release to January, synchronizing
-        it with the release of PyQt
-        5.12\footnote{\url{https://www.riverbankcomputing.com/pipermail/pyqt/2018-December/041192.html}}.
-    \end{itemize}
-  \item v1.6.x patch releases as needed (probably after the SA is finished).
+    v1.6.x patch releases as needed (probably after the SA is finished).
   \item In the future, after the extension API is open for third-party
     extensions, a v2.0.0 release with some other big changes (like dropping support
-    for the older QtWebKit backend, as it's rarely updated upstream, even for
-    security issues).
+    for the older QtWebKit backend).
 \end{itemize}
 
 At the end of week 11, an API review milestone is planned, where the extension
 API design gets reviewed by employees of the IFS (Institute for Software) at the
-HSR.
+HSR. At the end of week 12, feature freeze comes into effect and the focus is
+shifted to bugfixes and documentation.
 
 % Team, Rollen und Verantwortlichkeiten
 \section{Team and Roles}
@@ -55,10 +41,8 @@ unfortunately didn't pass some exams, which were a precondition to be allowed to
 do the SA project this semester.
 
 Professor \emph{Stefan Keller}, institute partner at the Institute for Software
-(IFS) at HSR is the advisor for this project.
-
-\emph{Raphael Das Gupta}, research assistant at the IFS, helped out with code
-reviews and architectural decisions.
+(IFS) at HSR is the advisor for this project. \emph{Raphael Das Gupta}, research
+assistant at the IFS, helped out with code reviews and architectural decisions.
 
 The qutebrowser community is not directly involved in this research project, but
 is the primary audience of the resulting work. It has also contributed many
@@ -78,20 +62,11 @@ author's own.
 \section{Process Model}
 Because of previous experience as part of HSR's ``Engineering Project'', the
 ``Scrum+'' process model will be used, i.e., an agile Scrum process with an
-additional ``End of Elaboration'' milestone.
-
-At the beginning of the SA, there was a phase with the goal of merging existing
+additional ``End of Elaboration'' milestone. At the beginning of the SA, there was a phase with the goal of merging existing
 third-party contributions (pull requests) into qutebrowser, so that the changes
 required for extensions does not conflict with existing work. Thus, an additional
 \emph{preparation} phase has been introduced, resulting in the following phases:
-
-\begin{itemize}[parsep=5pt]
-  \item Inception
-  \item Preparation
-  \item Elaboration
-  \item Construction
-  \item Transition
-\end{itemize}
+Inception, Preparation, Elaboration, Construction, Transition.
 
 % Aufwandschätzung, Zeitplan, Projektplan
 \section{Project Schedule}
@@ -109,7 +84,7 @@ unfortunate but unavoidable -- it's important to integrate existing
 contributions before starting to refactor the existing code, at least for
 third-party changes which would lead to conflicts with refactoring changes.
 
-\begin{figure}[p]
+\begin{figure}[H]
   \begin{ganttchart}[
         title height = 1,
         y unit title=.5cm,
