@@ -20,12 +20,9 @@ def render_weekly(hours):
                                  y_axis_label='Time (h)')
     plot.vbar(x='weeks', top='hours', source=source, width=0.9)
 
-    line1 = bokeh.models.Span(location=17, dimension='width',
-                              line_color='orange', line_width=2)
-    line2 = bokeh.models.Span(location=14, dimension='width',
-                              line_color='orange', line_width=2)
-    plot.add_layout(line1)
-    plot.add_layout(line2)
+    box = bokeh.models.BoxAnnotation(bottom=14, top=17,
+                                     fill_alpha=0.5, fill_color='green')
+    plot.add_layout(box)
 
     plot.xgrid.grid_line_color = None
 
