@@ -90,12 +90,11 @@ of those issues have since been resolved, some still remain. The refactorings
 needed to fix those issues will affect the API exposed to extensions, and
 therefore should be taken care of before attempting to design a extension API.
 
-The full list of relevant refactorings is tracked as a Kanban
-board\footnote{\url{https://github.com/qutebrowser/qutebrowser/projects/3}} in
-qutebrowser's GitHub repository. The biggest planned changes are the following:
+The following changes are planned:
 
 \begin{itemize}
-  \item \url{https://github.com/qutebrowser/qutebrowser/issues/1456}: \\ Parts of qutebrowser already use Python type
+  \item \url{https://github.com/qutebrowser/qutebrowser/issues/1456}: \\
+    Parts of qutebrowser already use Python type
     annotations\footnote{\url{https://www.python.org/dev/peps/pep-0484/}}, but
     only if contributors decide to use them. In addition to that, no type
     checker such as mypy\footnote{\url{http://mypy-lang.org/}} is currently run
@@ -106,10 +105,9 @@ qutebrowser's GitHub repository. The biggest planned changes are the following:
   \item \url{https://github.com/qutebrowser/qutebrowser/issues/345}: \\
     To generate HTML documentation, qutebrowser currently uses
     asciidoc\footnote{\url{http://asciidoc.org/}} which is unsuitable for API
-    documentation and ceased maintenance. An external contributor (see page
-    \pageref{fiete}) is currently working on migrating to the
-    Sphinx\footnote{\url{http://www.sphinx-doc.org/}} toolchain, and should be
-    supported with his work throughout the SA. \fixme{update}
+    documentation and ceased maintenance. The
+    Sphinx\footnote{\url{http://www.sphinx-doc.org/}} tool should be
+    introduced instead, which is tailored for documenting APIs.
   \item \url{https://github.com/qutebrowser/qutebrowser/issues/640}: \\
     Global objects are registered in a object registry based on a name as
     string (``stringly-typed''\footnote{\url{http://wiki.c2.com/?StringlyTyped}}).
