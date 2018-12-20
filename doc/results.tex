@@ -7,11 +7,10 @@
 % Zielerreichung
 \section{Achievement of Objectives}
 
-\fixme{review risks}
-
 In this chapter, the objectives set in section \ref{goals} will be reviewed.
 
 \subsection{Merging contributions}
+\label{sec:merging}
 At the beginning of this project, various third-party contributions were pending
 a code review, due to being ignored during the exam session preceding this
 semester.
@@ -99,6 +98,34 @@ were written by a single author. Juggling both code and documentation
 simultaneously was difficult at times, but their author is pleased with the
 outcome of both. This project also showed that documenting thoughts and ideas
 lead to a clearer picture of how the resulting code should look.
+
+\section{Risk review}
+At the beginning of this project, various possible risks with this project were
+analyzed (see section \ref{sec:risks}). This section reviews the evaluated
+risks at the end of this project.
+
+\begin{itemize}
+  \item Too many external contributions: Like predicted, third-party
+    contributions continued to be submitted (see section \ref{sec:merging}).
+    After it was clear that reviewing all of them in time would not be possible,
+    work on the extension API continued with new contributions being ignored
+    until after this work was complete.
+  \item Little time in construction phase: Since reviewing existing
+    contributions took a long time, only little time was available for
+    construction. Despite that, it was still possible to move various
+    qutebrowser commands and a major component (the adblocker) out of the core.
+  \item Sickness of author: The author of this document caught a fever in week
+    5. Thankfully, it only lasted four days, and thus did not have a major
+    impact on the progress of this project.
+  \item Migrating documentation toolchain is not done in time: This was indeed
+    the case, but it was possible to generate API documentation with the Sphinx
+    tool independently from the existing qutebrowser documentation.
+\end{itemize}
+
+A risk which was not considered is hardware failure -- the author's laptop
+refused to turn on in week 13, shortly before this project was due. Fortunately,
+finding and pressing a hidden reset button brought it back to life, but about
+half a day of time was lost due to the incident.
 
 % Projektmonitoring (Ist-Beschreibung, so ist es passiert)
 % \chapter{Project Monitoring}
@@ -269,7 +296,7 @@ prefixed by an underscore, a common convention in Python code.
 
 The full code of the demo extension can be found in listing \ref{lst:demo}.
 
-\begin{listing}[H]
+\begin{listing}[b]
 \centering
 \begin{minted}[linenos]{python}
 import typing
@@ -360,14 +387,36 @@ qutebrowser celebrated its fifth birthday. Back then, I was not sure whether I
 wanted to pursue a Bachelor's degree at all, or whether I would rather work in
 the industry immediately. Later, when it was clear that I wanted to study at
 HSR, I wondered whether I would ever have the chance to work on qutebrowser as
-part of a study thesis.
+part of my studies.
 
-\fixme{continue}
+I was happy that this was indeed the case, thanks to the flexibility of the
+HSR and Prof.~Stefan~Keller. There are a lot of other interesting research
+project proposals, so I am honored that this arrangement was possible.
+
+Working on an existing project proved to be challenging, as it was a ``moving
+target'' at times with many external contributors involved. Even though I
+planned a phase at the beginning for reviewing existing contributions, it became
+apparent that reviews would take much longer. Additionally, contributions
+continued despite a notice asking people to hold them back if possible. In
+retrospective, a better idea would be to put up such a notice very early,
+shorten the time for reviews of existing contributions, and deal with the merge
+conflicts after the research project finished as appropriate.
+
+I decided to write this report in English so it is widely accessible by
+qutebrowser users and developers -- I hope some of them will find the time to
+read it, and enjoy reading it as much as I enjoyed writing it. I initially was
+hesitant because I never wrote something of this scale in a foreign language
+before, but I quickly discovered that I was equally comfortable with writing
+English and writing German (my native language).
+
+All in all, I am pleased with how things turned out, even if this is only the
+first step of many needed for proper extension support in qutebrowser. I hope I
+will soon be able to continue working towards this goal.
 
 % Dank
 \section{Acknowledgements}
 Working on an open-source project with an idea contributed by a student, as well
-as doing an SA as a single person, is rather untypical. I'm very grateful that
+as doing an SA as a single person, is rather untypical. I am very grateful that
 Prof.~Stefan~Keller was open to mentor this project as an advisor despite the
 unusual conditions. His support and insights in our regular meetings were
 invaluable.
@@ -377,12 +426,15 @@ just a personal pet project of mine. Without this community, I doubt I would
 still be working on it after five years -- when I started, I never imagined that
 it would get that far.
 
-I'm thankful to all qutebrowser contributors for their patience and
-understanding when I couldn't attend to their contributions in a timely manner
-while working on this project. I'd especially like to thank Fritz~Reichwald for
-his contributions towards switching to the Sphinx documentation generator, and
-our careful coordination in order to not interfere with my own work on this
-project. \fixme{update}
+I am thankful to all qutebrowser contributors for their patience and
+understanding when I could not attend to their contributions in a timely manner
+while working on this project.
+
+I would especially like to thank Fritz~Reichwald for his contributions towards
+switching to the Sphinx documentation generator, even though I did not end up
+using his work in the scope of this project. We plan to meet up and merge the
+two approaches soon, so the entire qutebrowser documentation can be converted to
+Sphinx.
 
 Thanks to AnneMarie~O'Neill for her careful English reviews and constructive
 feedback on possible improvements. Her suggestions were always very welcome and
