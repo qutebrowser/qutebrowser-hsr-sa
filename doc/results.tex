@@ -353,13 +353,6 @@ def show_message(elements: typing.List[apitypes.WebElement]) -> None:
         message.info("This site does not use Leaflet...")
 \end{minted}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\linewidth]{img/screenshot-leaflet.png} \\[2em]
-  \includegraphics[width=\linewidth]{img/screenshot-leaflet-no.png}
-  \caption{Results of running the \texttt{:has-leaflet} command.}
-\end{figure}
-
 Finally, the extension uses the \py{@hook.init()} decorator to define an
 initialization hook. There, it displays an ``osmtest initialized'' message:
 
@@ -373,7 +366,20 @@ Note that it receives an \verb|InitContext| object with additional information
 (such as commandline arguments). Since the argument is unused, its name is
 prefixed by an underscore, a common convention in Python code.
 
-The full code of the demo extension can be found on page \pageref{lst:demo}.
+The full code of the demo extension can be found on page \pageref{lst:demo}.\\[2em]
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/screenshot-leaflet.png}
+  \caption{Running the \texttt{:has-leaflet} command on OSMyBiz.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/screenshot-leaflet-no.png}
+  \caption{Running the \texttt{:has-leaflet} command on Google Maps.}
+\end{figure}
+
 
 \begin{listing}[b]
 \centering
