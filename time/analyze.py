@@ -23,7 +23,7 @@ class Topic(enum.Enum):
     meetings = 1
     other = 2
     # upstream = 3
-    docs = 4
+    documentation = 4
     contributions = 5
     # bugfixes = 6
     implementation = 7
@@ -58,10 +58,10 @@ def analyze(f):
         'pytest upgrade': Topic.other,
         'Qt 5.12': Topic.other,
 
-        'Dokumentation': Topic.docs,
-        'Doku': Topic.docs,
-        'Dokumentation (Projektplan)': Topic.docs,
-        'Sphinx': Topic.docs,
+        'Dokumentation': Topic.documentation,
+        'Doku': Topic.documentation,
+        'Dokumentation (Projektplan)': Topic.documentation,
+        'Sphinx': Topic.documentation,
 
         'Implementation': Topic.implementation,
         'API review implementation': Topic.implementation,
@@ -97,7 +97,7 @@ def analyze(f):
         per_topic[topic] += hours
         per_desc[(topic, desc)] += hours
 
-        weekly_topic[topic][semweek - 1] += hours
+        weekly_topic[topic.capitalize()][semweek - 1] += hours
 
     return weekly_hours, per_topic, per_desc, weekly_topic
 

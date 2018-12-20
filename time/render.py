@@ -9,7 +9,7 @@ import bokeh.core.properties
 
 def render_weekly(hours):
     bokeh.io.output_file('weekly.html')
-    weeks = ['SW {}'.format(wk) for wk in range(1, 15)]
+    weeks = [str(wk) for wk in range(1, 15)]
 
     source = bokeh.models.ColumnDataSource(data={
         'weeks': weeks,
@@ -25,6 +25,10 @@ def render_weekly(hours):
     plot.add_layout(box)
 
     plot.xgrid.grid_line_color = None
+    plot.xaxis.axis_label_text_font_size = '12pt'
+    plot.xaxis.major_label_text_font_size = '12pt'
+    plot.yaxis.axis_label_text_font_size = '12pt'
+    plot.yaxis.major_label_text_font_size = '12pt'
 
     bokeh.io.save(plot)
 
@@ -34,8 +38,9 @@ def render_weekly(hours):
 
 def render_topic(weekly_topic):
     bokeh.io.output_file('topic.html')
-    weeks = ['SW {}'.format(wk) for wk in range(1, 15)]
-    topics = ['contributions', 'docs', 'implementation', 'meetings', 'other']
+    weeks = [str(wk) for wk in range(1, 15)]
+    topics = ['Documentation', 'Implementation', 'Contributions', 'Meetings',
+              'Other']
 
     data = {'weeks': weeks}
     data.update(weekly_topic)
@@ -55,6 +60,11 @@ def render_topic(weekly_topic):
 
     plot.legend.location = (300, 350)
     plot.xgrid.grid_line_color = None
+    plot.xaxis.axis_label_text_font_size = '12pt'
+    plot.xaxis.major_label_text_font_size = '12pt'
+    plot.yaxis.axis_label_text_font_size = '12pt'
+    plot.yaxis.major_label_text_font_size = '12pt'
+    plot.legend.label_text_font_size = '12pt'
 
     phases = [
         (0, 'Inception'),
