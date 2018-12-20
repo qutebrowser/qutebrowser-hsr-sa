@@ -80,6 +80,12 @@ The official task description (``Aufgabenstellung'') in German can be found in
 appendix \ref{ch:aufgabenstellung}.
 
 \subsection{Merging contributions}
+When this project started, various third-party contributions were pending a code
+review, due to being ignored during the exam session preceding this semester.
+
+Since those contributions would conflict with the refactorings needed before
+work on the extension API can start, those should be reviewed and merged (or
+rejected) at the beginning of this project.
 
 \subsection{Refactorings}
 \label{sec:goals-refactorings}
@@ -118,10 +124,37 @@ should be refactored to use better alternatives such as constructor arguments
 \end{itemize}
 
 \subsection{Extension API}
+After the needed refactorings are finished, an extension API for qutebrowser
+should be designed and implemented. In order to design the API with real-world
+usages in mind, the following steps should be taken:
+
+\begin{itemize}
+  \item Identify what functionality to expose over the extension API. This can
+    be done by analyzing code in qutebrowser's core which is suitable for moving
+    into extensions. Use cases for future third-party extensions should be
+    considered as well.
+  \item Research existing APIs for browser extensions and analyze prior
+    solutions.
+  \item Design and implement a suitable API based on the knowledge gained.
+  \item Use the newly added API by moving code out of qutebrowser's core into
+    extensions (which are shipped with qutebrowser).
+  \item Review the finished API to make sure it is consistent and intuitive.
+\end{itemize}
 
 \subsection{Documentation}
 
-\fixme{continue!}
+As shown in GitHub's ``Open Source Survey'' \autocite{oss-survey}, good
+documentation is highly valued in open source projects, but also is frequently
+overlooked by project maintainers.
+
+Therefore, good documentation is an explicit goal of this project: The resulting
+extension API should be documented well by providing API documentation,
+usage examples, and an example extension.
+
+Additionally, this report is written in English, allowing a bigger audience to
+read it. Thus, future extension authors or qutebrowser contributors can read
+this documentation to get further background information about its extension
+API.
 
 % Rahmenbedingungen, Umfeld, Definitionen, Abgrenzungen
 \section{Context}
