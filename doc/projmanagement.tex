@@ -9,23 +9,28 @@
 Since this project is done without any external industry partner, there is no
 immediate need for fixed releases or prototypes during the SA.
 
-However, the following releases are planned:
+However, the following releases were planned and shipped:
 
 \begin{itemize}
-  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream
+  \item A v1.5.0 feature release as soon as PyQt 5.11.3 is released upstream:
     \begin{itemize}
-      \item v1.5.0 was released in week 3
+      \item v1.5.0 was released in week 3.
     \end{itemize}
   \item Patch releases for v1.5.x as needed in case of regressions or serious
     enough bugs:
     \begin{itemize}
-      \item v1.5.1 was released in week 4
-      \item v1.5.2 in week 6
-      \item v1.5.3 in week \fixme{}
+      \item v1.5.1 was released in week 4;
+      \item v1.5.2 in week 6;
+      \item No further patch releases were needed.
     \end{itemize}
   \item v1.6.0 after the work on refactoring qutebrowser's core into extensions
     is completed, in order to get the changes out to users as soon as possible.
-  \item v1.6.x patch releases as needed (probably after the SA is finished)
+    \begin{itemize}
+      \item It was decided to delay the v1.6.0 release to January, synchronizing
+        it with the release of PyQt
+        5.12\footnote{\url{https://www.riverbankcomputing.com/pipermail/pyqt/2018-December/041192.html}}.
+    \end{itemize}
+  \item v1.6.x patch releases as needed (probably after the SA is finished).
   \item In the future, after the extension API is open for third-party
     extensions, a v2.0.0 release with some other big changes (like dropping support
     for the older QtWebKit backend, as it's rarely updated upstream, even for
@@ -60,15 +65,11 @@ There is no external industry partner.
 
 \label{fiete}
 \emph{Fritz Reichwald} (fiete201\footnote{\url{https://github.com/fiete201}})
-is a long-time qutebrowser user who is working on migrating qutebrowser's
-documentation system from asciidoc\footnote{\url{http://asciidoc.org/}} (which
-is deprecated) to the Sphinx\footnote{\url{http://www.sphinx-doc.org/}}
-documentation generator. This change was
-planned\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/345}}
-since December 2014, so his help with tackling this is very much appreciated.
-This project will benefit from his work, as Sphinx, unlike asciidoc, is a
-very good fit for documenting APIs. His work is clearly marked as such in this
-documentation. \fixme{update}
+is a long-time qutebrowser user who started working on migrating qutebrowser's
+documentation system from asciidoc to Sphinx (see section
+\ref{sec:goals-refactorings}). However, he was unable to finish his work in
+time, so all API documentation work mentioned in this documentation is the
+author's own.
 
 % Prozessmodel
 \section{Process Model}
@@ -81,7 +82,13 @@ third-party contributions (pull requests) into qutebrowser, so that the changes
 required for extensions does not conflict with existing work. Thus, an additional
 \emph{preparation} phase has been introduced, resulting in the following phases:
 
-Inception, Preparation, Elaboration, Construction, Transition
+\begin{itemize}[parsep=5pt]
+  \item Inception
+  \item Preparation
+  \item Elaboration
+  \item Construction
+  \item Transition
+\end{itemize}
 
 % Aufwandschätzung, Zeitplan, Projektplan
 \section{Project Schedule}
@@ -93,7 +100,13 @@ author, this amounts to 200--240 hours of work. The semester consists of 14
 weeks, thus, an average workload of 14--17 hours per week is expected. This time
 is allotted as shown in figure \ref{img:schedule}.
 
-\begin{figure}[h!]
+Due to the relatively long \emph{preparation} phase at the beginning of the
+project, the \emph{construction} phase gets unusually short. This is
+unfortunate but unavoidable -- it's important to integrate existing
+contributions before starting to refactor the existing code, at least for
+third-party changes which would lead to conflicts with refactoring changes.
+
+\begin{figure}[p]
   \begin{ganttchart}[
         title height = 1,
         y unit title=.5cm,
@@ -145,22 +158,12 @@ is allotted as shown in figure \ref{img:schedule}.
   \label{img:schedule}
 \end{figure}
 
-\fixme{feature freeze}
-
-Due to the relatively long \emph{preparation} phase at the beginning of the
-project, the \emph{construction} phase gets unusually short. This is
-unfortunate but unavoidable -- it's important to integrate existing
-contributions before starting to refactor the existing code, at least for
-third-party changes which would lead to conflicts with refactoring changes.
-
 % Risiken
 \section{Risks}
 \label{sec:risks}
-The following risks have been identified in this project:
+The following risks have been identified at the beginning of this project:
 
-\fixme{Should have a time, if possible -- see ÖV-Güteklassen 2018?}
-
-\begin{table}[h!]
+\begin{table}[H]
   \begin{tabulary}{\linewidth}{LLL}
     \toprule
     Risk & Mitigation & Probability (1-5) \\
@@ -176,11 +179,15 @@ The following risks have been identified in this project:
     contributions yet & 3 \\
     \hline
     Migrating documentation toolchain to Sphinx (done by external contributor)
-    is not done in time \fixme{update }& Initial extension API documentation can be separate from
+    is not done in time & Initial extension API documentation can be separate from
     qutebrowser documentation & 3 \\
     \bottomrule
   \end{tabulary}
+  \caption{Risks identified}
 \end{table}
+
+Since some of these risks are hard to quantify in hours lost (such as ``too many
+external contributions''), a probability between 1 and 5 has been assigned instead.
 
 As explained in section \ref{context}, it's expected that third-party
 contributors continue to submit changes (in the form of pull requests) while
