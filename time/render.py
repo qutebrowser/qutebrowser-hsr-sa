@@ -7,7 +7,7 @@ import bokeh.plotting
 
 def render_weekly(hours):
     bokeh.io.output_file('weekly.html')
-    weeks = [str(wk) for wk in range(1, 15)]
+    weeks = ['SW {}'.format(wk) for wk in range(1, 15)]
 
     source = bokeh.models.ColumnDataSource(data={
         'weeks': weeks,
@@ -17,6 +17,13 @@ def render_weekly(hours):
     plot = bokeh.plotting.figure(x_range=weeks, x_axis_label='Semester week',
                                  y_axis_label='Time (h)')
     plot.vbar(x='weeks', top='hours', source=source, width=0.9)
+
+    line1 = bokeh.models.Span(location=17, dimension='width',
+                              line_color='orange', line_width=2)
+    line2 = bokeh.models.Span(location=14, dimension='width',
+                              line_color='orange', line_width=2)
+    plot.add_layout(line1)
+    plot.add_layout(line2)
 
     bokeh.io.save(plot)
 
