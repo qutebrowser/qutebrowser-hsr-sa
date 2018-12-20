@@ -108,6 +108,9 @@ def main():
 
     print('\n===== weekly =====')
     pprint.pprint(weekly_hours)
+    for week, hours in enumerate(weekly_hours, start=1):
+        print('{} & {} \\\\'.format(week, round(hours)))
+    print('Total & {} \\\\'.format(sum(weekly_hours)))
 
     print('\n===== per topic =====')
     pprint.pprint(dict(per_topic))

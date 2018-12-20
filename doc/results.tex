@@ -131,7 +131,85 @@ half a day of time was lost due to the incident.
 % \chapter{Project Monitoring}
 % Soll-Ist-Zeit-Vergleich
 \section{Time evaluation}
+Based on the 30 ECTS points awarded for the SA, a total workload of 200--240
+hours is expected, which is equivalent to 14--17 hours per week (see section
+\ref{schedule}). Analyzing the tracked time each week shows the following
+distribution:
 
+\begin{figure}[H]
+\begin{minipage}[c]{0.6\linewidth}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/weekly.pdf}
+  \end{figure}
+\end{minipage}
+\begin{minipage}[c]{0.2\linewidth}
+  \begingroup
+  \renewcommand{\arraystretch}{1}
+  \begin{table}[H]
+    \centering
+    \begin{tabulary}{\linewidth}{rrl}
+      \toprule
+      Week & Time (h) & Comment\\
+      \midrule
+      1 & 10 & \\
+      2 & 18 & \\
+      3 & 19 & \\
+      4 & 10 & \\
+      5 & 5 & due to sickness \\
+      6 & 13 & \\
+      7 & 15 & \\
+      8 & 16 & \\
+      9 & 14 & \\
+      10 & 15 & \\
+      11 & 30 & \\
+      12 & 17 & \\
+      13 & 35 & \\
+      14 & 20 & \\
+      \midrule
+      Total & 237 \\
+      \bottomrule
+    \end{tabulary}
+  \end{table}
+  \endgroup
+\end{minipage}
+\caption{Time spent per week}
+\end{figure}
+
+The time entries tracked were split into various categories:
+
+\begin{table}[H]
+  \begin{tabulary}{\linewidth}{lLr}
+    \toprule
+    Category & Description & Time (h) \\
+    \midrule
+    Documentation & Writing this documentation and working on API documentation. & 88 \\
+    Implementation & Implementing the extension API, introducing mypy,
+                     bugfixing. & 60 \\
+    Contributions & Reviewing pull requests and contributions. & 34 \\
+    Meetings & Meetings with Prof.~Stefan~Keller, language reviews with
+               AnneMarie~O'Neill, video calls with Fritz~Reichwald (see section
+               \ref{sec:team}). & 29 \\
+    Other & Reading API design literature, communication with community, fixing
+            issues with upstream library upgrades, etc. & 27 \\
+    \bottomrule
+  \end{tabulary}
+  \caption{Time tracking categories}
+\end{table}
+
+Reviewing the time tracked per week per category, the project phases initially
+defined in the schedule on page \pageref{img:schedule} are clearly apparent:
+
+\vspace{1em}
+
+\begin{figure}[H]
+  \centering
+  \makebox[\textwidth][c]{
+    \includegraphics[width=1.2\linewidth]{img/topic.pdf}
+  }
+  % https://tex.stackexchange.com/a/16584/28697makebox[\textwidth][c]{
+  \caption{Time tracking categories per week}
+\end{figure}
 
 
 % Codestatistik (Zeilen: Kommentare, Klassen, Packages)
@@ -144,8 +222,6 @@ In the following table, code statistics as calculated by the
 cloc\footnote{\url{https://github.com/AlDanial/cloc}} tool (``count lines of
 code'') are presented for all files created as part of this project, as well as
 files with major changes:
-
-\fixme{whitespace still here?}
 
 \begingroup
 \renewcommand{\arraystretch}{1}
