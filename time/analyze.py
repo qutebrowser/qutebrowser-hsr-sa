@@ -21,11 +21,11 @@ def get_semweek(start, end):
 class Topic(enum.Enum):
 
     meetings = 1
-    misc = 2
-    upstream = 3
+    other = 2
+    # upstream = 3
     docs = 4
     contributions = 5
-    bugfixes = 6
+    # bugfixes = 6
     implementation = 7
 
 
@@ -35,6 +35,7 @@ def analyze(f):
     weekly_hours = [0.0] * 14
     per_topic = collections.defaultdict(float)
     per_desc = collections.defaultdict(float)
+    weekly_topic = [collections.defaultdict(float) for _ in range(14)]
 
     topic_map = {
         'Sitzung': Topic.meetings,
@@ -46,16 +47,16 @@ def analyze(f):
         'Sitzung (API review)': Topic.meetings,
         'Sprachreview': Topic.meetings,
 
-        'Einführung': Topic.misc,
-        'Community': Topic.misc,
-        'Release': Topic.misc,
-        'Tracking': Topic.misc,
-        'Buch lesen': Topic.misc,
-        'Organisatorisches': Topic.misc,
+        'Einführung': Topic.other,
+        'Community': Topic.other,
+        'Release': Topic.other,
+        'Tracking': Topic.other,
+        'Buch lesen': Topic.other,
+        'Organisatorisches': Topic.other,
 
-        'Upstream': Topic.upstream,
-        'pytest upgrade': Topic.upstream,
-        'Qt 5.12': Topic.upstream,
+        'Upstream': Topic.other,
+        'pytest upgrade': Topic.other,
+        'Qt 5.12': Topic.other,
 
         'Dokumentation': Topic.docs,
         'Doku': Topic.docs,
@@ -95,13 +96,14 @@ def analyze(f):
         weekly_hours[semweek - 1] += hours
         per_topic[topic] += hours
         per_desc[(topic, desc)] += hours
+        weekly_topic[semweek - 1][topic] += hours
 
-    return weekly_hours, per_topic, per_desc
+    return weekly_hours, per_topic, per_desc, weekly_topic
 
 
 def main():
     with open('time.csv', 'r', encoding='utf-8') as f:
-        weekly_hours, per_topic, per_desc = analyze(f)
+        weekly_hours, per_topic, per_desc, weekly_topic = analyze(f)
 
     print('\n===== weekly =====')
     pprint.pprint(weekly_hours)
@@ -112,11 +114,17 @@ def main():
     print('\n===== per desc =====')
     pprint.pprint(dict(per_desc))
 
+    print('\n===== weekly per topic =====')
+    pprint.pprint(weekly_topic)
+
     with open('weekly.json', 'w') as f:
         json.dump(weekly_hours, f)
 
     with open('per_topic.json', 'w') as f:
         json.dump(per_topic, f)
+
+    with open('weekly_topic.json', 'w') as f:
+        json.dump(weekly_topic, f)
 
 
 if __name__ == '__main__':
