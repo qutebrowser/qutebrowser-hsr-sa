@@ -20,17 +20,28 @@ or Chrome (Vimium\footnote{\url{https://vimium.github.io/}}). However, due to
 being constrained by the extension API exposed by Firefox and Chrome, those
 projects lack various features which qutebrowser offers.
 
-The project was started in December 2013 and is based on Python and PyQt5. An
-extension API for users to write their own extensions to qutebrowser is a
+Since qutebrowser uses the Python programming language in conjunction with the
+Qt library for graphical user interfaces, it is standing on the shoulders of
+giants: It does not implement complex tasks such as downloading and executing
+HTML/CSS/JavaScript code itself. Instead, it relies on the QtWebEngine project
+to do so, which is largely based on the same code as Google Chrome.
+
+An extension API for users to write their own extensions to qutebrowser is a
 long-standing feature
 request\footnote{\url{https://github.com/qutebrowser/qutebrowser/issues/30}},
 which has often been requested by its users.
 
+The original inspiration for qutebrowser was the \emph{dwb}
+project\footnote{\url{https://portix.bitbucket.io/dwb/}} which is a web browser
+with a very similar philosophy. The author of qutebrowser used dwb for a long
+time, but it became apparent that dwb's author lacked the time and interest to
+continue working on it, thus many dwb users were looking for a viable
+alternative. Since no suitable alternative existed, work on qutebrowser started
+in December 2013, after which it quickly gained traction.
+
 It is difficult to estimate qutebrowser's user count, but it is most likely used by a
 couple thousand users, so an extension API is also vital in order to be able to move
 less popular features out of the core part of qutebrowser.
-
-\fixme{Make clear that we're dealing with existing engines, maybe name, maybe motivation?}
 
 \label{backends}
 There are two backends (rendering engines) which can be used with qutebrowser:
