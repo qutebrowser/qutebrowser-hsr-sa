@@ -184,7 +184,84 @@ contributions (pull requests) which were already open. For the rest of the SA,
 such contributions will be dealt with on a best effort basis, with the main
 focus being this documentation and the work required for the extension API.
 
-\fixme{Describe Python decorators, packages/modules, Qt signals/slots}
+\subsection{Notable language features}
+\label{sec:langfeatures}
+This document assumes that the reader is familiar with a programming language
+following the object oriented paradigm and concepts such as classes.
+
+Some sections refer to concepts which are specific to Python or Qt and are
+thus explained in more detail below.
+
+\subsubsection{Python decorators}
+Python allows to annotate a function or method with a ``decorator''. As an
+example, this can be used to define properties:
+
+\begin{minted}{python}
+class Example:
+
+    @property
+    def prop(self):
+        return 2 + 2
+
+ex = Example()
+print(ex.prop)  # 4
+\end{minted}
+
+The same feature can also be used to implement custom decorators. Functions are
+first-level objects in Python, thus a decorator receives the function it
+decorates as an argument and returns a function (which may be modified).
+
+A more thorough explanation of decorators can be found here: \\
+\url{https://realpython.com/primer-on-python-decorators/}
+
+\subsubsection{Python modules and packages}
+A Python module simply is a file with a \verb|.py| extension containing Python
+code. A package is a folder containing modules and a special \verb|__init__.py|
+file (often empty) as a package marker.
+
+\subsubsection{Qt signals and slots}
+Signals and slots are an important feature of the Qt library to allow
+independent objects to communicate with each other.
+
+They can be considered an abstraction of the observer pattern
+\autocite[293ff]{gof}, similar to delegates and events in C\#.
+
+A class can define a signal which it uses to notify other objects (e.g. about
+changed state):
+
+\begin{minted}{python}
+class Example(QObject):
+
+    text_changed = pyqtSignal(str)
+\end{minted}
+
+A slot is a function or method which can be connected to a signal:
+
+\begin{minted}{python}
+@pyqtSlot(str)
+def on_text_changed(text: str) -> None:
+    print(text)
+\end{minted}
+
+Signals provide a \verb|connect()| method to connect them to a slot:
+
+\begin{minted}{python}
+ex = Example()
+ex.text_changed.connect(on_text_changed)
+\end{minted}
+
+as well as an \verb|emit()| method used to call all slots connected to it -- the
+above \verb|Example| class could have a \verb|set_text| method like this:
+
+\begin{minted}{python}
+def set_text(self, text: str) -> None:
+    # ...
+    self.text_changed.emit(text)
+\end{minted}
+
+More information about Qt signals and slots can be found in its (C++)
+documentation: \\
+\url{https://doc.qt.io/qt-5/signalsandslots.html}
 
 % Vorgehen, Aufbau der Arbeit
 \section{Methods and Structure}
