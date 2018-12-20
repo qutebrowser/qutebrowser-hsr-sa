@@ -660,21 +660,22 @@ def set_html(html: str, base_url: QUrl)
 Various other existing projects served as an inspiration for qutebrowser's
 extension API:
 
-\begin{itemize}
-  \item \fixme{Add simplicity details for pytest}
-  \item The pytest project\footnote{\url{https://www.pytest.org/}} exposes a
-    very simple and ``pythonic'' extension API. All that's needed to create a
-    plugin is a specially named Python file which implements hook functions such
-    as \py{def pytest_runtest_setup(item)}. However, giving trainings about
-    pytest in companies, the author of this SA has noticed that some aspects of
-    its plugin API are somewhat unintuitive. As an example, both the function
-    name and the argument names (\verb|item|) need to match the definition.
-    While some of its design decisions make sense, others should be solved
-    differently in qutebrowser.
-  \item The odoo project\footnote{\url{https://www.odoo.com/}} also follows the
-    philosophy of having a small core which is extended with modules (some of
-    which are shipped with the core). From some prior work experience, this SA's
-    author has worked with odoo modules in the past -- unfortunately, the API
-    for modules is complex and badly documented. Thus, odoo is mainly useful as
-    a conceptual inspiration rather than an inspiration for API design.
-\end{itemize}
+\subsection{pytest}
+
+The pytest project\footnote{\url{https://www.pytest.org/}} exposes a very simple
+and ``pythonic'' extension API. All that's needed to create a plugin is a
+specially named Python file which implements hook functions such as \py{def
+pytest_runtest_setup(item)}. However, giving trainings about pytest in
+companies, the author of this SA has noticed that some aspects of its plugin API
+are somewhat unintuitive. As an example, both the function name and the argument
+names (\verb|item|) need to match their definition; renaming the argument to
+\verb|test_item| instead would lead to an error. While some of its design
+decisions make sense, others should be solved differently in qutebrowser.
+
+\subsection{odoo}
+The odoo project\footnote{\url{https://www.odoo.com/}} also follows the
+philosophy of having a small core which is extended with modules (some of which
+are shipped with the core). From some prior work experience, this SA's author
+has worked with odoo modules in the past -- unfortunately, the API for modules
+is complex and badly documented. Thus, odoo is mainly useful as a conceptual
+inspiration rather than an inspiration for API design.
