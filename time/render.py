@@ -27,13 +27,15 @@ def render_weekly(hours):
     plot.add_layout(line1)
     plot.add_layout(line2)
 
+    plot.xgrid.grid_line_color = None
+
     bokeh.io.save(plot)
 
 
 def render_topic(weekly_topic):
     bokeh.io.output_file('topic.html')
     weeks = ['SW {}'.format(wk) for wk in range(1, 15)]
-    topics = ['meetings', 'other', 'docs', 'contributions', 'implementation']
+    topics = ['contributions', 'docs', 'implementation', 'meetings', 'other']
 
     data = {'weeks': weeks}
     data.update(weekly_topic)
@@ -41,7 +43,7 @@ def render_topic(weekly_topic):
     source = bokeh.models.ColumnDataSource(data=data)
 
     plot = bokeh.plotting.figure(x_range=weeks, x_axis_label='Semester week',
-                                 y_axis_label='Time (h)')
+                                 y_axis_label='Time (h)', plot_width=1200)
 
     colors = bokeh.palettes.Category10[len(topics)]
 
@@ -51,7 +53,27 @@ def render_topic(weekly_topic):
         plot.vbar(x=x, top=topic, width=0.1, source=source, color=colors[i],
                   legend=legend)
 
-    plot.legend.location = "top_center"
+    plot.legend.location = (300, 350)
+    plot.xgrid.grid_line_color = None
+
+    phases = [
+        (0, 'Inception'),
+        (1, 'Preparation'),
+        (6, 'Elaboration'),
+        (9, 'Construction'),
+        (13, 'Transition'),
+    ]
+
+    for week, _name in phases:
+        if week == 0:
+            continue
+        line = bokeh.models.Span(location=week, dimension='height',
+                                 line_color='grey', line_width=2)
+        plot.add_layout(line)
+
+    for week, text in phases:
+        label = bokeh.models.Label(x=week + 0.1, y=25, text=text)
+        plot.add_layout(label)
 
     bokeh.io.save(plot)
 
