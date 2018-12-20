@@ -31,6 +31,9 @@ def render_weekly(hours):
 
     bokeh.io.save(plot)
 
+    plot.output_backend = 'svg'
+    bokeh.io.export_svgs(plot, filename='weekly.svg')
+
 
 def render_topic(weekly_topic):
     bokeh.io.output_file('topic.html')
@@ -76,6 +79,9 @@ def render_topic(weekly_topic):
         plot.add_layout(label)
 
     bokeh.io.save(plot)
+
+    plot.output_backend = 'svg'
+    bokeh.io.export_svgs(plot, filename='topic.svg')
 
 
 def main():
