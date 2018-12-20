@@ -35,7 +35,7 @@ def analyze(f):
     weekly_hours = [0.0] * 14
     per_topic = collections.defaultdict(float)
     per_desc = collections.defaultdict(float)
-    weekly_topic = [collections.defaultdict(float) for _ in range(14)]
+    weekly_topic = collections.defaultdict(lambda: [0.0] * 14)
 
     topic_map = {
         'Sitzung': Topic.meetings,
@@ -96,7 +96,8 @@ def analyze(f):
         weekly_hours[semweek - 1] += hours
         per_topic[topic] += hours
         per_desc[(topic, desc)] += hours
-        weekly_topic[semweek - 1][topic] += hours
+
+        weekly_topic[topic][semweek - 1] += hours
 
     return weekly_hours, per_topic, per_desc, weekly_topic
 

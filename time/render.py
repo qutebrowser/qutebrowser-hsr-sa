@@ -34,25 +34,18 @@ def render_topic(weekly_topic):
     topics = ['meetings', 'other', 'docs', 'contributions', 'implementation']
 
     data = {'weeks': weeks}
-    for week in weekly_topic:
-        for topic in topics:
-            if topic not in data:
-                data[topic] = []
-
-            if topic not in week:
-                data[topic].append(0.0)
-
-            #for topic, hours in week.items():
-            #    data[topic].append(hours)
-
+    data.update(weekly_topic)
 
     source = bokeh.models.ColumnDataSource(data=data)
 
     plot = bokeh.plotting.figure(x_range=weeks, x_axis_label='Semester week',
                                  y_axis_label='Time (h)')
 
-    for topic in topics:
-        plot.vbar(x=bokeh.transform.dodge('weeks', -0.25, range=plot.x_range), top=topic, width=0.2, source=source)
+    plot.vbar(x=bokeh.transform.dodge('weeks', -0.2, range=plot.x_range), top='meetings', width=0.1, source=source)
+    plot.vbar(x=bokeh.transform.dodge('weeks', -0.1, range=plot.x_range), top='other', width=0.1, source=source)
+    plot.vbar(x=bokeh.transform.dodge('weeks', 0, range=plot.x_range), top='docs', width=0.1, source=source)
+    plot.vbar(x=bokeh.transform.dodge('weeks', 0.1, range=plot.x_range), top='contributions', width=0.1, source=source)
+    plot.vbar(x=bokeh.transform.dodge('weeks', 0.2, range=plot.x_range), top='implementation', width=0.1, source=source)
 
     bokeh.io.save(plot)
 
