@@ -3,6 +3,8 @@ import json
 import bokeh.io
 import bokeh.models
 import bokeh.plotting
+import bokeh.palettes
+import bokeh.core.properties
 
 
 def render_weekly(hours):
@@ -41,11 +43,15 @@ def render_topic(weekly_topic):
     plot = bokeh.plotting.figure(x_range=weeks, x_axis_label='Semester week',
                                  y_axis_label='Time (h)')
 
-    plot.vbar(x=bokeh.transform.dodge('weeks', -0.2, range=plot.x_range), top='meetings', width=0.1, source=source)
-    plot.vbar(x=bokeh.transform.dodge('weeks', -0.1, range=plot.x_range), top='other', width=0.1, source=source)
-    plot.vbar(x=bokeh.transform.dodge('weeks', 0, range=plot.x_range), top='docs', width=0.1, source=source)
-    plot.vbar(x=bokeh.transform.dodge('weeks', 0.1, range=plot.x_range), top='contributions', width=0.1, source=source)
-    plot.vbar(x=bokeh.transform.dodge('weeks', 0.2, range=plot.x_range), top='implementation', width=0.1, source=source)
+    colors = bokeh.palettes.Category10[len(topics)]
+
+    for i, topic in enumerate(topics):
+        x = bokeh.transform.dodge('weeks', -0.2 + i*0.1, range=plot.x_range)
+        legend = bokeh.core.properties.value(topic)
+        plot.vbar(x=x, top=topic, width=0.1, source=source, color=colors[i],
+                  legend=legend)
+
+    plot.legend.location = "top_center"
 
     bokeh.io.save(plot)
 
