@@ -163,27 +163,112 @@ third-party changes which would lead to conflicts with refactoring changes.
 \label{sec:risks}
 The following risks have been identified at the beginning of this project:
 
+\definecolor{risk9}{RGB}{165,21,38}
+\definecolor{risk8}{RGB}{221,64,45}
+\definecolor{risk7}{RGB}{249,141,82}
+\definecolor{risk6}{RGB}{254,208,130}
+\definecolor{risk5}{RGB}{244,242,162}
+\definecolor{risk4}{RGB}{202,233,134}
+\definecolor{risk3}{RGB}{133,202,104}
+\definecolor{risk2}{RGB}{47,160,83}
+\definecolor{risk1}{RGB}{0,104,55}
+
+\begin{figure}[H]
+  \begin{tikzpicture}[
+    table/.style={
+      matrix of nodes,
+      row sep=0,
+      column sep=0,
+      nodes={rectangle,text width=6.4em,align=center},
+      text depth=1.5em,
+      text height=1em,
+      nodes in empty cells
+    },
+    %
+    column 1/.style={nodes={text width=3ex}},
+    row 6/.style={nodes={text height=2ex}},
+    row 7/.style={nodes={text height=2ex}},
+    %
+    row 1 column 6/.style={nodes={fill=risk9}},
+    %
+    row 1 column 5/.style={nodes={fill=risk8}},
+    row 2 column 6/.style={nodes={fill=risk8}},
+    %
+    row 1 column 4/.style={nodes={fill=risk7}},
+    row 2 column 5/.style={nodes={fill=risk7}},
+    row 3 column 6/.style={nodes={fill=risk7}},
+    %
+    row 1 column 3/.style={nodes={fill=risk6}},
+    row 2 column 4/.style={nodes={fill=risk6}},
+    row 3 column 5/.style={nodes={fill=risk6}},
+    row 4 column 6/.style={nodes={fill=risk6}},
+    %
+    row 1 column 2/.style={nodes={fill=risk5}},
+    row 2 column 3/.style={nodes={fill=risk5}},
+    row 3 column 4/.style={nodes={fill=risk5}},
+    row 4 column 5/.style={nodes={fill=risk5}},
+    row 5 column 6/.style={nodes={fill=risk5}},
+    %
+    row 2 column 2/.style={nodes={fill=risk4}},
+    row 3 column 3/.style={nodes={fill=risk4}},
+    row 4 column 4/.style={nodes={fill=risk4}},
+    row 5 column 5/.style={nodes={fill=risk4}},
+    %
+    row 3 column 2/.style={nodes={fill=risk3}},
+    row 4 column 3/.style={nodes={fill=risk3}},
+    row 5 column 4/.style={nodes={fill=risk3}},
+    %
+    row 4 column 2/.style={nodes={fill=risk2}},
+    row 5 column 3/.style={nodes={fill=risk2}},
+    %
+    row 5 column 2/.style={nodes={fill=risk1}},
+  ]
+    \matrix (mat) [table]
+    {
+      5 & & & \RNum{1}: Too many contributions & & \\
+      4 & \RNum{2}: Migrating docs not done & & & \RNum{3}: Little time for construction & \\
+      3 & \RNum{4}: Breaking API changes & \RNum{5}: Sickness of author & & & \\
+      2 & & & & & \\
+      1 & & & & & \\
+        & 1 & 2 & 3 & 4 & 5 \\
+    };
+    
+    \path
+      ([yshift=-20pt]mat-5-2.south west) --
+      ([yshift=-20pt]mat-5-6.south east)
+      node[below, midway]{Severity};
+    \path
+      ([xshift=-10pt]mat-1-1.north west) --
+      ([xshift=-10pt]mat-4-1.south west)
+      node[left, midway, rotate=90]{Likelihood};
+  \end{tikzpicture}
+  \caption{Risk matrix}
+  \label{img:risiko}
+\end{figure}
+
+The following measures have been taken to mitigate those risks:
+
 \begin{table}[H]
-  \begin{tabulary}{\linewidth}{LLL}
+  \begin{tabulary}{\linewidth}{lLL}
     \toprule
-    Risk & Mitigation & Probability (1-5) \\
+    Risk & Description & Mitigation \\
     \midrule
-    Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions & 5 \\
+    \RNum{1} & Too many external contributions & Asking contributors to hold back further contributions; ignoring existing contributions  \\
     \hline
-    Little time in construction phase & Work on extension API is very
-    scalable, buffers in schedule & 4 \\
-    \hline
-    Sickness of author & Work on extension API is very scalable & 3 \\
-    \hline
-    Future breaking API changes needed & API is not exposed for third-party
-    contributions yet & 3 \\
-    \hline
-    Migrating documentation toolchain to Sphinx (done by external contributor)
+    \RNum{2} & Migrating documentation toolchain to Sphinx (done by external contributor)
     is not done in time & Initial extension API documentation can be separate from
-    qutebrowser documentation & 3 \\
+    qutebrowser documentation \\
+    \hline
+    \RNum{3} & Little time in construction phase & Work on extension API is very
+    scalable, buffers in schedule \\
+    \hline
+    \RNum{4} & Future breaking API changes needed & API is not exposed for third-party
+    contributions yet \\
+    \hline
+    \RNum{5} & Sickness of author & Work on extension API is very scalable \\
     \bottomrule
   \end{tabulary}
-  \caption{Risks identified}
+  \caption{Risk mitigations}
 \end{table}
 
 Since some of these risks are hard to quantify in hours lost (such as ``too many
