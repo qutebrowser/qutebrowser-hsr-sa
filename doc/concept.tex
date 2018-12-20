@@ -53,6 +53,8 @@ extensions, the existing APIs were reviewed by Raphael~Das~Gupta from the IFS
 It was considered to implement the object adapter pattern \autocite[139]{gof} to
 limit the methods exposed in the API to what is actually necessary:
 
+\vspace{0.5em}
+
 \begin{figure}[h]
 \centering
 \begin{sequencediagram}
@@ -70,6 +72,8 @@ limit the methods exposed in the API to what is actually necessary:
 \end{sequencediagram}
 \caption{Sequence diagram for the extension API with adapter object}
 \end{figure}
+
+\vspace{0.5em}
 
 However, this would lead to a considerable amount of duplicated code: Big parts
 of the tab API would need to be duplicated, just to pass calls through. Since
@@ -163,9 +167,11 @@ those APIs, and the private API can still be documented properly.
 \end{tikzpicture}
 \caption[Class diagram for refactored tab API]{Class diagram for refactored tab
   API, with added classes highlighted}
+\label{fig:refactored}
 \end{figure}
 
-The full refactored API can be found in the developer documentation in appendix
+Figure \ref{fig:refactored} show the class diagram for the refactored API. The
+full API definition can be found in the developer documentation in appendix
 \ref{ch:sphinx}.
 
 % z.T. Wiederholung im Groben, z.T. Verweise auf Teil II-Kapitel

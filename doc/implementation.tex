@@ -295,10 +295,12 @@ individually:
     value), it was not enabled.
   \item[--warn-redundant-casts] warns about constructs like \py{typing.cast(int,
       x)} when \py{x} already is of type \py{int}. It was enabled since it
-    did not result in any new errors.
+    did not result in any new errors and such casts are likely to be unintended.
   \item[--warn-unused-ignores] warns about \mintinline{python}{# type: ignore}
-    comment on lines where no error would have had occurred. This was enabled as
-    it did not result in any new errors.
+    comment on lines where no error would have had occurred. This warning can
+    be useful when such comments are added because of a bug in mypy or type
+    definitions, so it can be removed when the bug was fixed upstream.
+    This was enabled as it did not result in any new errors.
   \item[--warn-return-any] warns when a function returns a value of unknown
     (\verb|Any|) type, since that can propagate into other places which then are
     not type-checked either. This was not enabled as doing so would require many
@@ -318,15 +320,16 @@ some being partially annotated):
 
 \begin{itemize}[parsep=5pt]
   \item \texttt{browser.browsertab} (``tab API'')
-  \item \texttt{browser.webelem}, \texttt{browser.webkit.webkitelem},
+  \item \texttt{browser.webelem}, \texttt{browser.webkit.webkitelem}, \\
     \texttt{browser.webengine.webenginelem} (``web element API'')
-  \item \texttt{misc.objects} and \texttt{commands.cmdutils} (registering commands)
+  \item \texttt{misc.objects} (various application objects)
+  \item \texttt{commands.cmdutils} (registering commands)
   \item All modules in the \texttt{config} package: \\ \texttt{config}, \texttt{configcache},
     \texttt{configcommands}, \texttt{configdata}, \texttt{configdiff},
     \texttt{configexc}, \\ \texttt{configfiles}, \texttt{configinit}, \texttt{configtypes},
     \texttt{configutils}, \texttt{websettings}.
   \item All modules in the \texttt{api}, \texttt{components}
-    and \texttt{extensions} sub-packages (see section \ref{sec:important})
+    and \texttt{extensions} sub-packages (see section \ref{sec:important}).
 \end{itemize}
 
 
@@ -401,7 +404,10 @@ explained in further detail below.
 This module implements the internal logic so extensions can intercept and
 optionally block network requests made by qutebrowser.
 
-\begin{table}[H]
+The classes and functions which are part of this module are listed in table
+\ref{tab:interceptorsmod}.
+
+\begin{table}[p]
   \centering
   \begin{tabulary}{\linewidth}{lL}
     \toprule
@@ -418,10 +424,11 @@ optionally block network requests made by qutebrowser.
     \verb|register()| & Register a new request interceptor (exposed to
                        extensions as \verb|qutebrowser.api.interceptor.register()|) \\
     \verb|run()| & Used internally by qutebrowser to run all registered
-                  interceptors over a request. \\
+                  interceptors. \\
     \bottomrule
   \end{tabulary}
   \caption{Classes and functions in the qutebrowser.extensions.interceptors package.}
+  \label{tab:interceptorsmod}
 \end{table}
 
 \subsubsection{extensions.loader module}
@@ -430,7 +437,10 @@ extensions/components. It is responsible for dynamically finding all modules
 in the \verb|qutebrowser.components| package, loading them, and calling their
 registered hooks correctly.
 
-\begin{table}[H]
+The classes and functions which are part of this module are listed in table
+\ref{tab:loadermod}.
+
+\begin{table}[p]
   \centering
   \begin{tabulary}{\linewidth}{lL}
     \toprule
@@ -462,13 +472,10 @@ registered hooks correctly.
     \verb|walk_components()| & Find all available components. Used by
                                \verb|load_components()| and by qutebrowser's
                                packaging infrastructure so all component modules
-                               are added to Windows/macOS builds (via
-                               PyInstaller). Uses two different implementations
-                               internally: \verb|_walk_normal()| and
-                               \verb|_walk_pyinstaller()|. The latter needs to
-                               be used because the simpler approach doesn't work
-                               in builds built via
-                               PyInstaller
+                               are added to Windows/macOS builds). Uses two
+                               different implementations internally (\verb|_walk_normal()| and
+                               \verb|_walk_pyinstaller()|) because the simpler
+                               approach doesn't work in builds built via PyInstaller
                                \footnote{\url{https://github.com/pyinstaller/pyinstaller/issues/1905}}. \\
     \verb|_on_config_changed()| & Triggered on a configuration change, takes
                                   care of finding and calling all extension
@@ -477,14 +484,19 @@ registered hooks correctly.
                                   \verb|hook.py| in table \ref{tab:apimodule}). \\
     \bottomrule
   \end{tabulary}
-  \caption[Important classes and functions in the qutebrowser.extensions.loader
-  package.]{Important classes and functions in the qutebrowser.extensions.loader package.
-    Some private functions were redacted for brevity.}
+  \caption{Important classes and functions in the qutebrowser.extensions.loader
+  package.}
+  \label{tab:loadermod}
 \end{table}
 
 \subsection[The qutebrowser.components package]{The qutebrowser.components
   package: Code moved out of the core}
 \label{sec:components}
+
+The \verb|qutebrowser.components| package contains code which was moved out of
+qutebrowser's core, and now only accesses the \verb|qutebrowser.api| package,
+without interacting with any other parts of qutebrowser's code. It contains the
+following modules:
 
 \begin{table}[H]
   \centering
@@ -548,7 +560,7 @@ changes) is shown in table \ref{tab:coverage}.
 % 90.78571428571429
 \begingroup
 \renewcommand{\arraystretch}{1}
-\begin{table}[H]
+\begin{table}[p]
   \centering
   \begin{tabulary}{\linewidth}{rlrL}
     \toprule
@@ -604,4 +616,5 @@ automated tests were insufficient:
   \item Running \verb|:print| to display the print dialog and printing the
     website into a PDF file; using the \verb|:print --pdf| file to generate a
     PDF file directly.
+  \item Verifying that the contents of those PDFs look as expected.
 \end{itemize}
