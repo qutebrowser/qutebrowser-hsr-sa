@@ -173,7 +173,7 @@ except ImportError:
     There, mypy complained since setting a module type to the
     \verb|None| value is an invalid operation from the type system's view, but
     it still perfectly valid (if later guarded via \py{if secrets is not None:})
-    in Python. Thus, these issues also were ignored via \py{# type: ignore}
+    in Python. Thus, these issues also were ignored by adding \mintinline{python}{# type: ignore}
     comments. An issue for better handling of this case in mypy was already
     open in mypy's issue tracker: \url{https://github.com/python/mypy/issues/1153}
   \item Mypy not handling Python's \py{enum.IntEnum} correctly when used via
@@ -475,7 +475,7 @@ The classes and functions which are part of this module are listed in table
                                are added to Windows/macOS builds). Uses two
                                different implementations internally (\verb|_walk_normal()| and
                                \verb|_walk_pyinstaller()|) because the simpler
-                               approach doesn't work in builds built via PyInstaller
+                               approach does not work in builds built via PyInstaller
                                \footnote{\url{https://github.com/pyinstaller/pyinstaller/issues/1905}}. \\
     \verb|_on_config_changed()| & Triggered on a configuration change, takes
                                   care of finding and calling all extension

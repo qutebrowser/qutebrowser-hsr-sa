@@ -38,7 +38,7 @@ qutebrowser. However, exposing formerly private APIs carries certain risks:
     should be carefully evaluated by looking at proposals for future extensions
     before blindly exposing them. This approach leads to a smaller (and thus
     simpler) API. It also increases the maintainability of the core, as parts
-    which aren't exposed can be freely changed without needing to take care of
+    which are not exposed can be freely changed without needing to take care of
     extensions.
 \end{itemize}
 
@@ -210,9 +210,9 @@ them. This is for a variety of reasons:
     keyboard-focused nature. With a browser aimed at casual users, it might be
     easy to trick them into installing an extension which is malicious. In
     contrast, users of qutebrowser can be expected to be much more diligent in ensuring that
-    the extensions they're installing are not malicious.
-  \item The volume of available extensions is much lower. Thus, it's conceivable
-    that there's a whitelist of extensions which have been reviewed and approved
+    the extensions they are installing are not malicious.
+  \item The volume of available extensions is much lower. Thus, it is conceivable
+    that there is a whitelist of extensions which have been reviewed and approved
     by one of qutebrowser's core developers. A contributor wishing to distribute
     a new extension could then ask for it to be reviewed and included in that list.
   \item Due to the focus on power users, a user should always be able to

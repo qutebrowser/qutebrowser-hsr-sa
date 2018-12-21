@@ -81,8 +81,8 @@ extensions.
 \section{WebExtensions API}
 \label{webextensions}
 
-Currently, there are ongoing efforts towards an API for browser
-extensions called \emph{WebExtensions}, which is shared between different
+Currently, there are ongoing efforts towards a \emph{WebExtensions} API for browser
+extensions, which is shared between different
 browsers. WebExtensions are supported by Chrome, Opera, Firefox and Edge.
 Efforts are currently underway to standardize the API as a W3C specification
 \autocite{w3c-webext}. At the moment, each browser has a slightly different set of
@@ -121,7 +121,7 @@ reasons:
     Python API will make it easier for users to write custom additions to
     qutebrowser to suit their needs.
   \item The security model of WebExtensions is fundamentally different from
-    what's intended for qutebrowser extensions -- WebExtension code is sandboxed,
+    what is intended for qutebrowser extensions -- WebExtension code is sandboxed,
     and unable to run arbitrary code on the user's machine. This can be worked
 around by using WebExtension's ``native
     messaging''\footnote{\url{https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging}}
@@ -132,7 +132,7 @@ around by using WebExtension's ``native
     qutebrowser is bound to using those. In some cases it might be possible to
     write an adapter to bring the two approaches together; but if they are
     fundamentally different, doing so might prove difficult. With a custom API,
-    there's more control over the tradeoff between an API which closely follows
+    there is more control over the tradeoff between an API which closely follows
     Qt's (and thus reduces friction and complexity), or an API which prioritizes
     other considerations (see \ref{criteria}).
 \end{itemize}
@@ -180,9 +180,7 @@ extensions.
 
 Due to extensions being written in Python, the above separation between content
 and background scripts also does not fully apply to qutebrowser's API. The Python
-extensions can be seen as a background script. It initially won't be able to
-interact with web pages, as this functionality isn't needed before third-party
-extensions are enabled. See the API analysis below for further details.
+extensions can be seen as a background script.
 
 \subsection{Analysis of the WebExtension API}
 
@@ -212,10 +210,10 @@ Chrome; i.e. they are not organized in a tree-like structure, and features like
 tags are missing. Therefore, the bookmarks WebExtension API does not fit well
 with qutebrowser bookmarks.
 
-There's an ongoing
+There is an ongoing
 contribution\footnote{\url{https://github.com/qutebrowser/qutebrowser/pull/3855}}
 to add such features, and it would make little sense to add an extension API before
-that contribution is merged. Since access to bookmarks isn't vital for an extension
+that contribution is merged. Since access to bookmarks is not vital for an extension
 API, it is currently out of scope.
 
 \subsubsection{browserAction, menus, pageAction, sidebarAction}
@@ -293,8 +291,8 @@ With the contentScripts API, an extension can register and unregister scripts at
 \end{quote}
 
 Injecting custom JavaScript code into websites will be an useful feature for
-custom extensions at a later stage, but isn't needed to move code out of
-qutebrowser's core, as it's expected for internal JavaScript code to stay in the
+custom extensions at a later stage, but is not needed to move code out of
+qutebrowser's core, as it is expected for internal JavaScript code to stay in the
 core part. Thus, this module is currently out of scope.
 
 Running JavaScript one-off snippets (triggered manually, rather than
@@ -332,9 +330,9 @@ modules are out of scope.
 Enables extensions to get and set cookies, and be notified when they change.
 \end{quote}
 
-Cookie access isn't fully exposed by the QtWebEngine
+Cookie access is not fully exposed by the QtWebEngine
 library\footnote{\url{http://doc.qt.io/qt-5/qwebenginecookiestore.html}}, so
-it's currently not possible to implement this module.
+it is currently impossible to implement this module.
 
 \subsubsection{devtools}
 \begin{quote}
@@ -349,8 +347,8 @@ The devtools.network API lets a devtools extension get information about network
 The devtools.panels API lets a devtools extension define its user interface inside the devtools window.
 \end{quote}
 
-Access to developer tools isn't exposed by the QtWebEngine library, so it's
-currently not possible to implement this module.
+Access to developer tools is not exposed by the QtWebEngine library, so it is
+currently impossible to implement this module.
 
 \subsubsection{dns}
 \begin{quote}
@@ -435,7 +433,7 @@ Access and modify various privacy-related browser settings.
 
 In qutebrowser, these settings (like
 \verb|privacy.network.webRTCIPHandlingPolicy|) are exposed as normal qutebrowser
-settings (like \verb|content.webrtc_ip_handling_policy|), so there's no need
+settings (like \verb|content.webrtc_ip_handling_policy|), so there is no need
 for a similar module in the extension API.
 
 \subsubsection{proxy}
@@ -507,10 +505,10 @@ Add event listeners for the various stages of making an HTTP request. The event 
 \end{quote}
 
 The \verb|webRequest| module allows extensions to intercept and change HTTP
-network requests. Many of the fine-grained modifications exposed by
-WebExtensions (such as \verb|onResponseStarted| to modify the network response)
+network requests. Many of the fine-grained APIs available with
+WebExtensions (like \verb|onResponseStarted| to modify the network response)
 are not available in the QtWebEngine API, so exposing them in qutebrowser's API
-won't be possible. However, it's possible to intercept and block network
+is impossible. However, it is possible to intercept and block network
 requests, and such functionality is critical to move components like the ad
 blocker out from the core.
 
@@ -600,7 +598,7 @@ QtWebKit/QtWebEngine each:
   \label{fig:tabapi-inherit}
 \end{figure}
 
-The API exposed by those objects is quite long, so it's not included in full in
+The API exposed by those objects is quite long, so it is not included in full in
 this documentation.\footnote{The full API is available at
   \url{https://github.com/qutebrowser/qutebrowser/blob/v1.5.2/qutebrowser/browser/browsertab.py},
 accessed 2018-11-09.} As an example, the public API exposed in the main
@@ -608,7 +606,7 @@ accessed 2018-11-09.} As an example, the public API exposed in the main
 
 Some parts of the API (like the \verb|networkaccessmanager()| or
 \verb|user_agent()| methods) are only exposed because there was a need in
-qutebrowser's core to do so, but shouldn't be exposed via the extension API.
+qutebrowser's core to do so, but should not be exposed via the extension API.
 However, for the most part, the tab API can be exposed unmodified to extensions
 and already allow for a wide range of interactions with tabs.
 
@@ -663,7 +661,7 @@ extension API:
 \subsection{pytest}
 
 The pytest project\footnote{\url{https://www.pytest.org/}} exposes a very simple
-and ``pythonic'' extension API. All that's needed to create a plugin is a
+and ``pythonic'' extension API. All that is needed to create a plugin is a
 specially named Python file which implements hook functions such as \py{def
 pytest_runtest_setup(item)}. However, giving trainings about pytest in
 companies, the author of this SA has noticed that some aspects of its plugin API
