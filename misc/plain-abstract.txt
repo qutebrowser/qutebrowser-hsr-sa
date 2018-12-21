@@ -1,0 +1,10 @@
+The qutebrowser project is a web browser, comparable to Google Chrome or Mozilla Firefox, which is focused on keyboard usage and having a minimal user interface. It is aimed at power-users who value customizability and efficiency, but are willing to accept a rather steep learning curve compared to "traditional" web browsers.
+
+In contrast to Chrome and Firefox, qutebrowser did not support extending its functionality via extensions. Over its lifetime, various features have been added to its core by its maintainer and contributors. However, this caused the core to grow substantially, becoming increasingly complex over time.
+
+Many users of qutebrowser have specific feature requests and workflows. It should be possible for them to extend qutebrowser in an easy way in order to keep the core small and simple. The goal of this project was to make qutebrowser extensible by introducing a clearly defined API which can be used to develop extensions.
+
+Before attempting to expose such an API from qutebrowser, various problematic areas in its codebase had to be cleaned up due to "technical debt" accumulating in the past. Subsequently, functionality suitable for moving out of the core into extensions was identified. Based on the selected areas of code, a concept for an extension API was developed. After implementing said API, large parts of qutebrowser's functionality could be moved into extensions. The resulting changes increased code maintainability and simplicity.
+
+More information about qutebrowser can be found on its project website:
+https://www.qutebrowser.org/
