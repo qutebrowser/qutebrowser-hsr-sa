@@ -25,7 +25,8 @@ not implement complex tasks such as downloading and executing
 HTML/CSS/JavaScript code itself. Instead, it relies on the QtWebEngine project to do
 so, which is largely based on the same code as Chrome.
 
-Screenshot of qutebrowser displaying its history completion
+Screenshot of qutebrowser displaying the web page history by
+completing a search command (":open hsr")
 
 Work on qutebrowser started in 2013. Since then, it has gained a big community of
 thousands of users and dozens of contributors.
@@ -39,7 +40,7 @@ easy way in order to keep the core small and simple.
 The goal of this project was to make qutebrowser extensible by introducing a clearly
 defined API which can be used to develop extensions.
 
-Technologies used
+Software technologies used in qutebrowser
 
 Procedure / Result: In order to follow best practices in the software development
 world, tools for checking data types were evaluated. The "mypy" tool is now run
