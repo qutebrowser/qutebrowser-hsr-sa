@@ -45,7 +45,7 @@ def add(a: int, b: int) -> int:
 
 However, how the type annotation syntax would be used was left to the
 applications using them. Annotations are completely ignored at runtime, which
-means a call like \py{sub("1", "2")} would not be rejected based on annotations
+means a call like \py{add("1", "2")} would not be rejected based on annotations
 (and return the string \py{"12"}).
 
 The annotation feature was not commonly used, but it started to gain traction
@@ -110,20 +110,21 @@ where type information is maintained separately from Python itself.
 \label{pep561}
 Additionally, a more recent change to the Python ecosystem (PEP
 561\footnote{\url{https://www.python.org/dev/peps/pep-0561/}}, accepted in June
-2018) also allows type information (so-called ``stub files'' with a \verb|.pyi|
-extension, similar to \verb|.h| header files in C or C++) to be distributed
-independently from a library package itself.
+2018) also allows type information to be distributed independently from a
+library package itself. A PEP-561 package consists of
+so-called ``stub files'' with a \verb|.pyi| extension, similar to \verb|.h|
+header files in C or C++.
 
 \subsection{Introducing type checking}
 As per the task description, type annotations were introduced into qutebrowser's
 code base. Before starting this project, very few functions already carried type
-annotations (since they were contributed by developers who prefer using them),
+annotations (when contributed by a developer who prefers using annotations),
 but the majority of qutebrowser's code was unannotated. Additionally, no type
 checker was run systematically as part of qutebrowser's continuous integration
 toolchain.
 
-The tools mentioned in \ref{typecheck-tools} were evaluated, with the choice
-falling on mypy since it is widely used and backed by a more diverse community
+The tools mentioned in \ref{typecheck-tools} were evaluated, with the mypy tool
+being selected. It is widely used and backed by a more diverse community
 than either pytype and pyre (which are mostly developed and used by Google and
 Facebook, respectively).
 
@@ -142,7 +143,7 @@ No library stub file for module 'PyQt5.QtCore'
 \end{verbatim}
 \end{quote}
 
-with mypy complaining that it found no type information at all for various PyQt
+with mypy complaining that it found no type information for various PyQt
 modules.
 
 \subsubsection{Ignoring missing imports}
@@ -151,7 +152,7 @@ Mypy provides a \verb|--ignore-missing-imports| switch which allows ignoring
 such missing modules. Note that its usage is discouraged in mypy's documentation:
 \emph{``We recommend using this approach only as a last resort''}\footnote{\url{https://mypy.readthedocs.io/en/latest/running_mypy.html\#missing-imports},
 accessed 2018-12-03}. Nevertheless, it was deemed useful in order to focus on
-the other existing error messages.
+other error messages first.
 
 With the \verb|--ignore-missing-imports| option, mypy only produced 88 errors.
 
@@ -161,7 +162,7 @@ categories:
 \begin{itemize}
   \item Mypy not recognizing how qutebrowser adds an additional \verb|VDEBUG|
     (verbose debugging) logging level to Python's logging system. This was
-    solved by adding \py{# type: ignore} comments to make mypy ignore those
+    solved by adding \mintinline{python}{# type: ignore} comments to make mypy ignore those
     issues as appropriate.
   \item Trouble with a common pattern of handling optional library imports like so:
     \begin{minted}{python}
@@ -175,15 +176,15 @@ except ImportError:
     it still perfectly valid (if later guarded via \py{if secrets is not None:})
     in Python. Thus, these issues also were ignored by adding \mintinline{python}{# type: ignore}
     comments. An issue for better handling of this case in mypy was already
-    open in mypy's issue tracker: \url{https://github.com/python/mypy/issues/1153}
+    open in mypy's issue tracker: \url{https://github.com/python/mypy/issues/1153}.
   \item Mypy not handling Python's \py{enum.IntEnum} correctly when used via
     its function-based (rather than class-based) API. This was worked around by
     using the class-based API instead; an issue was already open in mypy's issue
-    tracker: \url{https://github.com/python/mypy/issues/4865}.
+    tracker: \\ \url{https://github.com/python/mypy/issues/4865}.
   \item Additional type annotations being needed by mypy in places where types
-    could not be inferred (such as \mintinline{python}{cmd_dict = {} # type: typing.Dict[str, Command]}).
+    could not be inferred (such as \mintinline{python}{cmd_dict = {}  # type: typing.Dict[str, Command]}).
   \item Module-level globals which are set to \py{None} initially and then
-    initialized in a \py{init()} method. Mypy asserted that those could be \py{None}
+    initialized in an \py{init()} method. Mypy asserted that those could be \py{None}
     throughout the codebase (thus resulting in many potentially invalid operations),
     while their initialization happens very early, so they can be safely assumed
     to never be \py{None} despite their initial value. This was solved by
@@ -193,9 +194,9 @@ except ImportError:
     mypy understands additional hints in the form of \py{assert val is not
       None} or \py{assert isinstance(index, int)}, such assertions could be used
     to silence these errors.
-  \item One case were an existing annotation falsely claimed that a value could
-    be either \py{str} or \py{int} (\py{typing.Union[str, int]}), while it
-    always was a string.
+  \item One case were an existing \py{typing.Union[str, int]} annotation falsely
+    claimed that a value could be either \py{str} or \py{int}, while in reality
+    it always was a string.
   \item Various other cases where existing type annotations had to be refined to
     be more accurate.
 \end{itemize}
@@ -212,12 +213,10 @@ quite simple wrapper over C++ code), those stubs come with various issues making
 them unsuitable for use with mypy.
 
 As a substitute, a PyQt5-stubs project
-exists\footnote{\url{https://github.com/stlehmann/PyQt5-stubs/}}, packaging
+exists\footnote{\url{https://github.com/stlehmann/PyQt5-stubs}}, packaging
 adjusted type stubs for PyQt5 as a separate package (via PEP 561, see
-\ref{pep561}).
-
-With those installed and the switch removed, 55 new errors appeared. These again
-could be classified into various categories:
+section \ref{pep561}). With those installed and the switch removed, 55 new errors
+appeared. These again could be classified into various categories:
 
 \begin{itemize}
   \item Issues with the PyQt5-stubs project where type annotations were
@@ -241,7 +240,7 @@ could be classified into various categories:
     possibilities to add type information to their packages, and the module was
     then ignored via the mypy config file.
   \item New places where mypy needed some additional type annotations in
-    qutebrowser's code base for types it could not infer correctly.
+    qutebrowser's code for types it could not infer correctly.
 \end{itemize}
 
 \subsection{Increasing strictness}
@@ -304,7 +303,7 @@ individually:
   \item[--warn-return-any] warns when a function returns a value of unknown
     (\verb|Any|) type, since that can propagate into other places which then are
     not type-checked either. This was not enabled as doing so would require many
-    additional type annotation for qutebrowser's codebase.
+    additional type annotations for qutebrowser's codebase.
 \end{description}
 
 \subsection{Adding annotations}
@@ -345,8 +344,8 @@ packages:
 \item The \verb|qutebrowser.extensions| package contains supporting infrastructure and
   internal code for handling extensions.
 \item The \verb|qutebrowser.components| package contains modules which formerly
-was part of qutebrowser's core and only uses the extension API -- that is, it
-only imports code from the \verb|qutebrowser.api| package, but not from any
+were part of qutebrowser's core and only use the extension API -- that is, they
+only import code from the \verb|qutebrowser.api| package, but not from any
 other \verb|qutebrowser.*| packages.
 \end{itemize}
 
@@ -360,8 +359,7 @@ other \verb|qutebrowser.*| packages.
     \midrule
     \verb|apitypes.py| & Various basic types which can be used by extensions.
                          These are either used as type annotations (such as
-                         \verb|Tab|, which is an \verb|AbstractTab| from figure
-                         \ref{fig:tabapi-inherit}) or as enumerations (such as
+                         \verb|Tab|) or as enumerations (such as
                          \verb|ClickTarget| which is used to specify how to open
                          a clicked link). \\
     \verb|cmdutils.py| & Utilities related to registering command handlers from
@@ -378,7 +376,7 @@ other \verb|qutebrowser.*| packages.
                           with existing downloads triggered by the user. \\
     \verb|hook.py| & Allows extensions to register hooks for certain events via
                      decorators, such as \py{@hook.init()} or
-                     \py{@hook.config_changed()} \\
+                     \py{@hook.config_changed()}. \\
     \verb|interceptor.py| & Can by used by extensions to register a
                             \emph{request interceptor}, which then gets called
                             for every network request made by qutebrowser. Based
@@ -388,7 +386,7 @@ other \verb|qutebrowser.*| packages.
                         \py{message.info("...")} or \py{message.error("...")}. \\
     \bottomrule
   \end{tabulary}
-  \caption{Modules in the qutebrowser.api package.}
+  \caption{Modules in the qutebrowser.api package}
   \label{tab:apimodule}
 \end{table}
 
@@ -397,7 +395,7 @@ documentation in appendix \ref{ch:sphinx}.
 
 \subsection[The qutebrowser.extensions package]{The qutebrowser.extensions package: Internal extension machinery}
 
-The \verb|qutebrowser.extensions| package consists of two modules, which are
+The \verb|qutebrowser.extensions| package consists of the following two modules:
 explained in further detail below.
 
 \subsubsection{extensions.interceptors module}
@@ -422,12 +420,12 @@ The classes and functions which are part of this module are listed in table
                              used in type annotations (exposed to extensions as
                              \verb|qutebrowser.api.interceptor.InterceptorType|). \\
     \verb|register()| & Register a new request interceptor (exposed to
-                       extensions as \verb|qutebrowser.api.interceptor.register()|) \\
+                       extensions as \verb|qutebrowser.api.interceptor.register()|). \\
     \verb|run()| & Used internally by qutebrowser to run all registered
                   interceptors. \\
     \bottomrule
   \end{tabulary}
-  \caption{Classes and functions in the qutebrowser.extensions.interceptors package.}
+  \caption{Important classes and functions in the qutebrowser.extensions.interceptors package}
   \label{tab:interceptorsmod}
 \end{table}
 
@@ -475,8 +473,7 @@ The classes and functions which are part of this module are listed in table
                                are added to Windows/macOS builds). Uses two
                                different implementations internally (\verb|_walk_normal()| and
                                \verb|_walk_pyinstaller()|) because the simpler
-                               approach does not work in builds built via PyInstaller
-                               \footnote{\url{https://github.com/pyinstaller/pyinstaller/issues/1905}}. \\
+                               approach does not work in builds built via PyInstaller. \\
     \verb|_on_config_changed()| & Triggered on a configuration change, takes
                                   care of finding and calling all extension
                                   methods decorated with
@@ -485,7 +482,7 @@ The classes and functions which are part of this module are listed in table
     \bottomrule
   \end{tabulary}
   \caption{Important classes and functions in the qutebrowser.extensions.loader
-  package.}
+  package}
   \label{tab:loadermod}
 \end{table}
 
@@ -512,12 +509,12 @@ following modules:
                               \verb|:toggle-selection| (18 commands total). \\
     \verb|misccommands.py| & Miscellaneous qutebrowser commands, such as
                              \verb|:home|, \verb|:reload| or \verb|:print| (15
-                             commands total) \\
+                             commands total). \\
     \verb|scrollcommands.py| & Commands related to scrolling (\verb|:scroll|,
                                \verb|:scroll-px|, \verb|:scroll-to-perc|,
-                               \verb|:scroll-to-anchor|) \\
+                               \verb|:scroll-to-anchor|). \\
     \verb|zoomcommands.py| & Commands related to zooming (\verb|:zoom-in|,
-                             \verb|:zoom-out|, \verb|:zoom|) \\
+                             \verb|:zoom-out|, \verb|:zoom|). \\
     \bottomrule
   \end{tabulary}
   \caption{Modules in the qutebrowser.components package.}
@@ -550,10 +547,9 @@ the existing average coverage of 80\%\footnote{The author is well aware that
 
 Unfortunately, there were no good uses for the hypothesis (fuzzing, i.e.,
 testing with many random values) and pytest-benchmark libraries while adding
-tests for the code added/changed during this project.
-
-The test coverage for modules added for the extension API (or modules with major
-changes) is shown in table \ref{tab:coverage}.
+tests for the code added/changed during this project. The test coverage for
+modules added for the extension API (or modules with major changes) is shown in
+table \ref{tab:coverage}.
 
 % >>> v = [100, 100, 100, 70, 90, 100, 100, 93, 82, 73, 96, 85, 94, 88]
 % >>> sum(v)/len(v)

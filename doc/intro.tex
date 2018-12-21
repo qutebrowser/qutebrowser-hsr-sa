@@ -48,10 +48,10 @@ There are two backends (rendering engines) which can be used with qutebrowser:
 
 \begin{itemize}
   \item \emph{QtWebKit} which is based on the
-  WebKit\footnote{\url{https://www.webkit.org/}} project
+  WebKit\footnote{\url{https://www.webkit.org/}} project.
   \item \emph{QtWebEngine} which is based on the
-  Chromium\footnote{\url{https://www.chromium.org/}} project, which is also used
-  in Google Chrome (used as default).
+  Chromium\footnote{\url{https://www.chromium.org/}} project and used by
+  default. Chromium is the open source project behind Google Chrome.
 \end{itemize}
 
 In order to allow using either backend, qutebrowser provides an abstraction
@@ -94,7 +94,7 @@ Initially, qutebrowser was developed without knowledge of proper software
 engineering practices, which resulted in some maintainability issues. While many
 of those issues have since been resolved, some still remain. The refactorings
 needed to fix those issues will affect the API exposed to extensions, and
-therefore should be taken care of before attempting to design a extension API.
+therefore should be taken care of before attempting to design an extension API.
 
 The following changes are planned:
 
@@ -167,7 +167,7 @@ The software and version constraints are mostly given by the existing project:
   \item Qt\footnote{\url{https://www.qt.io/}} 5 (5.7 or newer), used via PyQt5\footnote{\url{https://www.riverbankcomputing.com/software/pyqt/intro}}
   \item pytest\footnote{\url{https://pytest.org/}} as test framework
   \item Various code quality tools: pylint\footnote{\url{https://pylint.org/}},
-    flake8\footnote{\url{http://flake8.pycqa.org/}} and others.
+    flake8\footnote{\url{http://flake8.pycqa.org/}} and others
 \end{itemize}
 
 As qutebrowser is a pre-existing project with a vibrant community, external
@@ -187,7 +187,7 @@ focus being this documentation and the work required for the extension API.
 \subsection{Notable language features}
 \label{sec:langfeatures}
 This document assumes that the reader is familiar with a programming language
-following the object oriented paradigm and concepts such as classes.
+following the object oriented paradigm and related concepts such as classes.
 
 Some sections refer to concepts which are specific to Python or Qt and are
 thus explained in more detail below.
@@ -221,10 +221,9 @@ file (often empty) as a package marker.
 
 \subsubsection{Qt signals and slots}
 Signals and slots are an important feature of the Qt library to allow
-independent objects to communicate with each other.
-
-They can be considered an abstraction of the observer pattern
-\autocite[293ff]{gof}, similar to delegates and events in C\#.
+independent objects to communicate with each other. They can be considered an
+abstraction of the observer pattern \autocite[293ff]{gof}, similar to delegates
+and events in C\#.
 
 A class can define a signal which it uses to notify other objects (e.g. about
 changed state):
@@ -315,4 +314,5 @@ board features were used for project management, along with
 Clockify\footnote{\url{https://www.clockify.me/}} for time tracking.
 
 This document was typeset in \LaTeX{} using the \emph{Computer Modern Bright}
-font and various additional packages. GNU Emacs was used as text editor.
+font and various additional packages. GNU Emacs (with vim keybindings) was used
+as text editor.

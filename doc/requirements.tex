@@ -33,15 +33,15 @@ extension API:
   \item[Simplicity] It should be trivial for a user to extend her qutebrowser
     setup with a custom extension. Thus, getting started with writing a
     third-party extension should be as straightforward as possible, without
-    requiring packing multiple files into a custom format. Also see section
+    requiring packaging multiple files into a custom format. Also see section
     \ref{anatomy} for an explanation on how this topic is handled for
     WebExtensions, and how qutebrowser's API differs from that.
   \item[Learnability] When the extension API is opened for third-party
     contributions, it should be easy to get accustomed to it. Therefore, the API
     should be intuitive for Python programmers, and well documented.
   \item[Compability] The qutebrowser project runs on a variety of different
-    software versions -- various operating systems (Linux, macOS, Windows,
-    and more) are supported, including different Qt and Python versions. The
+    software versions -- various operating systems are supported (Linux, macOS, Windows,
+    and more), including different Qt and Python versions. The
     extension API should abstract over these differences, so an extension
     written for qutebrowser (or core code moved into such an extension) runs in
     all situations qutebrowser itself can run.

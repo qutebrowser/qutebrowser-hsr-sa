@@ -182,7 +182,7 @@ The time entries tracked were split into various categories:
     \midrule
     Documentation & Writing this documentation and working on API documentation. & 88 \\
     Implementation & Implementing the extension API, introducing mypy,
-                     bugfixing. & 60 \\
+                     fixing bugs. & 60 \\
     Contributions & Reviewing pull requests and contributions. & 34 \\
     Meetings & Meetings with Prof.~Stefan~Keller, language reviews with
                AnneMarie~O'Neill, video calls with Fritz~Reichwald (see section
@@ -197,7 +197,7 @@ The time entries tracked were split into various categories:
 Reviewing the time tracked per week per category, the project phases initially
 defined in the schedule on page \pageref{img:schedule} are clearly apparent:
 
-\vspace{1em}
+\vspace{0.1em}
 
 \begin{figure}[H]
   \centering
@@ -265,7 +265,7 @@ Notes:
 \begin{itemize}[parsep=5pt]
 
   \item \verb|browser/browsertab.py| is relatively large for a single file.
-    Should any additions be required in the future, it should be split into smaller
+    If any future additions are required, it should be split into smaller
     files.
   \item \verb|__init__.py| files mark a folder as a Python package, thus
     do not contain any code.
@@ -305,18 +305,18 @@ def has_leaflet(tab: apitypes.Tab) -> None:
 \end{minted}
 
 The command name is automatically deduced from the name of the function, while
-the Python docstring also gets shown in qutebrowser's command completion:
+the Python docstring gets shown in qutebrowser's command completion:
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/screenshot-completion.png}
-  \caption{Command completion showing the \texttt{:has-leaflet} command.}
+  \caption{Command completion showing the \texttt{:has-leaflet} command}
 \end{figure}
 
 The \py{@cmdutils.argument(...)} decorator is used to pass more information
 about the \verb|tab| argument to the API. Due to the
 \py{value=cmdutils.Value.cur_tab} parameter, the \verb|tab| argument is set to
-the tab object of the tab currently being focused when qutebrowser calls the
+the tab object of the currently focused tab when qutebrowser calls the
 command handler.
 
 Next, the extension uses the tab API to find HTML elements on the website:
@@ -338,7 +338,7 @@ The callback used for errors simply uses the \verb|message| module to show an
 error message to the user:
 
 \begin{minted}[linenos,firstnumber=15]{python}
-def show_error_message(error: str) -> None:
+def show_error_message(error: Exception) -> None:
     message.error(str(error))
 \end{minted}
 
@@ -355,12 +355,12 @@ def show_message(elements: typing.List[apitypes.WebElement]) -> None:
 \end{minted}
 
 Finally, the extension uses the \py{@hook.init()} decorator to define an
-initialization hook. There, it displays an ``osmtest initialized'' message:
+initialization hook. There, it displays an ``has-leaftlet initialized'' message:
 
 \begin{minted}[linenos,firstnumber=26]{python}
 @hook.init()
 def init(_context: apitypes.InitContext) -> None:
-    message.info("osmtest initialized")
+    message.info("has-leaftlet initialized")
 \end{minted}
 
 Note that it receives an \verb|InitContext| object with additional information
@@ -372,13 +372,13 @@ The full code of the demo extension can be found on page \pageref{lst:demo}.\\[2
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/screenshot-leaflet.png}
-  \caption{Running the \texttt{:has-leaflet} command on OSMyBiz.}
+  \caption{Running the \texttt{:has-leaflet} command on OSMyBiz}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/screenshot-leaflet-no.png}
-  \caption{Running the \texttt{:has-leaflet} command on Google Maps.}
+  \caption{Running the \texttt{:has-leaflet} command on Google Maps}
 \end{figure}
 
 
@@ -399,7 +399,7 @@ def has_leaflet(tab: apitypes.Tab) -> None:
                           error_cb=show_error_message)
 
 
-def show_error_message(error: str) -> None:
+def show_error_message(error: Exception) -> None:
     message.error(str(error))
 
 
@@ -412,7 +412,7 @@ def show_message(elements: typing.List[apitypes.WebElement]) -> None:
 
 @hook.init()
 def init(_context: apitypes.InitContext) -> None:
-    message.info("osmtest initialized")
+    message.info("has-leaftlet initialized")
 \end{minted}
 \caption{Demo extension}
 \label{lst:demo}
@@ -449,7 +449,7 @@ additions for handling user-initiated downloads. Furthermore, init-hooks which
 can be defined by extensions receive a special \verb|InitContext| instance
 (rather than getting called with the information therein as individual
 arguments) so that the \verb|InitContext| class can be extended in the future
-without extensions needing to adjust their code.
+without extensions needing to adapt their code.
 
 % From project management part:
 % % Resultate und Weiterentwicklung

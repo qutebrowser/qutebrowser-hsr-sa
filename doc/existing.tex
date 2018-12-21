@@ -53,7 +53,7 @@ in Mozilla's blog post \autocite{mozilla-webext} were as follows:
     security liability \autocite{mozilla-signing}.
   \item Legacy addons hindered Firefox development in general, since its
     powerful addon API introduced a tight coupling between Firefox' internal
-    code, and the code in third-party addons: \emph{``A permissive add-on model
+    code and the code in third-party addons: \emph{``A permissive add-on model
     means that we have limited flexibility in changing the foundations of Firefox.
     [...] Without a fundamental shift to the way Firefox add-ons work, we will
     be unable to use new technologies like Electrolysis, Servo\footnote{An
@@ -88,10 +88,10 @@ Efforts are currently underway to standardize the API as a W3C specification
 \autocite{w3c-webext}. At the moment, each browser has a slightly different set of
 supported APIs, with some divergence in naming. As an example, the
 \verb|chrome.| module is used in Chromium for browser-specific features, while
-Firefox uses \verb|browser.|.
+Firefox uses \verb|browser.| instead.
 
 If qutebrowser supported the WebExtension API, it would follow a common
-standard, and enable running thousands of existing Chromium extensions with
+standard and enable running thousands of existing Chromium extensions with
 little to no adjustment to their code.
 
 Unfortunately, WebExtensions are unsuitable for qutebrowser, for various
@@ -133,8 +133,8 @@ around by using WebExtension's ``native
     write an adapter to bring the two approaches together; but if they are
     fundamentally different, doing so might prove difficult. With a custom API,
     there is more control over the tradeoff between an API which closely follows
-    Qt's (and thus reduces friction and complexity), or an API which prioritizes
-    other considerations (see \ref{criteria}).
+    Qt's APIs (and thus reduces friction and complexity), or an API which prioritizes
+    other considerations (see section \ref{criteria}).
 \end{itemize}
 
 While it is not possible for qutebrowser to implement support for WebExtensions,
@@ -156,7 +156,7 @@ a WebExtension consists of various files:
     an extension, such as its name, its author, or the permissions it requests.
   \item Background scripts, which are used to implement long-running operations.
     An extension's background scripts are loaded for the entire lifetime of an
-    extension, i.e., until it is disabled or uninstalled.
+    extension, until it is disabled or uninstalled.
   \item Content scripts, which are injected into loaded web pages, and can
     interact with their content (access and manipulate the DOM). They also have
     some additional permissions, which scripts supplied by the page do not have,
@@ -206,7 +206,7 @@ The WebExtensions bookmarks API lets an extension interact with and manipulate t
 \end{quote}
 
 Bookmarks in qutebrowser are currently much simpler than they are in Firefox or
-Chrome; i.e. they are not organized in a tree-like structure, and features like
+Chrome: They are not organized in a tree-like structure, and features like
 tags are missing. Therefore, the bookmarks WebExtension API does not fit well
 with qutebrowser bookmarks.
 
@@ -250,8 +250,8 @@ SA). Therefore, this API is currently out of scope.
 Enables an extension to modify certain global browser settings.
 \end{quote}
 
-Extensions for qutebrowser should be able to modify its settings, and also
-define their own options.
+Extensions for qutebrowser should be able to modify its settings. Contrary to
+WebExtensions, all available settings can be exposed to extensions.
 
 \subsubsection{browsingData}
 \begin{quote}
@@ -282,7 +282,7 @@ similar concept also exists in qutebrowser, where commands can either be bound
 to keys (using the configuration), or executed in the commandline via \verb|:command|.
 
 This API is important, since many core parts register commands in qutebrowser
-(like \verb|:adblock-update| for the ad blocker). Thus, Extensions should be
+(like \verb|:adblock-update| for the ad blocker). Thus, extensions should be
 able to register Python functions as commands.
 
 \subsubsection{contentScripts}
@@ -296,7 +296,7 @@ qutebrowser's core, as it is expected for internal JavaScript code to stay in th
 core part. Thus, this module is currently out of scope.
 
 Running JavaScript one-off snippets (triggered manually, rather than
-automatically on page load) is already implemented in the tab API, and should be
+automatically on page load) is already implemented in the tab API and should be
 trivial to expose to extensions.
 
 \subsubsection{contextualIdentities, i18n, identity, idle, notifications, pkcs11, topSites}
@@ -467,7 +467,9 @@ Enables extensions to store and retrieve data, and listen for changes to stored 
 \end{quote}
 
 Having a simple way to persist data for extensions will be an useful feature for
-third-party extensions, but is currently not needed when moving code out of the core.
+third-party extensions, but is currently not needed when moving code out of the
+core. However, extensions should also be able to query the global data and
+configuration directories used.
 
 \subsubsection{tabs, windows}
 \begin{quote}
@@ -488,7 +490,7 @@ extension API.
 Enables browser extensions to update the browser theme.
 \end{quote}
 
-No dedicated theme feature exists in qutebrowser - instead, qutebrowser's user
+No dedicated theme feature exists in qutebrowser -- instead, qutebrowser's user
 interface can be customized using its configuration.
 
 \subsubsection{webNavigation}
@@ -608,7 +610,7 @@ Some parts of the API (like the \verb|networkaccessmanager()| or
 \verb|user_agent()| methods) are only exposed because there was a need in
 qutebrowser's core to do so, but should not be exposed via the extension API.
 However, for the most part, the tab API can be exposed unmodified to extensions
-and already allow for a wide range of interactions with tabs.
+and already allows for a wide range of interactions with tabs.
 
 \begin{listing}
 \begin{minted}{python}
@@ -637,18 +639,18 @@ def icon() -> QIcon
 def networkaccessmanager() -> QNetworkAccessManager
 def user_agent() -> str
 
-def send_event(evt: QEvent)
-def handle_auto_insert_mode(ok: bool)
+def send_event(evt: QEvent) -> None
+def handle_auto_insert_mode(ok: bool) -> None
 def url(requested: bool) -> QUrl
-def openurl(url: QUrl, predict: bool)
-def reload(force: bool)
-def stop()
-def clear_ssl_errors()
-def key_press(key: Qt.Key, modifier: Qt.KeyboardModifier)
-def dump_async(callback: Callable, plain: bool)
-def run_js_async(code: str, callback: Callable, world: JsWorld)
-def shutdown()
-def set_html(html: str, base_url: QUrl)
+def openurl(url: QUrl, predict: bool) -> None
+def reload(force: bool) -> None
+def stop() -> None
+def clear_ssl_errors() -> None
+def key_press(key: Qt.Key, modifier: Qt.KeyboardModifier) -> None
+def dump_async(callback: Callable, plain: bool) -> None
+def run_js_async(code: str, callback: Callable, world: JsWorld) -> None
+def shutdown() -> None
+def set_html(html: str, base_url: QUrl) -> None
 \end{minted}
   \caption{Existing main tab API}
   \label{lst:tabapi}

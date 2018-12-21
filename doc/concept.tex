@@ -12,9 +12,9 @@ functionality being used in extensions already exists as a cleanly defined API
 in qutebrowser, which could be exposed (after minor refactorings) in the
 extension API.
 
-Due to time constraints, not all considerations made could find their way into
-an API design. Instead, the work being done was centered on improving APIs which
-already exist in qutebrowser, in order to separate existing code into extensions.
+Due to time constraints, only small parts of the API were designed from scratch.
+Instead, the work being done was centered on improving and exposing APIs which
+already exist in qutebrowser.
 
 \section{Exposing existing APIs}
 Many of the APIs which should be exposed to extensions already exist in
@@ -31,15 +31,14 @@ qutebrowser. However, exposing formerly private APIs carries certain risks:
     reasons.
   \item When improving or refactoring APIs in the future, care must be taken
     because third-party extensions might be affected by the change. To avoid
-    extension authors having to catch up with every upgrade of the core (and
+    extension authors having to adjust their code with every upgrade of the core (and
     frustrating users due to breaking extensions), any future changes should be
     backwards-compatible, which greatly limits the room for future cleanups.
   \item Even for methods which seem useful for an extension API, their need
     should be carefully evaluated by looking at proposals for future extensions
     before blindly exposing them. This approach leads to a smaller (and thus
     simpler) API. It also increases the maintainability of the core, as parts
-    which are not exposed can be freely changed without needing to take care of
-    extensions.
+    which are not exposed can be freely changed without considering extensions.
 \end{itemize}
 
 It must be noted that many of these issues are less relevant in the scope of
@@ -81,8 +80,8 @@ this solution provided an overhead which was considered too big compared to the
 benefits, the following alternatives were considered:
 
 \begin{itemize}
-  \item The methods could be marked private via the common Python convention to
-    start the name with an underscore (for example, \py{_shutdown()}).
+  \item The methods could be marked private by following the common Python convention of
+    starting the name with an underscore (for example, \py{_shutdown()}).
     However, in the core part, they should \emph{not} be private, as they need to
     be used from outside the tab API.
   \item The methods could be lacking a Python docstring, so they are accessible,
@@ -211,8 +210,8 @@ them. This is for a variety of reasons:
     easy to trick them into installing an extension which is malicious. In
     contrast, users of qutebrowser can be expected to be much more diligent in ensuring that
     the extensions they are installing are not malicious.
-  \item The volume of available extensions is much lower. Thus, it is conceivable
-    that there is a whitelist of extensions which have been reviewed and approved
+  \item The volume of available extensions is much lower. Thus, it would be possible
+    to create a whitelist of extensions which have been reviewed and approved
     by one of qutebrowser's core developers. A contributor wishing to distribute
     a new extension could then ask for it to be reviewed and included in that list.
   \item Due to the focus on power users, a user should always be able to
